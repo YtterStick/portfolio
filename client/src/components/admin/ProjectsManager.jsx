@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
+import { projectsData } from '../../data/projects';
 
 const ProjectsManager = () => {
     const [projects, setProjects] = useState([]);
@@ -21,10 +22,15 @@ const ProjectsManager = () => {
     const fetchProjects = async () => {
         try {
             const { data } = await axios.get('http://localhost:5000/api/projects');
-            setProjects(data);
+            if (data && data.length > 0) {
+                setProjects(data);
+            } else {
+                setProjects(projectsData);
+            }
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching projects:', error);
+            console.error('Error fetching projects, using local data:', error);
+            setProjects(projectsData);
             setLoading(false);
         }
     };
