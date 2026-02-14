@@ -115,86 +115,87 @@ const ProjectsSection = () => {
                     ))}
                 </div>
 
-                <AnimatePresence>
-                    {selectedProject && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-                            onClick={() => setSelectedProject(null)}
-                        >
-                            <motion.div
-                                layoutId={`project-${selectedProject._id}`}
-                                className="bg-secondary w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-gray-700 max-h-[90vh] overflow-y-auto"
-                                onClick={(e) => e.stopPropagation()}
-                                data-lenis-prevent // Add this to prevent Lenis from hijacking scroll inside modal
-                            >
-                                <div className="relative h-64 md:h-96">
-                                    <img
-                                        src={selectedProject.image}
-                                        alt={selectedProject.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <button
-                                        onClick={() => setSelectedProject(null)}
-                                        className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className="p-8 md:p-10">
-                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                                        <div>
-                                            <h3 className="text-3xl font-bold text-white mb-2">{selectedProject.title}</h3>
-                                            <span className="text-accent font-medium">{selectedProject.category}</span>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <a
-                                                href={selectedProject.githubLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-primary border border-gray-700 rounded-lg hover:border-white transition-colors text-white"
-                                            >
-                                                <FaGithub /> Code
-                                            </a>
-                                            <a
-                                                href={selectedProject.liveLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-accent text-primary font-bold rounded-lg hover:bg-accent-hover transition-colors"
-                                            >
-                                                <FaExternalLinkAlt /> Live Demo
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-6">
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-3">About the Project</h4>
-                                            <p className="text-gray-300 leading-relaxed text-lg">{selectedProject.description}</p>
-                                        </div>
-
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-3">Technologies Used</h4>
-                                            <div className="flex flex-wrap gap-3">
-                                                {selectedProject.techStack.map((tech, i) => (
-                                                    <span key={i} className="px-4 py-2 bg-primary/50 text-accent rounded-lg border border-accent/20">
-                                                        {tech}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
-        </section>
+
+            <AnimatePresence>
+                {selectedProject && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                        onClick={() => setSelectedProject(null)}
+                    >
+                        <motion.div
+                            layoutId={`project-${selectedProject._id}`}
+                            className="bg-secondary w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-gray-700 max-h-[90vh] overflow-y-auto"
+                            onClick={(e) => e.stopPropagation()}
+                            data-lenis-prevent // Add this to prevent Lenis from hijacking scroll inside modal
+                        >
+                            <div className="relative h-64 md:h-96">
+                                <img
+                                    src={selectedProject.image}
+                                    alt={selectedProject.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                <button
+                                    onClick={() => setSelectedProject(null)}
+                                    className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="p-8 md:p-10">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                                    <div>
+                                        <h3 className="text-3xl font-bold text-white mb-2">{selectedProject.title}</h3>
+                                        <span className="text-accent font-medium">{selectedProject.category}</span>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <a
+                                            href={selectedProject.githubLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-2 px-5 py-2.5 bg-primary border border-gray-700 rounded-lg hover:border-white transition-colors text-white"
+                                        >
+                                            <FaGithub /> Code
+                                        </a>
+                                        <a
+                                            href={selectedProject.liveLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-2 px-5 py-2.5 bg-accent text-primary font-bold rounded-lg hover:bg-accent-hover transition-colors"
+                                        >
+                                            <FaExternalLinkAlt /> Live Demo
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div>
+                                        <h4 className="text-xl font-semibold text-white mb-3">About the Project</h4>
+                                        <p className="text-gray-300 leading-relaxed text-lg">{selectedProject.description}</p>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-xl font-semibold text-white mb-3">Technologies Used</h4>
+                                        <div className="flex flex-wrap gap-3">
+                                            {selectedProject.techStack.map((tech, i) => (
+                                                <span key={i} className="px-4 py-2 bg-primary/50 text-accent rounded-lg border border-accent/20">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </section >
     );
 };
 
