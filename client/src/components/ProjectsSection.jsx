@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { useScroll } from '../context/ScrollContext';
 import axios from 'axios';
+import { projectsData } from '../data/projects';
 
 const ProjectCard = ({ project, index, setSelectedProject }) => {
     return (
@@ -56,7 +57,7 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
 };
 
 const ProjectsSection = () => {
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState(projectsData);
     const [loading, setLoading] = useState(true);
     const [selectedProject, setSelectedProject] = useState(null);
     const { lenis } = useScroll();
@@ -65,10 +66,13 @@ const ProjectsSection = () => {
         const fetchProjects = async () => {
             try {
                 const { data } = await axios.get('http://localhost:5000/api/projects');
-                setProjects(data);
+                if (data && data.length > 0) {
+                    setProjects(data);
+                }
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching projects:', error);
+                console.error('Error fetching projects, using local data:', error);
+                setProjects(projectsData);
                 setLoading(false);
             }
         };
