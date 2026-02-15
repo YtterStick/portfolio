@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaDatabase, FaJsSquare, FaDownload, FaLinkedin } from 'react-icons/fa';
+import resumePdf from '../assets/resume.pdf';
 
 const AboutSection = () => {
     const skills = [
@@ -114,8 +115,8 @@ const AboutSection = () => {
 
                             <div className="flex gap-4 mt-8">
                                 <a
-                                    href="/resume.pdf"
-                                    download
+                                    href={resumePdf}
+                                    download="Andrei_Dilag_Resume.pdf"
                                     className="px-6 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2 shadow-lg shadow-white/10"
                                 >
                                     <FaDownload /> Download Resume
