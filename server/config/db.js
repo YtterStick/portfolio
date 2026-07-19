@@ -10,7 +10,7 @@ const connectDB = async () => {
             console.error('Note: This is often a DNS or network problem. Check if your network blocks SRV records.');
         }
         console.error(error);
-        process.exit(1);
+        console.warn('Continuing without a MongoDB connection so the server can still start.');
     }
 };
 
