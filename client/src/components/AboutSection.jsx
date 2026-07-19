@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaReact, FaNodeJs, FaDatabase, FaJsSquare, FaDownload, FaLinkedin, FaJava } from 'react-icons/fa';
 import { SiExpress, SiTailwindcss, SiMongodb, SiOracle } from 'react-icons/si';
-import resumePdf from '../assets/resume.pdf';
 
 const AboutSection = () => {
     const [activeTab, setActiveTab] = useState('technical');
@@ -201,8 +200,8 @@ const AboutSection = () => {
 
                         <div className="flex gap-4 mt-12">
                             <a
-                                href={resumePdf}
-                                download="Andrei_Dilag_Resume.pdf"
+                                href="/andrei_dilag_resume.pdf"
+                                download="andrei_dilag_resume.pdf"
                                 className="px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-300 flex items-center gap-2"
                             >
                                 <FaDownload /> Download Resume
