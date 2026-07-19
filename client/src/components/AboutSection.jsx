@@ -364,8 +364,8 @@ const AboutSection = () => {
                     </motion.div>
 
                     {/* Carousel */}
-                    <div className="relative max-w-4xl mx-auto">
-                        <div className="overflow-hidden rounded-xl border border-border/50">
+                    <div className="relative max-w-3xl mx-auto">
+                        <div className="overflow-hidden rounded-xl border border-border/50 bg-primary/60">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentSlide}
@@ -373,13 +373,13 @@ const AboutSection = () => {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -100 }}
                                     transition={{ duration: 0.4, ease: 'easeInOut' }}
-                                    className="relative group"
+                                    className="relative group h-[400px]"
                                 >
-                                    <a href={spotlights[currentSlide].link} target="_blank" rel="noopener noreferrer" className="block">
+                                    <a href={spotlights[currentSlide].link} target="_blank" rel="noopener noreferrer" className="block h-full">
                                         <img
                                             src={spotlights[currentSlide].image}
                                             alt={spotlights[currentSlide].caption}
-                                            className="w-full h-auto object-contain"
+                                            className="w-full h-full object-contain"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
                                         <div className="absolute bottom-0 left-0 right-0 p-8">
