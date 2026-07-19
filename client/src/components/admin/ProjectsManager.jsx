@@ -21,7 +21,7 @@ const ProjectsManager = () => {
 
     const fetchProjects = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/projects');
+            const { data } = await axios.get('/api/projects');
             if (data && data.length > 0) {
                 setProjects(data);
             } else {
@@ -60,9 +60,9 @@ const ProjectsManager = () => {
             };
 
             if (currentProject._id) {
-                await axios.put(`http://localhost:5000/api/projects/${currentProject._id}`, projectData, config);
+                await axios.put(`/api/projects/${currentProject._id}`, projectData, config);
             } else {
-                await axios.post('http://localhost:5000/api/projects', projectData, config);
+                await axios.post('/api/projects', projectData, config);
             }
 
             fetchProjects();
@@ -101,7 +101,7 @@ const ProjectsManager = () => {
                         Authorization: `Bearer ${user.token}`,
                     },
                 };
-                await axios.delete(`http://localhost:5000/api/projects/${id}`, config);
+                await axios.delete(`/api/projects/${id}`, config);
                 fetchProjects();
             } catch (error) {
                 console.error('Error deleting project:', error);
@@ -141,7 +141,7 @@ const ProjectsManager = () => {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Category</label>
-                                <input name="category" value={currentProject.category} onChange={handleChange} placeholder="e.g., Thesis Project" className="w-full bg-primary/50 border border-gray-700/50 rounded-xl px-4 py-3 text-white outline-none focus:border-accent transition-all" required />
+                                <input name="category" value={currentProject.category} onChange={handleChange} placeholder="e.g., Full-Stack Application" className="w-full bg-primary/50 border border-gray-700/50 rounded-xl px-4 py-3 text-white outline-none focus:border-accent transition-all" required />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Image URL</label>

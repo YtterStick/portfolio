@@ -15,7 +15,7 @@ const AppContent = () => {
   return (
     <div className="flex flex-col min-h-screen bg-primary text-white">
       {!isAdminPath && <Navbar />}
-      <main className="flex-grow">
+      <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<AdminLogin />} />

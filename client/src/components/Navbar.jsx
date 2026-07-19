@@ -25,19 +25,19 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', href: '#hero' },
         { name: 'About', href: '#about' },
-        { name: 'Projects', href: '#projects' },
+        { name: 'Work', href: '#projects' },
         { name: 'Contact', href: '#contact' },
     ];
 
     return (
         <nav
-            className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-primary/95 backdrop-blur-md shadow-lg py-2' : 'bg-transparent py-4'
+            className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-primary/95 backdrop-blur-md border-b border-border py-2' : 'bg-transparent py-4'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    <div className="flex-shrink-0 cursor-pointer">
-                        <Link to="/" className="text-2xl font-bold text-white tracking-tighter">
+                    <div className="shrink-0 cursor-pointer">
+                        <Link to="/" className="text-xl font-semibold text-white tracking-tight">
                             Andrei<span className="text-accent">.</span>
                         </Link>
                     </div>
@@ -49,17 +49,17 @@ const Navbar = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    className="text-gray-300 hover:text-accent font-medium transition-colors relative group"
+                                    className="text-text-muted hover:text-white font-medium text-sm transition-colors duration-300 relative group"
                                 >
                                     {link.name}
-                                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"></span>
+                                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all duration-300 group-hover:w-full"></span>
                                 </a>
                             ))}
                             <a
                                 href="#contact"
-                                className="px-4 py-2 border border-accent text-accent rounded hover:bg-accent hover:text-primary transition-all duration-300 font-medium"
+                                className="px-5 py-2 border border-accent/50 text-accent rounded-lg hover:bg-accent hover:text-white transition-all duration-300 font-medium text-sm"
                             >
-                                Hire Me
+                                Get in Touch
                             </a>
                         </div>
                     </div>
@@ -68,11 +68,11 @@ const Navbar = () => {
                     <div className="-mr-2 flex md:hidden">
                         <button
                             onClick={toggleMenu}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-text-muted hover:text-white hover:bg-surface focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
                             aria-expanded="false"
                         >
                             <span className="sr-only">Open main menu</span>
-                            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                            {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
                         </button>
                     </div>
                 </div>
@@ -85,15 +85,15 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-primary/95 backdrop-blur-md border-t border-gray-800"
+                        className="md:hidden bg-primary/95 backdrop-blur-md border-t border-border"
                     >
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <div className="px-4 pt-3 pb-4 space-y-1">
                             {navLinks.map((link) => (
                                 <a
                                     key={link.name}
                                     href={link.href}
                                     onClick={toggleMenu}
-                                    className="text-gray-300 hover:text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                                    className="text-text-muted hover:text-white hover:bg-surface block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300"
                                 >
                                     {link.name}
                                 </a>
@@ -101,9 +101,9 @@ const Navbar = () => {
                             <a
                                 href="#contact"
                                 onClick={toggleMenu}
-                                className="block w-full text-center mt-4 px-4 py-3 bg-accent text-primary font-bold rounded hover:bg-opacity-90 transition-all"
+                                className="block w-full text-center mt-4 px-4 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent-hover transition-all duration-300 text-sm"
                             >
-                                Hire Me
+                                Get in Touch
                             </a>
                         </div>
                     </motion.div>

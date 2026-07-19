@@ -15,7 +15,7 @@ const InquiriesManager = () => {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.get('http://localhost:5000/api/inquiries', config);
+            const { data } = await axios.get('/api/inquiries', config);
             setInquiries(data);
             setLoading(false);
         } catch (error) {
@@ -35,7 +35,7 @@ const InquiriesManager = () => {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            await axios.put(`http://localhost:5000/api/inquiries/${id}`, { status: newStatus }, config);
+            await axios.put(`/api/inquiries/${id}`, { status: newStatus }, config);
             fetchInquiries();
         } catch (error) {
             console.error('Error updating status:', error);
@@ -50,7 +50,7 @@ const InquiriesManager = () => {
                         Authorization: `Bearer ${user.token}`,
                     },
                 };
-                await axios.delete(`http://localhost:5000/api/inquiries/${id}`, config);
+                await axios.delete(`/api/inquiries/${id}`, config);
                 fetchInquiries();
             } catch (error) {
                 console.error('Error deleting inquiry:', error);

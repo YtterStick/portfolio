@@ -12,42 +12,34 @@ const Home = () => {
         offset: ['start start', 'end end'],
     });
 
-    const farBgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%']);
-    const midBgY = useTransform(scrollYProgress, [0, 1], ['0%', '-10%']);
-    const nearBgY = useTransform(scrollYProgress, [0, 1], ['0%', '24%']);
-
-    const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '0%']);
-    const aboutY = useTransform(scrollYProgress, [0, 1], ['0%', '-4%']);
-    const projectsY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
-    const contactY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
+    const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
 
     return (
         <div ref={pageRef} className="relative isolate overflow-hidden">
+            {/* Minimal background — subtle grid + single top gradient */}
             <motion.div
-                style={{ y: farBgY }}
-                className="pointer-events-none fixed inset-0 -z-20 opacity-90 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.1),transparent_22%),linear-gradient(180deg,#020617_0%,#020617_45%,#01040f_100%)]"
+                style={{ y: bgY }}
+                className="pointer-events-none fixed inset-0 -z-20 bg-primary"
             />
-            <motion.div
-                style={{ y: midBgY }}
-                className="pointer-events-none fixed inset-0 -z-10 opacity-20 bg-[linear-gradient(rgba(148,163,184,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.1)_1px,transparent_1px)] bg-size-[96px_96px]"
+            <div
+                className="pointer-events-none fixed inset-0 -z-10 opacity-[0.03] bg-[linear-gradient(rgba(99,102,241,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.4)_1px,transparent_1px)] bg-size-[80px_80px]"
             />
-            <motion.div
-                style={{ y: nearBgY }}
-                className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[42vh] bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_60%)] blur-3xl"
+            <div
+                className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 -z-10 w-[900px] h-[500px] bg-accent/4 rounded-full blur-[150px]"
             />
 
-            <motion.div style={{ y: heroY }} className="relative z-10">
+            <div className="relative z-10">
                 <HeroSection />
-            </motion.div>
-            <motion.div style={{ y: aboutY }} className="relative z-10">
+            </div>
+            <div className="relative z-10">
                 <AboutSection />
-            </motion.div>
-            <motion.div style={{ y: projectsY }} className="relative z-10">
+            </div>
+            <div className="relative z-10">
                 <ProjectsSection />
-            </motion.div>
-            <motion.div style={{ y: contactY }} className="relative z-10">
+            </div>
+            <div className="relative z-10">
                 <ContactSection />
-            </motion.div>
+            </div>
         </div>
     );
 };
