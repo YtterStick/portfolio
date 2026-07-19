@@ -22,6 +22,18 @@ const Navbar = () => {
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
+    const handleNavClick = (e, href) => {
+        // Only prevent default if it's an internal link
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const element = document.querySelector(href);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        setIsOpen(false);
+    };
+
     const navLinks = [
         { name: 'Home', href: '#hero' },
         { name: 'About', href: '#about' },
@@ -49,6 +61,7 @@ const Navbar = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
                                     className="text-text-muted hover:text-white font-medium text-sm transition-colors duration-300 relative group"
                                 >
                                     {link.name}
@@ -57,6 +70,7 @@ const Navbar = () => {
                             ))}
                             <a
                                 href="#contact"
+                                onClick={(e) => handleNavClick(e, '#contact')}
                                 className="px-5 py-2 border border-accent/50 text-accent rounded-lg hover:bg-accent hover:text-white transition-all duration-300 font-medium text-sm"
                             >
                                 Get in Touch
@@ -92,7 +106,7 @@ const Navbar = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    onClick={toggleMenu}
+                                    onClick={(e) => handleNavClick(e, link.href)}
                                     className="text-text-muted hover:text-white hover:bg-surface block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300"
                                 >
                                     {link.name}
@@ -100,7 +114,7 @@ const Navbar = () => {
                             ))}
                             <a
                                 href="#contact"
-                                onClick={toggleMenu}
+                                onClick={(e) => handleNavClick(e, '#contact')}
                                 className="block w-full text-center mt-4 px-4 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent-hover transition-all duration-300 text-sm"
                             >
                                 Get in Touch
