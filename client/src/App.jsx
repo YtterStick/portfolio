@@ -38,7 +38,7 @@ function App() {
   return (
     <AuthProvider>
       <ScrollProvider>
-        <Router basename="/portfolio">
+        <Router>
           <AppContent />
         </Router>
       </ScrollProvider>
