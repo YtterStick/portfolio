@@ -1,6 +1,6 @@
 # Andrei Dev Portfolio
 
-Live Deployment: [portfolio-self-tau-apg5fm8dxi.vercel.app](https://portfolio-self-tau-apg5fm8dxi.vercel.app/)
+Live Deployment: [andrei-dev.vercel.app](https://andrei-dev.vercel.app/)
 
 A modern, high-performance portfolio website built with React, Vite, Tailwind CSS, Framer Motion, and Node.js. Highlighting flagship engineering projects like **Evalo** (AI Assessment & Anti-Cheat Proctoring Portal with OpenCV OMR), **StarWashPH**, and academic educator leadership at STI College Fairview.
 

@@ -18,12 +18,12 @@ const Footer = () => {
                             Full-stack developer & educator — dedicated to building scalable web applications and software solutions.
                         </p>
                         <a
-                            href="https://portfolio-self-tau-apg5fm8dxi.vercel.app/"
+                            href="https://andrei-dev.vercel.app/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 text-xs text-accent hover:text-accent-hover font-mono transition-colors"
                         >
-                            portfolio-self-tau-apg5fm8dxi.vercel.app
+                            andrei-dev.vercel.app
                         </a>
                     </div>
 
