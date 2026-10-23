@@ -205,16 +205,16 @@ const AboutSection = () => {
     ];
 
     return (
-        <section id="about" className="py-28 bg-secondary relative overflow-hidden">
+        <section id="about" className="py-16 sm:py-28 bg-secondary relative overflow-hidden">
             {/* Subtle ambient background — GPU radial gradient with 0 blur overhead */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.08]">
                 <div className="absolute -top-40 -left-40 w-96 h-96 bg-[radial-gradient(circle,rgba(99,102,241,0.5)_0%,transparent_70%)]" />
                 <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(99,102,241,0.4)_0%,transparent_70%)]" />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 {/* Top Row: About Story & Experience */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 mb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-14 sm:mb-20">
                     {/* About Story */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -222,13 +222,13 @@ const AboutSection = () => {
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold uppercase tracking-widest mb-4">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-4">
                             <span>About Me</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8 tracking-tight">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 sm:mb-8 tracking-tight">
                             Full-Stack Developer
                         </h2>
-                        <div className="text-text-muted text-lg leading-relaxed space-y-5 font-light">
+                        <div className="text-text-muted text-base sm:text-lg leading-relaxed space-y-4 sm:space-y-5 font-light">
                             <p>
                                 I am a <span className="text-white font-medium">Full-Stack Developer and Educator</span>. While I teach Advance Database and Network Technology at STI College Fairview, <span className="text-accent font-medium">software development is my true passion and primary goal</span>.
                             </p>
@@ -240,11 +240,11 @@ const AboutSection = () => {
                             </p>
                         </div>
 
-                        <div className="flex flex-wrap gap-4 mt-10">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
                             <a
                                 href="/andrei_dilag_resume.pdf"
                                 download="andrei_dilag_resume.pdf"
-                                className="px-6 py-3 bg-white text-primary font-semibold rounded-xl hover:bg-gray-200 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-white/10"
+                                className="w-full sm:w-auto px-6 py-3.5 sm:py-3 bg-white text-primary font-semibold rounded-xl hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-white/10 text-sm"
                             >
                                 <FaDownload /> Download Resume
                             </a>
@@ -252,7 +252,7 @@ const AboutSection = () => {
                                 href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-6 py-3 border border-border/80 text-white font-medium rounded-xl hover:border-accent hover:text-accent transition-colors duration-300 flex items-center gap-2"
+                                className="w-full sm:w-auto px-6 py-3.5 sm:py-3 border border-border/80 text-white font-medium rounded-xl hover:border-accent hover:text-accent transition-colors duration-300 flex items-center justify-center gap-2 text-sm"
                             >
                                 <FaLinkedin /> Connect on LinkedIn
                             </a>
@@ -308,64 +308,68 @@ const AboutSection = () => {
                 </div>
 
                 {/* Skills Section */}
-                <div className="pt-20 border-t border-border/60 mt-16">
+                <div className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                         viewport={{ once: true }}
-                        className="text-center mb-12"
+                        className="text-center mb-10 sm:mb-12"
                     >
-                        <h2 className="text-4xl font-serif font-bold text-white mb-4">Core Competencies & Skills</h2>
-                        <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base font-light">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4">Core Competencies & Skills</h2>
+                        <p className="text-text-muted max-w-xl mx-auto text-xs sm:text-base font-light px-2">
                             Synthesizing strong academic fundamentals with modern enterprise and AI tooling.
                         </p>
                         
-                        {/* Tab Buttons */}
-                        <div className="flex justify-center gap-4 mt-8">
-                            <button 
-                                onClick={() => setActiveTab('technical')}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                                    activeTab === 'technical' 
-                                        ? 'bg-accent text-white shadow-lg shadow-accent/30' 
-                                        : 'bg-primary/40 text-text-muted hover:text-white border border-border/50 hover:border-accent/50'
-                                }`}
-                            >
-                                Technical & Architectural Skills
-                            </button>
-                            <button 
-                                onClick={() => setActiveTab('programming')}
-                                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                                    activeTab === 'programming' 
-                                        ? 'bg-accent text-white shadow-lg shadow-accent/30' 
-                                        : 'bg-primary/40 text-text-muted hover:text-white border border-border/50 hover:border-accent/50'
-                                }`}
-                            >
-                                Programming Languages & Frameworks
-                            </button>
+                        {/* Tab Buttons: Responsive Segmented Control */}
+                        <div className="flex justify-center mt-6 sm:mt-8">
+                            <div className="inline-flex p-1 bg-primary/70 border border-border/60 rounded-xl sm:rounded-full w-full sm:w-auto max-w-md">
+                                <button 
+                                    onClick={() => setActiveTab('technical')}
+                                    className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-300 text-center ${
+                                        activeTab === 'technical' 
+                                            ? 'bg-accent text-white shadow-lg shadow-accent/30' 
+                                            : 'text-text-muted hover:text-white'
+                                    }`}
+                                >
+                                    <span className="sm:hidden">Technical Skills</span>
+                                    <span className="hidden sm:inline">Technical & Architectural Skills</span>
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab('programming')}
+                                    className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-300 text-center ${
+                                        activeTab === 'programming' 
+                                            ? 'bg-accent text-white shadow-lg shadow-accent/30' 
+                                            : 'text-text-muted hover:text-white'
+                                    }`}
+                                >
+                                    <span className="sm:hidden">Languages & Stacks</span>
+                                    <span className="hidden sm:inline">Programming Languages & Frameworks</span>
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
 
                     {/* Tab Content */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                         {(activeTab === 'technical' ? technicalSkills : programmingSkills).map((category, catIndex) => (
                             <motion.div 
                                 key={`${activeTab}-${catIndex}`}
                                 initial={{ opacity: 0, scale: 0.96 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.3, delay: catIndex * 0.04 }}
-                                className="group bg-primary/40 backdrop-blur-md p-6 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                                className="group bg-primary/40 backdrop-blur-md p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                                 
-                                <h4 className="text-xs font-semibold text-accent tracking-widest uppercase mb-4 relative z-10">
+                                <h4 className="text-xs font-semibold text-accent tracking-widest uppercase mb-3 sm:mb-4 relative z-10">
                                     {category.category}
                                 </h4>
-                                <div className="flex flex-wrap gap-2 relative z-10 pt-1">
+                                <div className="flex flex-wrap gap-1.5 sm:gap-2 relative z-10 pt-1">
                                     {category.items.map((item, skillIndex) => (
                                         <span
                                             key={skillIndex}
-                                            className="bg-secondary/90 text-text-muted text-xs px-3 py-1.5 rounded-lg border border-border/40 font-medium hover:bg-accent/15 hover:text-white hover:border-accent/40 transition-all duration-200 cursor-default"
+                                            className="bg-secondary/90 text-text-muted text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 font-medium hover:bg-accent/15 hover:text-white hover:border-accent/40 transition-all duration-200 cursor-default"
                                         >
                                             {item}
                                         </span>
@@ -428,19 +432,19 @@ const AboutSection = () => {
                 </div>
 
                 {/* Spotlight Gallery Section: Fast, Auto-slides by default, Movable on Drag */}
-                <div className="mt-28 pt-24 border-t border-border/60">
+                <div className="mt-16 sm:mt-28 pt-14 sm:pt-24 border-t border-border/60">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
-                        className="text-center mb-10"
+                        className="text-center mb-8 sm:mb-10"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold uppercase tracking-widest mb-3">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
                             <span>Achievements Showcase</span>
                         </div>
-                        <h2 className="text-4xl font-serif font-bold text-white mb-3">Spotlight Gallery</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-base font-light">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Spotlight Gallery</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2">
                             Moments captured from championship hackathons and academic recognitions.
                         </p>
                     </motion.div>
@@ -452,7 +456,7 @@ const AboutSection = () => {
                         onMouseLeave={() => setIsHovered(false)}
                     >
                         {/* Image Viewer Stage with Natural Drag & Move */}
-                        <div className="overflow-hidden rounded-2xl border border-border/70 bg-primary/80 relative shadow-2xl h-105 sm:h-120 lg:h-130 select-none flex items-center justify-center">
+                        <div className="overflow-hidden rounded-2xl border border-border/70 bg-primary/80 relative shadow-2xl h-72 sm:h-110 lg:h-125 select-none flex items-center justify-center">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentSlide}
@@ -475,12 +479,12 @@ const AboutSection = () => {
                                     />
 
                                     {/* Caption Bar */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 bg-linear-to-t from-primary via-primary/85 to-transparent pointer-events-none z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-linear-to-t from-primary via-primary/85 to-transparent pointer-events-none z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
                                         <div>
-                                            <span className="text-[10px] font-semibold tracking-widest uppercase text-accent bg-accent/15 px-3 py-1 rounded-full border border-accent/25 inline-block mb-2">
+                                            <span className="text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase text-accent bg-accent/15 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-accent/25 inline-block mb-1 sm:mb-2">
                                                 {spotlights[currentSlide].badge}
                                             </span>
-                                            <p className="text-white font-semibold text-lg sm:text-xl leading-snug drop-shadow-md">
+                                            <p className="text-white font-semibold text-sm sm:text-xl leading-snug drop-shadow-md line-clamp-2 sm:line-clamp-none">
                                                 {spotlights[currentSlide].caption}
                                             </p>
                                         </div>
@@ -489,9 +493,9 @@ const AboutSection = () => {
                                                 href={spotlights[currentSlide].link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="pointer-events-auto shrink-0 px-4 py-2 rounded-xl bg-secondary/80 hover:bg-accent border border-border/60 hover:border-accent text-white text-xs font-medium transition-all duration-300 flex items-center gap-2 shadow-md"
+                                                className="pointer-events-auto shrink-0 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-secondary/90 hover:bg-accent border border-border/60 hover:border-accent text-white text-xs font-medium transition-all duration-300 flex items-center gap-1.5 sm:gap-2 shadow-md w-fit"
                                             >
-                                                Verify Post <FaExternalLinkAlt size={11} />
+                                                Verify Post <FaExternalLinkAlt size={10} />
                                             </a>
                                         )}
                                     </div>
@@ -501,30 +505,30 @@ const AboutSection = () => {
                             {/* Floating Left & Right Chevrons */}
                             <button
                                 onClick={prevSlide}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
+                                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
                                 aria-label="Previous Slide"
                             >
-                                <FaChevronLeft size={16} />
+                                <FaChevronLeft size={14} />
                             </button>
                             <button
                                 onClick={nextSlide}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
+                                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
                                 aria-label="Next Slide"
                             >
-                                <FaChevronRight size={16} />
+                                <FaChevronRight size={14} />
                             </button>
                         </div>
 
                         {/* Thumbnail Indicators */}
-                        <div className="flex justify-center items-center gap-3 mt-6">
+                        <div className="flex justify-center items-center gap-2 sm:gap-3 mt-4 sm:mt-6">
                             {spotlights.map((item, index) => (
                                 <button
                                     key={index}
                                     onClick={() => setCurrentSlide(index)}
                                     className={`relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
                                         index === currentSlide
-                                            ? 'ring-2 ring-accent scale-105 shadow-lg shadow-accent/30 opacity-100 w-16 sm:w-20 h-12 sm:h-14'
-                                            : 'opacity-40 hover:opacity-80 w-12 sm:w-16 h-10 sm:h-12 border border-border/60'
+                                            ? 'ring-2 ring-accent scale-105 shadow-lg shadow-accent/30 opacity-100 w-14 sm:w-20 h-10 sm:h-14'
+                                            : 'opacity-40 hover:opacity-80 w-10 sm:w-16 h-8 sm:h-12 border border-border/60'
                                     }`}
                                     aria-label={`Jump to slide ${index + 1}`}
                                 >

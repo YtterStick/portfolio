@@ -19,7 +19,7 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
             onClick={() => setSelectedProject(project)}
         >
             {/* Image Header with Fixed Height for Uniformity */}
-            <div className="relative overflow-hidden h-56 bg-primary shrink-0">
+            <div className="relative overflow-hidden h-48 sm:h-56 bg-primary shrink-0">
                 <img
                     src={project.image}
                     alt={project.title}
@@ -30,8 +30,8 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                 
                 {/* Badge Chip */}
                 {project.badge && (
-                    <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5">
-                        <span className="px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-accent/90 text-white shadow-md shadow-accent/30 flex items-center gap-1 backdrop-blur-md">
+                    <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-10 flex items-center gap-1.5">
+                        <span className="px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-accent/90 text-white shadow-md shadow-accent/30 flex items-center gap-1 backdrop-blur-md">
                             {project.featured ? <FaRobot className="text-[10px]" /> : null}
                             {project.badge}
                         </span>
@@ -44,18 +44,18 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                 )}
 
                 {/* Category & Title */}
-                <div className="absolute bottom-4 left-4 right-4 z-10">
-                    <span className="text-accent text-[11px] font-bold tracking-[0.18em] uppercase mb-1 block">
+                <div className="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 z-10">
+                    <span className="text-accent text-[10px] sm:text-[11px] font-bold tracking-[0.18em] uppercase mb-0.5 sm:mb-1 block">
                         {project.category}
                     </span>
-                    <h3 className="text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 truncate">
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 truncate">
                         {project.title}
                     </h3>
                 </div>
             </div>
 
             {/* Content Body */}
-            <div className="p-6 flex flex-col justify-between grow">
+            <div className="p-4 sm:p-6 flex flex-col justify-between grow">
                 <div>
                     {project.subtitle && (
                         <p className="text-accent/90 text-xs font-medium mb-3 line-clamp-1">
@@ -177,33 +177,33 @@ const ProjectsSection = () => {
     }, []);
 
     return (
-        <section id="projects" className={`py-28 bg-primary relative transition-all duration-300 ${selectedProject ? 'z-50' : ''}`}>
+        <section id="projects" className={`py-16 sm:py-28 bg-primary relative transition-all duration-300 ${selectedProject ? 'z-50' : ''}`}>
             {/* Ambient Background Glows — GPU accelerated */}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-175 h-125 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-100 h-100 bg-[radial-gradient(circle,rgba(99,102,241,0.04)_0%,transparent_70%)] pointer-events-none" />
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="text-center mb-10 sm:mb-16"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold uppercase tracking-widest mb-4">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3 sm:mb-4">
                         <span>Selected Work</span>
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6 tracking-tight">
                         Featured Engineering Projects
                     </h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed">
+                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-light leading-relaxed px-2">
                         Production-grade applications leveraging Generative AI, secure exam proctoring, enterprise architectures, and robust cloud services.
                     </p>
                 </motion.div>
 
                 {/* Projects Grid: All 3 Cards at the Exact Same Level and Height */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
                     {projects.map((project, index) => (
                         <ProjectCard
                             key={project._id || index}
@@ -237,7 +237,7 @@ const ProjectsSection = () => {
                                 data-lenis-prevent
                             >
                                 {/* Modal Header Banner */}
-                                <div className="relative h-64 sm:h-80 w-full shrink-0 overflow-hidden bg-primary">
+                                <div className="relative h-48 sm:h-72 w-full shrink-0 overflow-hidden bg-primary">
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
@@ -248,29 +248,29 @@ const ProjectsSection = () => {
                                     {/* Close Button */}
                                     <button
                                         onClick={() => setSelectedProject(null)}
-                                        className="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white rounded-full p-2.5 transition-all duration-300 border border-white/10 hover:border-white/30 z-20 cursor-pointer"
+                                        className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-black/60 hover:bg-black/90 text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 border border-white/10 hover:border-white/30 z-20 cursor-pointer"
                                         aria-label="Close Modal"
                                     >
-                                        <FaTimes size={16} />
+                                        <FaTimes size={14} />
                                     </button>
 
                                     {/* Overlay Title */}
-                                    <div className="absolute bottom-6 left-6 right-6 z-10">
-                                        <div className="flex flex-wrap gap-2 items-center mb-2">
-                                            <span className="px-3 py-1 bg-accent/90 text-white text-[10px] font-semibold tracking-widest uppercase rounded-full">
+                                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-10">
+                                        <div className="flex flex-wrap gap-1.5 sm:gap-2 items-center mb-1.5 sm:mb-2">
+                                            <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-accent/90 text-white text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase rounded-full">
                                                 {selectedProject.category}
                                             </span>
                                             {selectedProject.badge && (
-                                                <span className="px-3 py-1 bg-primary/80 border border-border text-white text-[10px] font-semibold tracking-wider uppercase rounded-full">
+                                                <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-primary/80 border border-border text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase rounded-full">
                                                     {selectedProject.badge}
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+                                        <h3 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
                                             {selectedProject.title}
                                         </h3>
                                         {selectedProject.subtitle && (
-                                            <p className="text-accent-hover text-sm font-medium mt-1">
+                                            <p className="text-accent-hover text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">
                                                 {selectedProject.subtitle}
                                             </p>
                                         )}
@@ -278,15 +278,15 @@ const ProjectsSection = () => {
                                 </div>
 
                                 {/* Modal Body (Scrollable) */}
-                                <div className="p-6 sm:p-10 overflow-y-auto space-y-8">
+                                <div className="p-4 sm:p-10 overflow-y-auto space-y-6 sm:space-y-8">
                                     {/* Action Links */}
-                                    <div className="flex flex-wrap gap-4 pb-6 border-b border-border/60">
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pb-6 border-b border-border/60">
                                         {selectedProject.liveLink && selectedProject.liveLink !== '#' && (
                                             <a
                                                 href={selectedProject.liveLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-6 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent-hover transition-all duration-300 text-sm shadow-lg shadow-accent/25"
+                                                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent-hover transition-all duration-300 text-sm shadow-lg shadow-accent/25 w-full sm:w-auto"
                                             >
                                                 <FaExternalLinkAlt /> Launch Live Application
                                             </a>
@@ -296,7 +296,7 @@ const ProjectsSection = () => {
                                                 href={selectedProject.githubLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-6 py-3 bg-primary border border-border/70 rounded-xl hover:border-accent/50 hover:bg-primary/90 transition-all duration-300 text-white text-sm"
+                                                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 bg-primary border border-border/70 rounded-xl hover:border-accent/50 hover:bg-primary/90 transition-all duration-300 text-white text-sm w-full sm:w-auto"
                                             >
                                                 <FaGithub size={16} /> View GitHub Source
                                             </a>

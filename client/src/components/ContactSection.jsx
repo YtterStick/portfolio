@@ -74,26 +74,26 @@ const ContactSection = () => {
     };
 
     return (
-        <section id="contact" className="py-28 bg-secondary relative overflow-hidden">
+        <section id="contact" className="py-16 sm:py-28 bg-secondary relative overflow-hidden">
             {/* Background Decorations — GPU accelerated */}
             <div className="absolute top-0 left-0 w-64 h-64 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle,rgba(99,102,241,0.04)_0%,transparent_70%)] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="text-center mb-10 sm:mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Get In Touch</h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-lg font-light">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6">Get In Touch</h2>
+                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-lg font-light px-2">
                         Whether you need a full-stack developer for your team or a partner for your next project, I'd like to hear from you.
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 max-w-6xl mx-auto">
                     {/* Contact Info */}
                     <motion.div
                         initial={{ opacity: 0, x: -24 }}
@@ -102,8 +102,8 @@ const ContactSection = () => {
                         viewport={{ once: true }}
                         className="lg:col-span-2 space-y-8"
                     >
-                        <div className="bg-primary/60 backdrop-blur-sm p-8 rounded-xl border border-border h-full">
-                            <h3 className="text-xl font-semibold text-white mb-6">Contact Information</h3>
+                        <div className="bg-primary/60 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border border-border h-full">
+                            <h3 className="text-lg sm:text-xl font-semibold text-white mb-6">Contact Information</h3>
 
                             <div className="space-y-6">
                                 <div className="flex items-start gap-4">
@@ -160,7 +160,7 @@ const ContactSection = () => {
                         viewport={{ once: true }}
                         className="lg:col-span-3"
                     >
-                        <div className="bg-primary p-8 md:p-10 rounded-xl border border-border relative min-h-125 flex flex-col justify-center">
+                        <div className="bg-primary p-5 sm:p-8 md:p-10 rounded-2xl border border-border relative min-h-125 flex flex-col justify-center">
                             {status === 'success' ? (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -191,55 +191,55 @@ const ContactSection = () => {
                                 </motion.div>
                             ) : (
                                 <form onSubmit={handleSubmit}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                                         <div>
-                                            <label className="block text-text-muted text-xs font-medium mb-2 tracking-[0.15em] uppercase">Name</label>
+                                            <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Name</label>
                                             <input
                                                 type="text"
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
                                                 required
-                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
+                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
                                                 placeholder="Your Full Name"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-text-muted text-xs font-medium mb-2 tracking-[0.15em] uppercase">Email Address</label>
+                                            <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Email Address</label>
                                             <input
                                                 type="email"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 required
-                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
+                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
                                                 placeholder="email@example.com"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="mb-6">
-                                        <label className="block text-text-muted text-xs font-medium mb-2 tracking-[0.15em] uppercase">Subject</label>
+                                    <div className="mb-4 sm:mb-6">
+                                        <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Subject</label>
                                         <input
                                             type="text"
                                             name="subject"
                                             value={formData.subject}
                                             onChange={handleChange}
                                             required
-                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
+                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
                                             placeholder="What is this about?"
                                         />
                                     </div>
 
-                                    <div className="mb-8">
-                                        <label className="block text-text-muted text-xs font-medium mb-2 tracking-[0.15em] uppercase">Message</label>
+                                    <div className="mb-6 sm:mb-8">
+                                        <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Message</label>
                                         <textarea
                                             name="message"
                                             value={formData.message}
                                             onChange={handleChange}
                                             required
                                             rows="4"
-                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 resize-none placeholder:text-text-muted/40"
+                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 resize-none placeholder:text-text-muted/40"
                                             placeholder="Write your message here..."
                                         ></textarea>
                                     </div>
