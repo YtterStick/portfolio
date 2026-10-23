@@ -49,8 +49,12 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="shrink-0 cursor-pointer">
-                        <Link to="/" className="text-xl font-semibold text-white tracking-tight">
-                            Andrei<span className="text-accent">.</span>
+                        <Link to="/" className="text-xl font-semibold text-white tracking-tight flex items-center gap-1.5 group">
+                            <span>Andrei</span>
+                            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-accent/15 text-accent border border-accent/30 group-hover:bg-accent group-hover:text-white transition-all duration-300">
+                                dev
+                            </span>
+                            <span className="text-accent">.</span>
                         </Link>
                     </div>
 

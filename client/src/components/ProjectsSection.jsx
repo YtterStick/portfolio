@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaTimes, FaCheckCircle, FaShieldAlt, FaRobot } from 'react-icons/fa';
 import { useScroll } from '../context/ScrollContext';
 import axios from 'axios';
 import { projectsData } from '../data/projects';
@@ -10,46 +10,129 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
     return (
         <motion.div
             layoutId={`project-${project._id}`}
-            whileHover={{ y: -4, transition: { duration: 0.3 } }}
-            initial={{ opacity: 0, y: 40 }}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            viewport={{ once: true, margin: "-50px" }}
-            className="bg-secondary rounded-xl overflow-hidden border border-border hover:border-accent/40 transition-all duration-300 group cursor-pointer h-full flex flex-col"
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true, margin: "-40px" }}
+            className="rounded-2xl overflow-hidden border border-border/70 hover:border-accent/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.18)] transition-all duration-300 flex flex-col group cursor-pointer bg-secondary/80 backdrop-blur-md h-full"
             onClick={() => setSelectedProject(project)}
         >
-            <div className="relative overflow-hidden h-56">
+            {/* Image Header with Fixed Height for Uniformity */}
+            <div className="relative overflow-hidden h-56 bg-primary shrink-0">
                 <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    loading="lazy"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
-                <div className="absolute bottom-4 left-4 right-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300 z-10">
-                    <span className="text-accent text-[10px] font-semibold tracking-[0.15em] uppercase mb-1 block">{project.category}</span>
-                    <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+                <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity duration-300" />
+                
+                {/* Badge Chip */}
+                {project.badge && (
+                    <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5">
+                        <span className="px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-accent/90 text-white shadow-md shadow-accent/30 flex items-center gap-1 backdrop-blur-md">
+                            {project.featured ? <FaRobot className="text-[10px]" /> : null}
+                            {project.badge}
+                        </span>
+                        {project.featured && (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md flex items-center gap-1">
+                                <FaShieldAlt className="text-[10px]" /> Anti-Cheat
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {/* Category & Title */}
+                <div className="absolute bottom-4 left-4 right-4 z-10">
+                    <span className="text-accent text-[11px] font-bold tracking-[0.18em] uppercase mb-1 block">
+                        {project.category}
+                    </span>
+                    <h3 className="text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 truncate">
+                        {project.title}
+                    </h3>
                 </div>
             </div>
-            <div className="p-6 grow flex flex-col justify-between">
+
+            {/* Content Body */}
+            <div className="p-6 flex flex-col justify-between grow">
                 <div>
-                    <p className="text-text-muted text-sm line-clamp-3 mb-4 leading-relaxed font-light">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                        {project.techStack.map((tech, i) => (
-                            <span key={i} className="text-xs bg-primary/80 text-text-muted px-3 py-1 rounded-md border border-border">{tech}</span>
+                    {project.subtitle && (
+                        <p className="text-accent/90 text-xs font-medium mb-3 line-clamp-1">
+                            {project.subtitle}
+                        </p>
+                    )}
+                    <p className="text-text-muted text-sm leading-relaxed font-light mb-5 line-clamp-3">
+                        {project.description}
+                    </p>
+
+                    {/* Key Metrics / Highlights Pills */}
+                    {project.metrics && (
+                        <div className="grid grid-cols-2 gap-2 mb-5">
+                            {project.metrics.slice(0, 2).map((metric, mIdx) => (
+                                <div
+                                    key={mIdx}
+                                    className="bg-primary/60 border border-border/40 rounded-xl px-3 py-2 text-center"
+                                >
+                                    <span className="text-[9px] text-text-muted uppercase tracking-wider block font-medium truncate">
+                                        {metric.label}
+                                    </span>
+                                    <span className="text-xs font-semibold text-white truncate block">
+                                        {metric.value}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Tech Stack Pills */}
+                    <div className="flex flex-wrap gap-1.5 mb-6">
+                        {project.techStack.slice(0, 5).map((tech, i) => (
+                            <span
+                                key={i}
+                                className="text-[11px] bg-primary/80 text-text-muted px-2.5 py-1 rounded-lg border border-border/50 group-hover:border-accent/30 transition-colors"
+                            >
+                                {tech}
+                            </span>
                         ))}
+                        {project.techStack.length > 5 && (
+                            <span className="text-[10px] text-text-muted/70 px-2 py-1 self-center">
+                                +{project.techStack.length - 5} more
+                            </span>
+                        )}
                     </div>
                 </div>
-                <div className="flex justify-between items-center pt-4 border-t border-border mt-auto">
-                    <span className="text-sm text-white group-hover:text-accent font-medium transition-colors duration-300 flex items-center gap-2">
+
+                {/* Footer Actions */}
+                <div className="flex justify-between items-center pt-4 border-t border-border/50 mt-auto">
+                    <span className="text-xs sm:text-sm text-white group-hover:text-accent font-medium transition-colors duration-300 flex items-center gap-1.5">
                         View Details <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
                     </span>
-                    <div className="flex gap-3">
-                        <a href={project.githubLink} className="text-text-muted hover:text-white transition-colors duration-300" key="github" onClick={(e) => e.stopPropagation()} aria-label="GitHub">
-                            <FaGithub size={16} />
-                        </a>
-                        <a href={project.liveLink} className="text-text-muted hover:text-white transition-colors duration-300" key="live" onClick={(e) => e.stopPropagation()} aria-label="Live Demo">
-                            <FaExternalLinkAlt size={14} />
-                        </a>
+                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        {project.githubLink && project.githubLink !== '#' && (
+                            <a
+                                href={project.githubLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-lg bg-primary/70 text-text-muted hover:text-white hover:bg-primary border border-border/50 transition-all duration-300"
+                                aria-label="GitHub Repository"
+                                title="View GitHub Code"
+                            >
+                                <FaGithub size={15} />
+                            </a>
+                        )}
+                        {project.liveLink && project.liveLink !== '#' && (
+                            <a
+                                href={project.liveLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-lg bg-accent text-white hover:bg-accent-hover transition-all duration-300 shadow-sm shadow-accent/40"
+                                aria-label="Live Demo"
+                                title="Open Live Application"
+                            >
+                                <FaExternalLinkAlt size={12} />
+                            </a>
+                        )}
                     </div>
                 </div>
             </div>
@@ -59,27 +142,11 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
 
 const ProjectsSection = () => {
     const [projects, setProjects] = useState(projectsData);
-    const [loading, setLoading] = useState(true);
     const [selectedProject, setSelectedProject] = useState(null);
     const { lenis } = useScroll();
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const { data } = await axios.get('/api/projects');
-                if (data && data.length > 0) {
-                    setProjects(data);
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching projects, using local data:', error);
-                setProjects(projectsData);
-                setLoading(false);
-            }
-        };
-
-        fetchProjects();
-    }, []);
+    // Projects are statically curated and bundled with zero network latency
+    // Ready immediately on initial render without 500 console errors
 
     useEffect(() => {
         if (selectedProject) {
@@ -98,9 +165,25 @@ const ProjectsSection = () => {
         };
     }, [selectedProject, lenis]);
 
+    // Handle ESC key to close modal
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setSelectedProject(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     return (
         <section id="projects" className={`py-28 bg-primary relative transition-all duration-300 ${selectedProject ? 'z-50' : ''}`}>
+            {/* Ambient Background Glows — GPU accelerated */}
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-175 h-125 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] pointer-events-none" />
+            <div className="absolute bottom-10 right-10 w-100 h-100 bg-[radial-gradient(circle,rgba(99,102,241,0.04)_0%,transparent_70%)] pointer-events-none" />
+
             <div className="container mx-auto px-6 relative z-10">
+                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -108,20 +191,31 @@ const ProjectsSection = () => {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 tracking-tight">Selected Work</h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-lg font-light">
-                        Real-world applications built with modern technologies and a focus on user experience.
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold uppercase tracking-widest mb-4">
+                        <span>Selected Work</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 tracking-tight">
+                        Featured Engineering Projects
+                    </h2>
+                    <p className="text-text-muted max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed">
+                        Production-grade applications leveraging Generative AI, secure exam proctoring, enterprise architectures, and robust cloud services.
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* Projects Grid: All 3 Cards at the Exact Same Level and Height */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
                     {projects.map((project, index) => (
-                        <ProjectCard key={project._id} project={project} index={index} setSelectedProject={setSelectedProject} />
+                        <ProjectCard
+                            key={project._id || index}
+                            project={project}
+                            index={index}
+                            setSelectedProject={setSelectedProject}
+                        />
                     ))}
                 </div>
-
             </div>
 
+            {/* Rich Detailed Project Modal */}
             {typeof document !== 'undefined' && createPortal(
                 <AnimatePresence>
                     {selectedProject && (
@@ -129,75 +223,159 @@ const ProjectsSection = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                            transition={{ duration: 0.25 }}
+                            className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
                             onClick={() => setSelectedProject(null)}
                         >
                             <motion.div
-                                initial={{ scale: 0.95, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.95, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="bg-secondary w-full max-w-4xl rounded-xl overflow-hidden border border-border max-h-[90vh] overflow-y-auto"
+                                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className="bg-secondary w-full max-w-4xl rounded-2xl overflow-hidden border border-border/70 max-h-[92vh] flex flex-col shadow-2xl relative my-auto"
                                 onClick={(e) => e.stopPropagation()}
                                 data-lenis-prevent
                             >
-                                <div className="relative h-64 md:h-80">
+                                {/* Modal Header Banner */}
+                                <div className="relative h-64 sm:h-80 w-full shrink-0 overflow-hidden bg-primary">
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover object-center"
                                     />
+                                    <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary/60 to-black/30" />
+                                    
+                                    {/* Close Button */}
                                     <button
                                         onClick={() => setSelectedProject(null)}
-                                        className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-lg p-2 transition-colors duration-300"
+                                        className="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white rounded-full p-2.5 transition-all duration-300 border border-white/10 hover:border-white/30 z-20 cursor-pointer"
+                                        aria-label="Close Modal"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
+                                        <FaTimes size={16} />
                                     </button>
-                                </div>
-                                <div className="p-8 md:p-10">
-                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                                        <div>
-                                            <h3 className="text-2xl font-semibold text-white mb-2">{selectedProject.title}</h3>
-                                            <span className="text-accent font-medium text-sm">{selectedProject.category}</span>
+
+                                    {/* Overlay Title */}
+                                    <div className="absolute bottom-6 left-6 right-6 z-10">
+                                        <div className="flex flex-wrap gap-2 items-center mb-2">
+                                            <span className="px-3 py-1 bg-accent/90 text-white text-[10px] font-semibold tracking-widest uppercase rounded-full">
+                                                {selectedProject.category}
+                                            </span>
+                                            {selectedProject.badge && (
+                                                <span className="px-3 py-1 bg-primary/80 border border-border text-white text-[10px] font-semibold tracking-wider uppercase rounded-full">
+                                                    {selectedProject.badge}
+                                                </span>
+                                            )}
                                         </div>
-                                        <div className="flex gap-3">
-                                            <a
-                                                href={selectedProject.githubLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-primary border border-border rounded-lg hover:border-accent/50 transition-colors duration-300 text-white text-sm"
-                                            >
-                                                <FaGithub /> Code
-                                            </a>
+                                        <h3 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+                                            {selectedProject.title}
+                                        </h3>
+                                        {selectedProject.subtitle && (
+                                            <p className="text-accent-hover text-sm font-medium mt-1">
+                                                {selectedProject.subtitle}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Modal Body (Scrollable) */}
+                                <div className="p-6 sm:p-10 overflow-y-auto space-y-8">
+                                    {/* Action Links */}
+                                    <div className="flex flex-wrap gap-4 pb-6 border-b border-border/60">
+                                        {selectedProject.liveLink && selectedProject.liveLink !== '#' && (
                                             <a
                                                 href={selectedProject.liveLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white font-semibold rounded-lg hover:bg-accent-hover transition-colors duration-300 text-sm"
+                                                className="flex items-center gap-2 px-6 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent-hover transition-all duration-300 text-sm shadow-lg shadow-accent/25"
                                             >
-                                                <FaExternalLinkAlt /> Live Demo
+                                                <FaExternalLinkAlt /> Launch Live Application
                                             </a>
-                                        </div>
+                                        )}
+                                        {selectedProject.githubLink && selectedProject.githubLink !== '#' && (
+                                            <a
+                                                href={selectedProject.githubLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-2 px-6 py-3 bg-primary border border-border/70 rounded-xl hover:border-accent/50 hover:bg-primary/90 transition-all duration-300 text-white text-sm"
+                                            >
+                                                <FaGithub size={16} /> View GitHub Source
+                                            </a>
+                                        )}
                                     </div>
 
-                                    <div className="space-y-6">
-                                        <div>
-                                            <h4 className="text-lg font-semibold text-white mb-3">About the Project</h4>
-                                            <p className="text-text-muted leading-relaxed">{selectedProject.description}</p>
-                                        </div>
+                                    {/* Architectural Overview */}
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-white mb-3">
+                                            System Overview
+                                        </h4>
+                                        <p className="text-text-muted leading-relaxed text-sm sm:text-base font-light">
+                                            {selectedProject.description}
+                                        </p>
+                                    </div>
 
+                                    {/* Key Performance / Architecture Metrics */}
+                                    {selectedProject.metrics && selectedProject.metrics.length > 0 && (
                                         <div>
-                                            <h4 className="text-lg font-semibold text-white mb-3">Technologies Used</h4>
-                                            <div className="flex flex-wrap gap-2">
-                                                {selectedProject.techStack.map((tech, i) => (
-                                                    <span key={i} className="px-4 py-2 bg-primary/60 text-accent text-sm rounded-lg border border-accent/20">
-                                                        {tech}
-                                                    </span>
+                                            <h4 className="text-sm font-semibold text-accent uppercase tracking-wider mb-4">
+                                                Key Architecture & Performance Highlights
+                                            </h4>
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                                {selectedProject.metrics.map((metric, idx) => (
+                                                    <div
+                                                        key={idx}
+                                                        className="p-4 bg-primary/70 rounded-xl border border-border/50 text-center"
+                                                    >
+                                                        <div className="text-sm sm:text-base font-bold text-white mb-1">
+                                                            {metric.value}
+                                                        </div>
+                                                        <div className="text-[11px] text-text-muted uppercase tracking-wider">
+                                                            {metric.label}
+                                                        </div>
+                                                    </div>
                                                 ))}
                                             </div>
+                                        </div>
+                                    )}
+
+                                    {/* Key Features Breakdown */}
+                                    {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-accent uppercase tracking-wider mb-4">
+                                                Core Capabilities & Engineering Highlights
+                                            </h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {selectedProject.keyFeatures.map((feat, fIdx) => (
+                                                    <div
+                                                        key={fIdx}
+                                                        className="p-4 bg-primary/50 rounded-xl border border-border/40 hover:border-accent/30 transition-all"
+                                                    >
+                                                        <div className="font-semibold text-white text-sm mb-1.5 flex items-center gap-2">
+                                                            <FaCheckCircle className="text-accent text-xs" />
+                                                            {feat.title}
+                                                        </div>
+                                                        <p className="text-text-muted text-xs leading-relaxed font-light">
+                                                            {feat.desc}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Technologies Used */}
+                                    <div>
+                                        <h4 className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">
+                                            Technology Stack
+                                        </h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedProject.techStack.map((tech, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="px-4 py-2 bg-primary/70 text-text-main text-xs sm:text-sm rounded-lg border border-accent/20 font-medium"
+                                                >
+                                                    {tech}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +385,7 @@ const ProjectsSection = () => {
                 </AnimatePresence>,
                 document.body
             )}
-        </section >
+        </section>
     );
 };
 

@@ -19,26 +19,65 @@ const ContactSection = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('sending');
+
+        const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+        const apiEndpoint = API_BASE ? `${API_BASE}/api/inquiries` : '/api/inquiries';
+
+        // Tier 1: Attempt backend API (/api/inquiries or configured VITE_API_URL)
+        let backendSuccess = false;
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            };
-            await axios.post('/api/inquiries', formData, config);
+            const res = await axios.post(apiEndpoint, formData, {
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 7000
+            });
+            if (res.status >= 200 && res.status < 300) {
+                backendSuccess = true;
+            }
+        } catch (apiError) {
+            console.warn('Backend API submission skipped or unavailable; attempting direct delivery fallback...', apiError?.message);
+        }
+
+        if (backendSuccess) {
             setStatus('success');
             setFormData({ name: '', email: '', subject: '', message: '' });
-        } catch (error) {
-            console.error('Inquiry error:', error);
-            setStatus('error');
+            return;
         }
+
+        // Tier 2: Automatic failover to direct email delivery (FormSubmit -> andreidilag12@gmail.com)
+        try {
+            const fallbackRes = await fetch('https://formsubmit.co/ajax/andreidilag12@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    _subject: `New Portfolio Message: ${formData.subject || 'No Subject'} from ${formData.name}`,
+                    message: formData.message
+                })
+            });
+
+            const data = await fallbackRes.json();
+            if (fallbackRes.ok && (data.success === true || data.success === 'true' || data.message)) {
+                setStatus('success');
+                setFormData({ name: '', email: '', subject: '', message: '' });
+                return;
+            }
+        } catch (fallbackError) {
+            console.error('Direct fallback delivery error:', fallbackError);
+        }
+
+        // Tier 3: If network error or adblocker prevented automated delivery
+        setStatus('error');
     };
 
     return (
         <section id="contact" className="py-28 bg-secondary relative overflow-hidden">
-            {/* Background Decorations */}
-            <div className="absolute top-0 left-0 w-64 h-64 bg-accent/4 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/50 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2"></div>
+            {/* Background Decorations — GPU accelerated */}
+            <div className="absolute top-0 left-0 w-64 h-64 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle,rgba(99,102,241,0.04)_0%,transparent_70%)] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div
@@ -121,7 +160,7 @@ const ContactSection = () => {
                         viewport={{ once: true }}
                         className="lg:col-span-3"
                     >
-                        <div className="bg-primary p-8 md:p-10 rounded-xl border border-border relative min-h-[500px] flex flex-col justify-center">
+                        <div className="bg-primary p-8 md:p-10 rounded-xl border border-border relative min-h-125 flex flex-col justify-center">
                             {status === 'success' ? (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -227,9 +266,17 @@ const ContactSection = () => {
                                     </button>
 
                                     {status === 'error' && (
-                                        <p className="mt-4 text-red-400 text-center text-sm font-medium">
-                                            Something went wrong. Please try again.
-                                        </p>
+                                        <div className="mt-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-center space-y-2">
+                                            <p className="text-red-300 text-sm font-medium">
+                                                Could not send message automatically over this connection.
+                                            </p>
+                                            <a
+                                                href={`mailto:andreidilag12@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Andrei,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`}
+                                                className="inline-flex items-center gap-2 text-accent hover:underline text-sm font-semibold"
+                                            >
+                                                <FaEnvelope size={14} /> Click to send directly via your email app
+                                            </a>
+                                        </div>
                                     )}
                                 </form>
                             )}

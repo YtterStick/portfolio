@@ -1,6 +1,8 @@
-# Full Stack Portfolio Website
+# Andrei Dev Portfolio
 
-A modern, futuristic portfolio website built with the MERN stack (MongoDB, Express, React, Node.js).
+Live Deployment: [portfolio-self-tau-apg5fm8dxi.vercel.app](https://portfolio-self-tau-apg5fm8dxi.vercel.app/)
+
+A modern, high-performance portfolio website built with React, Vite, Tailwind CSS, Framer Motion, and Node.js. Highlighting flagship engineering projects like **Evalo** (AI Assessment & Anti-Cheat Proctoring Portal with OpenCV OMR), **StarWashPH**, and academic educator leadership at STI College Fairview.
 
 ## Features
 -   **Futuristic UI**: Dark theme, glassmorphism, and Framer Motion animations.

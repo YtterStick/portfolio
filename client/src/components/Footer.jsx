@@ -6,13 +6,25 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     {/* Brand */}
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-semibold text-white tracking-tight">
-                            Andrei<span className="text-accent">.</span>
+                    <div className="space-y-3">
+                        <h3 className="text-xl font-semibold text-white tracking-tight flex items-center gap-1.5">
+                            <span>Andrei</span>
+                            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-accent/15 text-accent border border-accent/30">
+                                dev
+                            </span>
+                            <span className="text-accent">.</span>
                         </h3>
                         <p className="text-text-muted text-sm font-light max-w-xs leading-relaxed">
-                            Full-stack developer building modern web and mobile applications.
+                            Full-stack developer & educator — dedicated to building scalable web applications and software solutions.
                         </p>
+                        <a
+                            href="https://portfolio-self-tau-apg5fm8dxi.vercel.app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs text-accent hover:text-accent-hover font-mono transition-colors"
+                        >
+                            portfolio-self-tau-apg5fm8dxi.vercel.app
+                        </a>
                     </div>
 
                     {/* Quick Links */}

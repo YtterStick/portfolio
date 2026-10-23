@@ -35,9 +35,10 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV !== 'production') {
+// Listen in standalone mode (Render, Railway, Local) while exporting app for Vercel serverless
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
-        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+        console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     });
 }
 
