@@ -13,7 +13,7 @@ const projects = [
     {
         title: 'Evalo',
         category: 'AI EdTech & Proctoring System',
-        description: 'An advanced, full-stack classroom assessment and student review portal equipped with multi-tiered Generative AI (student reviewers with pointers, short quizzes, flashcards; teacher question generation) and an anti-cheat proctoring engine (auto fullscreen, Alt+Tab/Esc/Alt+F4 prevention, 3-strike auto-submit, question randomization). Integrates OpenCV Optical Mark Recognition (OMR) for automated paper bubble sheet scanning and 6-digit Student ID evaluation.',
+        description: 'An advanced, full-stack classroom assessment and student review portal engineered with a strict anti-cheating proctoring engine and multi-tiered Generative AI. Its primary purpose is securing digital examinations by enforcing automatic full-screen mode that prevents Alt+Tab, Esc, Alt+F4, and window switching—automatically submitting the test after 3 warning strikes. Built for maximum flexibility, Evalo empowers educators to create comprehensive exams either with AI assistance or without AI (custom manual authoring), while giving students AI-generated study pointers, flashcard reviewers, practice quizzes, and automated computer vision bubble sheet grading.',
         techStack: ['Next.js 14', 'Python FastAPI', 'OpenCV OMR', 'PostgreSQL', 'GenAI / LLMs', 'Tailwind CSS', 'Google Drive API'],
         image: '/evalo-showcase.jpg',
         githubLink: 'https://github.com/YtterStick/Long-Quiz',

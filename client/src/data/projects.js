@@ -5,22 +5,17 @@ export const projectsData = [
         subtitle: 'Assessment & Student Review Portal with AI & Anti-Cheat Proctoring',
         category: 'AI EdTech & Proctoring System',
         featured: true,
-        badge: 'Featured Flagship',
-        description: 'An advanced, full-stack classroom assessment and student review portal equipped with multi-tiered Generative AI and a robust anti-cheat proctoring engine. Built for both students and educators, Evalo automates the entire examination and revision lifecycle—from AI-generated study pointers, flashcard reviewers, and practice quizzes to automated paper sheet grading using computer vision.',
+        description: 'An advanced, full-stack classroom assessment and student review portal engineered with a strict anti-cheating proctoring engine and multi-tiered Generative AI. Its primary purpose is securing digital examinations by enforcing automatic full-screen mode that prevents Alt+Tab, Esc, Alt+F4, and window switching—automatically submitting the test after 3 warning strikes. Built for maximum flexibility, Evalo empowers educators to create comprehensive exams either with AI assistance or without AI (custom manual authoring), while giving students AI-generated study pointers, flashcard reviewers, practice quizzes, and automated computer vision bubble sheet grading.',
         metrics: [
             { label: 'Anti-Cheat Enforcement', value: '3-Strike Auto-Submit' },
+            { label: 'Exam Creation', value: 'With or Without AI' },
             { label: 'Student AI Reviewer', value: 'Pointers & Flashcards' },
-            { label: 'Evaluation Engine', value: 'OpenCV OMR & Digital' },
-            { label: 'Cloud Architecture', value: 'FastAPI + Next.js 14' }
+            { label: 'Evaluation Engine', value: 'OpenCV OMR & Digital' }
         ],
         keyFeatures: [
             {
-                title: 'AI Student Reviewer Suite',
-                desc: 'Generates structured study guides with key pointers, adaptive short practice quizzes, and interactive flashcard reviewers to accelerate knowledge retention.'
-            },
-            {
-                title: 'AI Teacher Assessment Creator',
-                desc: 'Empowers educators to automatically draft subject-specific exam questions, customizable difficulty tiers, and verified digital answer keys in seconds.'
+                title: 'Exam Creation (With or Without AI)',
+                desc: 'Gives educators full flexibility to construct examinations either automatically using Generative AI (subject-specific questions, difficulty tiers, and verified answer keys) or without AI through custom manual authoring.'
             },
             {
                 title: 'High-Security Anti-Cheat Proctoring',
