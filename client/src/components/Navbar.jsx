@@ -22,7 +22,30 @@ const Navbar = () => {
     }, []);
 
     useEffect(() => {
-        const sectionIds = ['hero', 'about', 'projects', 'contact'];
+        const sectionToNav = {
+            hero: 'hero',
+            about: 'about',
+            services: 'about',
+            skills: 'about',
+            projects: 'projects',
+            contact: 'contact'
+        };
+        const sectionIds = Object.keys(sectionToNav);
+
+        const updateFromScroll = () => {
+            const scrollMarker = window.innerHeight * 0.35;
+            let current = 'hero';
+            for (const id of sectionIds) {
+                const el = document.getElementById(id);
+                if (!el) continue;
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= scrollMarker && rect.bottom > 80) {
+                    current = sectionToNav[id];
+                }
+            }
+            setActiveSection(current);
+        };
+
         const elements = sectionIds
             .map((id) => document.getElementById(id))
             .filter(Boolean);
@@ -30,23 +53,23 @@ const Navbar = () => {
         if (elements.length === 0) return;
 
         const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries
-                    .filter((entry) => entry.isIntersecting)
-                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-                if (visible.length > 0) {
-                    setActiveSection(visible[0].target.id);
-                }
+            () => {
+                updateFromScroll();
             },
             {
-                rootMargin: '-25% 0px -55% 0px',
-                threshold: [0.1, 0.25, 0.5]
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
             }
         );
 
         elements.forEach((el) => observer.observe(el));
-        return () => observer.disconnect();
+        window.addEventListener('scroll', updateFromScroll, { passive: true });
+        updateFromScroll();
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('scroll', updateFromScroll);
+        };
     }, []);
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -55,6 +78,8 @@ const Navbar = () => {
         // Only prevent default if it's an internal link
         if (href.startsWith('#')) {
             e.preventDefault();
+            const targetId = href.slice(1);
+            setActiveSection(targetId);
             const element = document.querySelector(href);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });

@@ -138,7 +138,7 @@ const AboutSection = () => {
         },
         {
             title: 'Enterprise & Internal Tools',
-            stack: 'Payroll • Logistics • Admin Dashboards • SQL Optimization',
+            stack: 'Payroll • Logistics • Dashboards • SQL',
             outcome: 'Replace error-prone spreadsheets with reliable internal systems, real-time operations dashboards, and high-throughput database architectures.',
             deliverables: ['Payroll & HR Systems', 'Multi-Site Logistics Tracking', 'Query & Schema Optimization']
         }
@@ -246,7 +246,7 @@ const AboutSection = () => {
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-4">
                             <span>About Me</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 sm:mb-8 tracking-tight">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 sm:mb-8 tracking-tight text-balance">
                             Engineering Systems Built for Business Impact
                         </h2>
                         <div className="text-text-muted text-base sm:text-lg leading-relaxed space-y-4 sm:space-y-5 font-light">
@@ -329,7 +329,7 @@ const AboutSection = () => {
                 </div>
 
                 {/* Services / What I Can Build Section */}
-                <div className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
+                <div id="services" className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -340,13 +340,13 @@ const AboutSection = () => {
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
                             <span>Services</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4">What I Can Build for You</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4 text-balance">What I Can Build for You</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
                             Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
                         </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
                         {services.map((service, sIdx) => (
                             <motion.div
                                 key={sIdx}
@@ -354,20 +354,22 @@ const AboutSection = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.45, delay: sIdx * 0.08 }}
                                 viewport={{ once: true }}
-                                className="group bg-primary/40 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                                className="group bg-primary/40 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
                             >
-                                <div>
-                                    <span className="inline-block text-[11px] font-mono text-accent-hover bg-accent/10 border border-accent/25 px-2.5 py-1 rounded-md mb-4">
-                                        {service.stack}
-                                    </span>
-                                    <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-accent-hover transition-colors">
+                                <div className="flex-1 flex flex-col">
+                                    <div className="min-h-[34px] mb-4 flex items-start">
+                                        <span className="inline-block text-[11px] font-mono text-accent-hover bg-accent/10 border border-accent/25 px-2.5 py-1 rounded-md">
+                                            {service.stack}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-accent-hover transition-colors text-balance">
                                         {service.title}
                                     </h3>
                                     <p className="text-text-muted text-sm leading-relaxed font-light mb-5">
                                         {service.outcome}
                                     </p>
                                 </div>
-                                <ul className="space-y-2 pt-4 border-t border-border/50">
+                                <ul className="space-y-2 pt-4 border-t border-border/50 mt-auto">
                                     {service.deliverables.map((item, dIdx) => (
                                         <li key={dIdx} className="text-xs text-text-main/90 flex items-center gap-2">
                                             <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
@@ -381,7 +383,7 @@ const AboutSection = () => {
                 </div>
 
                 {/* Skills Section */}
-                <div className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
+                <div id="skills" className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -389,35 +391,35 @@ const AboutSection = () => {
                         viewport={{ once: true }}
                         className="text-center mb-10 sm:mb-12"
                     >
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4">Core Competencies & Skills</h2>
-                        <p className="text-text-muted max-w-xl mx-auto text-xs sm:text-base font-light px-2">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4 text-balance">Core Competencies &amp; Skills</h2>
+                        <p className="text-text-muted max-w-xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
                             Synthesizing strong academic fundamentals with modern enterprise and AI tooling.
                         </p>
                         
                         {/* Tab Buttons: Responsive Segmented Control */}
-                        <div className="flex justify-center mt-6 sm:mt-8">
-                            <div className="inline-flex p-1 bg-primary/70 border border-border/60 rounded-xl sm:rounded-full w-full sm:w-auto max-w-md">
+                        <div className="flex justify-center mt-6 sm:mt-8 px-2">
+                            <div className="inline-flex flex-wrap sm:flex-nowrap w-fit max-w-full items-center justify-center gap-1 p-1 bg-primary/80 border border-border/70 rounded-2xl sm:rounded-full">
                                 <button 
                                     onClick={() => setActiveTab('technical')}
-                                    className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-300 text-center ${
+                                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-200 text-center whitespace-nowrap cursor-pointer ${
                                         activeTab === 'technical' 
-                                            ? 'bg-accent text-white shadow-lg shadow-accent/30' 
-                                            : 'text-text-muted hover:text-white'
+                                            ? 'bg-accent/90 text-white border border-accent-hover/40' 
+                                            : 'text-zinc-300 hover:text-white border border-transparent'
                                     }`}
                                 >
                                     <span className="sm:hidden">Technical Skills</span>
-                                    <span className="hidden sm:inline">Technical & Architectural Skills</span>
+                                    <span className="hidden sm:inline">Technical &amp; Architectural Skills</span>
                                 </button>
                                 <button 
                                     onClick={() => setActiveTab('programming')}
-                                    className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-300 text-center ${
+                                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-200 text-center whitespace-nowrap cursor-pointer ${
                                         activeTab === 'programming' 
-                                            ? 'bg-accent text-white shadow-lg shadow-accent/30' 
-                                            : 'text-text-muted hover:text-white'
+                                            ? 'bg-accent/90 text-white border border-accent-hover/40' 
+                                            : 'text-zinc-300 hover:text-white border border-transparent'
                                     }`}
                                 >
-                                    <span className="sm:hidden">Languages & Stacks</span>
-                                    <span className="hidden sm:inline">Programming Languages & Frameworks</span>
+                                    <span className="sm:hidden">Languages &amp; Stacks</span>
+                                    <span className="hidden sm:inline">Programming Languages &amp; Frameworks</span>
                                 </button>
                             </div>
                         </div>
@@ -462,8 +464,8 @@ const AboutSection = () => {
                         viewport={{ once: true }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-4xl font-serif font-bold text-white mb-4">Certifications & Accolades</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto font-light">
+                        <h2 className="text-4xl font-serif font-bold text-white mb-4 text-balance">Certifications &amp; Accolades</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto font-light text-balance">
                             Recognition for competitive hackathon triumphs and enterprise certifications.
                         </p>
                     </motion.div>
@@ -516,8 +518,8 @@ const AboutSection = () => {
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
                             <span>Achievements Showcase</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Spotlight Gallery</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 text-balance">Spotlight Gallery</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
                             Moments captured from championship hackathons and academic recognitions.
                         </p>
                     </motion.div>

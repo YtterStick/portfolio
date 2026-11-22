@@ -142,8 +142,8 @@ const ContactSection = () => {
                     viewport={{ once: true }}
                     className="text-center mb-10 sm:mb-16"
                 >
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6">Get In Touch</h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-lg font-light px-2">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6 text-balance">Get In Touch</h2>
+                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-lg font-light px-2 text-balance">
                         Whether you need a full-stack developer for your team or a partner for your next project, I'd like to hear from you.
                     </p>
                 </motion.div>

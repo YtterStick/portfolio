@@ -196,10 +196,10 @@ const ProjectsSection = () => {
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3 sm:mb-4">
                         <span>Selected Work</span>
                     </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6 tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6 tracking-tight text-balance">
                         Featured Engineering Projects
                     </h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-light leading-relaxed px-2">
+                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-light leading-relaxed px-2 text-balance">
                         Production-grade applications leveraging Generative AI, secure exam proctoring, enterprise architectures, and robust cloud services.
                     </p>
                 </motion.div>
