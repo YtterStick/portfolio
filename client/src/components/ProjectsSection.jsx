@@ -6,6 +6,134 @@ import { useScroll } from '../context/ScrollContext';
 import axios from 'axios';
 import { projectsData } from '../data/projects';
 
+const getDomainLabel = (liveLink, title) => {
+    if (!liveLink || liveLink === '#') return `${title.toLowerCase().replace(/\s+/g, '-')}.app`;
+    try {
+        const host = new URL(liveLink).hostname.replace(/^www\./, '');
+        if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+            return 'hr-tna-payroll.internal';
+        }
+        return host;
+    } catch {
+        return `${title.toLowerCase().replace(/\s+/g, '-')}.app`;
+    }
+};
+
+const BrowserTopBar = ({ domain }) => (
+    <div className="flex items-center justify-between px-3.5 py-2 bg-[#0d0d14] border-b border-border/60 shrink-0">
+        <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-rose-500/70" />
+            <span className="w-2 h-2 rounded-full bg-amber-400/70" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400/70" />
+        </div>
+        <span className="text-[10px] font-mono text-text-muted/80 bg-primary/80 px-2.5 py-0.5 rounded-md border border-border/50 truncate max-w-[70%]">
+            {domain}
+        </span>
+        <span className="w-6" aria-hidden="true" />
+    </div>
+);
+
+const FlagshipProjectCard = ({ project, setSelectedProject }) => (
+    <motion.div
+        layoutId={`project-${project._id}`}
+        whileHover={{ y: -4, transition: { duration: 0.25 } }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, margin: "-40px" }}
+        className="mb-6 sm:mb-8 rounded-2xl overflow-hidden border border-accent/35 hover:border-accent/70 hover:shadow-[0_0_40px_rgba(99,102,241,0.18)] transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 group cursor-pointer bg-secondary/85 backdrop-blur-md"
+        onClick={() => setSelectedProject(project)}
+    >
+        {/* Left: Browser-Framed 16:9 Screenshot */}
+        <div className="lg:col-span-7 flex flex-col bg-primary border-b lg:border-b-0 lg:border-r border-border/60">
+            <BrowserTopBar domain={getDomainLabel(project.liveLink, project.title)} />
+            <div className="relative overflow-hidden aspect-video w-full bg-primary">
+                <img
+                    src={project.image}
+                    alt={project.title}
+                    className="aspect-video w-full object-cover object-top transition-transform duration-300 ease-out group-hover:scale-105"
+                    loading="lazy"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-secondary/90 via-secondary/40 to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-4 z-10 flex items-center gap-2">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-primary/90 border border-accent/40 text-accent-hover text-[10px] font-bold tracking-[0.16em] uppercase backdrop-blur-sm">
+                        {project.category}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {/* Right: Executive Summary */}
+        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300 mb-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Flagship Case Study</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 mb-3">
+                    {project.title}
+                </h3>
+                <p className="text-text-muted text-sm sm:text-base leading-relaxed font-light mb-5 line-clamp-3">
+                    {project.valueProp || project.description}
+                </p>
+
+                {project.highlight && (
+                    <div className="bg-primary/70 border border-border/60 rounded-xl px-4 py-2.5 mb-5 flex items-center gap-2.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                        <span className="text-xs sm:text-sm font-semibold text-text-main">
+                            {project.highlight}
+                        </span>
+                    </div>
+                )}
+
+                <div className="flex flex-wrap items-center gap-1.5 mb-6">
+                    {project.techStack.slice(0, 4).map((tech, i) => (
+                        <span
+                            key={i}
+                            className="text-[11px] bg-primary/80 text-zinc-300 px-2.5 py-1 rounded-lg border border-border/60 group-hover:border-accent/35 transition-colors"
+                        >
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-4 border-t border-border/50 mt-auto">
+                <span className="text-sm text-white group-hover:text-accent font-semibold transition-colors duration-300 flex items-center gap-1.5">
+                    Read Case Study <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </span>
+                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    {project.githubLink && project.githubLink !== '#' && (
+                        <a
+                            href={project.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2.5 rounded-lg bg-primary/70 text-text-muted hover:text-white hover:bg-primary border border-border/50 transition-all duration-300"
+                            aria-label="GitHub Repository"
+                            title="View GitHub Code"
+                        >
+                            <FaGithub size={15} />
+                        </a>
+                    )}
+                    {project.liveLink && project.liveLink !== '#' && (
+                        <a
+                            href={project.liveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3.5 py-2 rounded-lg bg-accent text-white hover:bg-accent-hover transition-all duration-300 shadow-sm shadow-accent/40 text-xs font-semibold flex items-center gap-1.5"
+                            aria-label="Live Demo"
+                            title="Open Live Application"
+                        >
+                            <span>Live</span>
+                            <FaExternalLinkAlt size={11} />
+                        </a>
+                    )}
+                </div>
+            </div>
+        </div>
+    </motion.div>
+);
+
 const ProjectCard = ({ project, index, setSelectedProject }) => {
     return (
         <motion.div
@@ -13,12 +141,13 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
             whileHover={{ y: -6, transition: { duration: 0.25 } }}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
             viewport={{ once: true, margin: "-40px" }}
             className="rounded-2xl overflow-hidden border border-border/70 hover:border-accent/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.18)] transition-all duration-300 flex flex-col group cursor-pointer bg-secondary/80 backdrop-blur-md h-full"
             onClick={() => setSelectedProject(project)}
         >
-            {/* 16:9 Project Thumbnail with Single Category Badge */}
+            {/* Browser-Framed 16:9 Project Thumbnail with Single Category Badge */}
+            <BrowserTopBar domain={getDomainLabel(project.liveLink, project.title)} />
             <div className="relative overflow-hidden aspect-video w-full bg-primary shrink-0">
                 <img
                     src={project.image}
@@ -168,9 +297,17 @@ const ProjectsSection = () => {
                     </p>
                 </motion.div>
 
-                {/* Projects Grid: All 3 Cards at the Exact Same Level and Height */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-                    {projects.map((project, index) => (
+                {/* Flagship Spotlight */}
+                {projects[0] && (
+                    <FlagshipProjectCard
+                        project={projects[0]}
+                        setSelectedProject={setSelectedProject}
+                    />
+                )}
+
+                {/* Balanced 2x2 Grid for Remaining Projects */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+                    {projects.slice(1).map((project, index) => (
                         <ProjectCard
                             key={project._id || index}
                             project={project}
