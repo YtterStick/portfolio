@@ -18,7 +18,7 @@ const AdminLogin = () => {
             await login(email, password);
             navigate('/admin/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || '[ERROR] ACCESS_DENIED: INVALID_CREDENTIALS');
+            setError(err.response?.data?.message || 'ERROR: ACCESS_DENIED — INVALID_CREDENTIALS');
         } finally {
             setIsLoading(false);
         }
@@ -26,10 +26,10 @@ const AdminLogin = () => {
 
     return (
         <div className="min-h-screen bg-primary flex items-center justify-center p-6 font-mono text-xs">
-            <div className="w-full max-w-md border-2 border-accent bg-secondary">
-                <div className="bg-primary border-b border-accent px-4 py-2.5 flex justify-between items-center">
-                    <span className="text-accent font-bold">╔══[ ROOT_AUTH // /ADMIN/LOGIN ]</span>
-                    <span className="text-text-muted">[SSH_TTY]</span>
+            <div className="w-full max-w-md term-card">
+                <div className="bg-primary border-b border-border px-5 py-3 flex justify-between items-center">
+                    <span className="text-text-main font-bold">ROOT_AUTH // /ADMIN/LOGIN</span>
+                    <span className="text-accent text-[10px]">● SSH_TTY</span>
                 </div>
 
                 <div className="p-6 sm:p-8 space-y-6">
@@ -50,13 +50,13 @@ const AdminLogin = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-accent font-bold mb-1.5">
+                            <label className="block text-text-main font-bold mb-1.5">
                                 &gt; ADMIN_EMAIL:_
                             </label>
                             <input
                                 type="email"
                                 required
-                                className="w-full bg-primary border border-border px-3 py-2.5 text-text-main outline-none focus:border-accent"
+                                className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main outline-none focus:border-accent"
                                 placeholder="admin@andrei.dev"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -64,13 +64,13 @@ const AdminLogin = () => {
                         </div>
 
                         <div>
-                            <label className="block text-accent font-bold mb-1.5">
+                            <label className="block text-text-main font-bold mb-1.5">
                                 &gt; SECRET_KEY:_
                             </label>
                             <input
                                 type="password"
                                 required
-                                className="w-full bg-primary border border-border px-3 py-2.5 text-text-main outline-none focus:border-accent"
+                                className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main outline-none focus:border-accent"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -80,7 +80,7 @@ const AdminLogin = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-accent text-primary font-bold py-3 border border-accent hover:bg-primary hover:text-accent transition-none cursor-pointer disabled:opacity-50"
+                            className="w-full bg-primary text-accent font-bold py-3 border border-accent hover:bg-accent hover:text-primary transition-colors duration-150 cursor-pointer disabled:opacity-50"
                         >
                             {isLoading ? '[ AUTHENTICATING... ]' : '[ AUTHENTICATE --LOGIN -> ]'}
                         </button>
@@ -90,7 +90,7 @@ const AdminLogin = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/')}
-                            className="px-3 py-1.5 bg-primary border border-border text-text-muted hover:bg-accent hover:text-primary hover:border-accent font-bold cursor-pointer transition-none"
+                            className="px-3.5 py-1.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent font-bold cursor-pointer transition-colors duration-150"
                         >
                             [ &lt;- RETURN_TO_PORTFOLIO ]
                         </button>

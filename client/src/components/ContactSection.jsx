@@ -25,7 +25,7 @@ const ContactSection = () => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            showToast('error', '[ERROR] CLIPBOARD_ACCESS_DENIED: COPY andreidilag12@gmail.com MANUALLY');
+            showToast('error', 'ERROR: CLIPBOARD_ACCESS_DENIED — COPY andreidilag12@gmail.com MANUALLY');
         }
     };
 
@@ -43,11 +43,11 @@ const ContactSection = () => {
         };
 
         if (!trimmed.name || !trimmed.email || !trimmed.subject || !trimmed.message) {
-            showToast('error', '[ERROR] MISSING_ARGS: ALL_FIELDS_REQUIRED');
+            showToast('error', 'ERROR: MISSING_ARGS — ALL_FIELDS_REQUIRED');
             return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) {
-            showToast('error', '[ERROR] SYNTAX_ERR: INVALID_EMAIL_FORMAT');
+            showToast('error', 'ERROR: SYNTAX_ERR — INVALID_EMAIL_FORMAT');
             return;
         }
 
@@ -67,7 +67,7 @@ const ContactSection = () => {
                 if (res.ok) {
                     setStatus('success');
                     setFormData({ name: '', email: '', subject: '', message: '' });
-                    showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
+                    showToast('success', 'SUCCESS: MESSAGE TRANSMITTED // ACK_200');
                     return;
                 }
             } catch (err) {
@@ -84,7 +84,7 @@ const ContactSection = () => {
                 if (res.status >= 200 && res.status < 300) {
                     setStatus('success');
                     setFormData({ name: '', email: '', subject: '', message: '' });
-                    showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
+                    showToast('success', 'SUCCESS: MESSAGE TRANSMITTED // ACK_200');
                     return;
                 }
             } catch (apiError) {
@@ -111,7 +111,7 @@ const ContactSection = () => {
             if (fallbackRes.ok && (data.success === true || data.success === 'true' || data.message)) {
                 setStatus('success');
                 setFormData({ name: '', email: '', subject: '', message: '' });
-                showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
+                showToast('success', 'SUCCESS: MESSAGE TRANSMITTED // ACK_200');
                 return;
             }
         } catch (fallbackError) {
@@ -119,63 +119,64 @@ const ContactSection = () => {
         }
 
         setStatus('error');
-        showToast('error', '[WARN] AUTO_RELAY_BLOCKED // USE_DIRECT_MAILTO_BELOW');
+        showToast('error', 'WARN: AUTO_RELAY_BLOCKED // USE_DIRECT_MAILTO_BELOW');
     };
 
     return (
-        <section id="contact" className="py-16 sm:py-24 bg-primary font-mono">
+        <section id="contact" className="py-24 sm:py-32 bg-primary font-mono">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-10 border border-border bg-secondary p-4 sm:p-6">
-                    <div className="text-xs text-accent font-bold mb-1">
+                <div className="mb-12 term-card p-6 sm:p-8">
+                    <div className="text-xs text-accent font-bold mb-1.5">
                         root@andrei-dev:/dev/tcp/contact# ./open_comms_channel.sh
                     </div>
                     <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase text-balance">
                         05 // INITIATE_TRANSMISSION (CONTACT)
                     </h2>
-                    <p className="text-text-muted text-xs sm:text-sm mt-1 text-balance">
+                    <p className="text-text-muted text-xs sm:text-sm mt-1.5 text-balance">
                         Available for full-time engineering roles, contract architecture, and custom software builds.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Left: Terminal Connection Coordinates */}
-                    <div className="lg:col-span-5 border border-border bg-secondary p-5 sm:p-6 flex flex-col justify-between">
+                    <div className="lg:col-span-5 term-card p-6 sm:p-7 flex flex-col justify-between">
                         <div className="space-y-5">
-                            <div className="text-xs text-accent font-bold border-b border-border pb-2">
-                                ╔══[ CONNECTION_ENDPOINTS ]
+                            <div className="text-xs text-text-main font-bold border-b border-border pb-2.5 flex items-center justify-between">
+                                <span>CONNECTION_ENDPOINTS</span>
+                                <span className="text-accent text-[10px]">● READY</span>
                             </div>
 
                             <div className="space-y-4 text-xs">
-                                <div className="p-3 bg-primary border border-border">
+                                <div className="p-3.5 bg-primary border border-border">
                                     <div className="text-[10px] text-text-muted">VOICE_TEL_ENDPOINT:</div>
                                     <a
                                         href="tel:+639150475513"
-                                        className="text-sm font-bold text-accent hover:bg-accent hover:text-primary px-1 inline-block mt-1 transition-none"
+                                        className="text-sm font-bold text-text-main hover:text-accent inline-block mt-1 transition-colors duration-150"
                                     >
                                         +63 915 047 5513
                                     </a>
                                 </div>
 
-                                <div className="p-3 bg-primary border border-border">
+                                <div className="p-3.5 bg-primary border border-border">
                                     <div className="text-[10px] text-text-muted">SMTP_MAIL_ENDPOINT:</div>
                                     <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
                                         <a
                                             href="mailto:andreidilag12@gmail.com"
-                                            className="text-xs sm:text-sm font-bold text-text-main hover:bg-accent hover:text-primary px-1 transition-none break-all"
+                                            className="text-xs sm:text-sm font-bold text-text-main hover:text-accent transition-colors duration-150 break-all"
                                         >
                                             andreidilag12@gmail.com
                                         </a>
                                         <button
                                             type="button"
                                             onClick={handleCopyEmail}
-                                            className="px-2 py-1 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-[10px] font-bold cursor-pointer transition-none"
+                                            className="px-2.5 py-1 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-[10px] font-bold cursor-pointer transition-colors duration-150"
                                         >
                                             {copied ? '[ COPIED! ]' : '[ COPY ]'}
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="p-3 bg-primary border border-border">
+                                <div className="p-3.5 bg-primary border border-border">
                                     <div className="text-[10px] text-text-muted">PHYSICAL_NODE:</div>
                                     <div className="text-sm font-bold text-text-main mt-1">
                                         Quezon City, Metro Manila, PH
@@ -184,8 +185,8 @@ const ContactSection = () => {
                             </div>
                         </div>
 
-                        <div className="mt-6 pt-4 border-t border-border text-xs">
-                            <div className="text-accent font-bold mb-1">[STATUS: READY_FOR_DISPATCH]</div>
+                        <div className="mt-7 pt-4 border-t border-border text-xs">
+                            <div className="text-accent font-bold mb-1">STATUS: READY_FOR_DISPATCH</div>
                             <p className="text-text-muted leading-relaxed">
                                 Response SLA: &lt; 24 hours for project inquiries, technical interviews, and architecture consultations.
                             </p>
@@ -193,16 +194,16 @@ const ContactSection = () => {
                     </div>
 
                     {/* Right: Command-Line Contact Form */}
-                    <div className="lg:col-span-7 border border-accent bg-secondary p-5 sm:p-7">
-                        <div className="text-xs text-accent font-bold border-b border-border pb-2 mb-6 flex justify-between">
-                            <span>╔══[ /BIN/SEND_PACKET --INTERACTIVE ]</span>
-                            <span>[TTY_INPUT]</span>
+                    <div className="lg:col-span-7 term-card p-6 sm:p-8">
+                        <div className="text-xs text-text-main font-bold border-b border-border pb-2.5 mb-6 flex justify-between">
+                            <span>/BIN/SEND_PACKET --INTERACTIVE</span>
+                            <span className="text-text-muted">TTY_INPUT</span>
                         </div>
 
                         {status === 'success' ? (
-                            <div className="p-6 bg-primary border border-accent text-center space-y-4">
+                            <div className="p-8 bg-primary border border-accent text-center space-y-4">
                                 <div className="text-accent font-bold text-base sm:text-lg">
-                                    [SUCCESS] MESSAGE TRANSMITTED // ACK_200
+                                    SUCCESS: MESSAGE TRANSMITTED // ACK_200
                                 </div>
                                 <p className="text-text-muted text-xs max-w-md mx-auto">
                                     Packet logged. I will review your transmission and reply within 24 hours.
@@ -210,7 +211,7 @@ const ContactSection = () => {
                                 <button
                                     type="button"
                                     onClick={() => setStatus('')}
-                                    className="px-4 py-2 bg-accent text-primary font-bold text-xs border border-accent hover:bg-primary hover:text-accent cursor-pointer transition-none"
+                                    className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary cursor-pointer transition-colors duration-150"
                                 >
                                     [ + SEND_ANOTHER_PACKET ]
                                 </button>
@@ -219,7 +220,7 @@ const ContactSection = () => {
                             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-accent font-bold mb-1.5">
+                                        <label className="block text-text-main font-bold mb-1.5">
                                             &gt; ENTER_NAME:_
                                         </label>
                                         <input
@@ -228,12 +229,12 @@ const ContactSection = () => {
                                             value={formData.name}
                                             onChange={handleChange}
                                             required
-                                            className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                            className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
                                             placeholder="JANE_DOE"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-accent font-bold mb-1.5">
+                                        <label className="block text-text-main font-bold mb-1.5">
                                             &gt; ENTER_EMAIL:_
                                         </label>
                                         <input
@@ -242,14 +243,14 @@ const ContactSection = () => {
                                             value={formData.email}
                                             onChange={handleChange}
                                             required
-                                            className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                            className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
                                             placeholder="founder@company.com"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-accent font-bold mb-1.5">
+                                    <label className="block text-text-main font-bold mb-1.5">
                                         &gt; ENTER_SUBJECT:_
                                     </label>
                                     <input
@@ -258,13 +259,13 @@ const ContactSection = () => {
                                         value={formData.subject}
                                         onChange={handleChange}
                                         required
-                                        className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                        className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
                                         placeholder="PROJECT_BUILD // HIRING_INQUIRY"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-accent font-bold mb-1.5">
+                                    <label className="block text-text-main font-bold mb-1.5">
                                         &gt; ENTER_MESSAGE_PAYLOAD:_
                                     </label>
                                     <textarea
@@ -273,7 +274,7 @@ const ContactSection = () => {
                                         onChange={handleChange}
                                         required
                                         rows="4"
-                                        className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent resize-none placeholder:text-text-muted/50"
+                                        className="w-full bg-primary border border-border px-3.5 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent resize-none placeholder:text-text-muted/50"
                                         placeholder="Type project scope, timeline, or role details..."
                                     ></textarea>
                                 </div>
@@ -281,7 +282,7 @@ const ContactSection = () => {
                                 <button
                                     type="submit"
                                     disabled={status === 'sending'}
-                                    className="w-full bg-accent text-primary font-bold py-3 border border-accent hover:bg-primary hover:text-accent transition-none cursor-pointer disabled:opacity-50"
+                                    className="w-full bg-primary text-accent font-bold py-3.5 border border-accent hover:bg-accent hover:text-primary transition-colors duration-150 cursor-pointer disabled:opacity-50"
                                 >
                                     {status === 'sending'
                                         ? '[ TRANSMITTING_PACKET... PLEASE_WAIT ]'
@@ -291,7 +292,7 @@ const ContactSection = () => {
                                 {toast && (
                                     <div
                                         role="status"
-                                        className={`p-3 border text-xs font-bold text-center ${
+                                        className={`p-3.5 border text-xs font-bold text-center ${
                                             toast.type === 'success'
                                                 ? 'bg-primary border-accent text-accent'
                                                 : 'bg-primary border-text-main text-text-main'
@@ -302,13 +303,13 @@ const ContactSection = () => {
                                 )}
 
                                 {status === 'error' && (
-                                    <div className="p-3 bg-primary border border-accent text-center space-y-2">
+                                    <div className="p-4 bg-primary border border-accent text-center space-y-2.5">
                                         <p className="text-text-main text-xs">
-                                            [FALLBACK_READY] Automated relay blocked by network policy.
+                                            FALLBACK_READY: Automated relay blocked by network policy.
                                         </p>
                                         <a
                                             href={`mailto:andreidilag12@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Andrei,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`}
-                                            className="inline-block px-3 py-1.5 bg-accent text-primary font-bold text-xs"
+                                            className="inline-block px-4 py-2 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-xs transition-colors duration-150"
                                         >
                                             [ LAUNCH_DEFAULT_MAIL_CLIENT ↗ ]
                                         </a>

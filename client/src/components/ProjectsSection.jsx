@@ -16,95 +16,112 @@ const getDomainLabel = (liveLink, title) => {
     }
 };
 
-const getAsciiBar = (idx) => {
-    const bars = [
-        { pct: '96%', bar: '[██████████]' },
-        { pct: '92%', bar: '[█████████░]' },
-        { pct: '88%', bar: '[█████████░]' },
-        { pct: '90%', bar: '[█████████░]' }
-    ];
-    return bars[idx % bars.length];
-};
-
-const AsciiWindowHeader = ({ index, title, domain }) => (
-    <div className="flex items-center justify-between px-3 py-2 bg-primary border-b border-border text-[11px] font-mono">
-        <span className="text-accent font-bold truncate">
-            ╔══[ 0{index + 1} // {title.toUpperCase()}.EXE ]
-        </span>
+const WindowHeader = ({ index, title, domain }) => (
+    <div className="flex items-center justify-between px-4 py-2.5 bg-primary border-b border-border text-[11px] font-mono">
+        <div className="flex items-center gap-2 truncate">
+            <span className="w-1.5 h-1.5 bg-accent shrink-0" />
+            <span className="text-text-main font-bold truncate">
+                0{index + 1} // {title.toUpperCase()}
+            </span>
+        </div>
         <span className="text-text-muted truncate max-w-[45%] text-[10px]">
-            [{domain}]
+            {domain}
         </span>
     </div>
 );
 
+const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full' }) => {
+    const [imgError, setImgError] = useState(false);
+
+    return (
+        <div className={`relative ${className} dither-wrap bg-primary overflow-hidden`}>
+            {!imgError && src ? (
+                <img
+                    src={src}
+                    alt={alt}
+                    onError={() => setImgError(true)}
+                    className="w-full h-full object-cover object-top dither-img group-hover:scale-[1.02]"
+                    loading="lazy"
+                />
+            ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-primary text-center border border-border/50">
+                    <span className="text-xs font-bold text-text-main uppercase tracking-wider mb-1">
+                        {alt} // PREVIEW_FRAME
+                    </span>
+                    <span className="text-[10px] text-text-muted font-mono">
+                        SYS_ASSET: {category}
+                    </span>
+                </div>
+            )}
+            <div className="absolute bottom-2.5 left-3 z-10">
+                <span className="px-2.5 py-0.5 bg-primary/95 border border-border text-accent text-[10px] font-bold uppercase tracking-wider">
+                    {category}
+                </span>
+            </div>
+        </div>
+    );
+};
+
 const FlagshipProjectCard = ({ project, setSelectedProject }) => (
     <div
         onClick={() => setSelectedProject(project)}
-        className="mb-8 border border-accent bg-secondary grid grid-cols-1 lg:grid-cols-12 group cursor-pointer font-mono"
+        className="mb-8 term-card grid grid-cols-1 lg:grid-cols-12 group cursor-pointer font-mono"
     >
-        {/* Left: Dithered 16:9 Screenshot with ASCII Window Chrome */}
+        {/* Left: Dithered 16:9 Screenshot with Clean Window Header */}
         <div className="lg:col-span-7 flex flex-col bg-primary border-b lg:border-b-0 lg:border-r border-border">
-            <AsciiWindowHeader
+            <WindowHeader
                 index={0}
                 title={project.title}
                 domain={getDomainLabel(project.liveLink, project.title)}
             />
-            <div className="relative aspect-video w-full dither-wrap border-b border-border lg:border-b-0">
-                <img
-                    src={project.image}
-                    alt={project.title}
-                    className="aspect-video w-full object-cover object-top dither-img"
-                    loading="lazy"
-                />
-                <div className="absolute bottom-2 left-2 z-10">
-                    <span className="px-2 py-0.5 bg-primary border border-accent text-accent text-[10px] font-bold uppercase">
-                        [ {project.category} ]
-                    </span>
-                </div>
-            </div>
+            <ProjectThumbnail
+                src={project.image}
+                alt={project.title}
+                category={project.category}
+            />
         </div>
 
         {/* Right: Technical Directory Spec */}
-        <div className="lg:col-span-5 p-5 sm:p-6 flex flex-col justify-between">
+        <div className="lg:col-span-5 p-6 sm:p-7 flex flex-col justify-between">
             <div>
-                <div className="text-[11px] text-accent font-bold mb-2">
-                    &gt; FLAGSHIP_EXECUTABLE // STATUS: PRODUCTION
+                <div className="flex items-center gap-2 text-[11px] text-accent font-bold mb-2">
+                    <span className="w-1.5 h-1.5 bg-accent inline-block" />
+                    <span>FLAGSHIP_CASE_STUDY // PRODUCTION</span>
                 </div>
-                <h3 className="text-2xl font-bold text-text-main mb-2 uppercase">
+                <h3 className="text-2xl font-bold text-text-main mb-2.5 uppercase group-hover:text-accent transition-colors duration-150">
                     {project.title}
                 </h3>
-                <p className="text-text-muted text-xs sm:text-sm leading-relaxed mb-4">
+                <p className="text-text-muted text-xs sm:text-sm leading-relaxed mb-5">
                     {project.valueProp || project.description}
                 </p>
 
                 {project.highlight && (
-                    <div className="bg-primary border border-border px-3 py-2 mb-4 text-xs">
-                        <span className="text-accent font-bold">[OUTCOME]: </span>
+                    <div className="bg-primary border border-border px-3.5 py-2.5 mb-5 text-xs">
+                        <span className="text-accent font-bold">OUTCOME: </span>
                         <span className="text-text-main">{project.highlight}</span>
                     </div>
                 )}
 
-                {/* ASCII Tech Stack Progress / Stat Block */}
-                <div className="border border-border bg-primary p-3 mb-5 space-y-1 text-[11px]">
-                    <div className="text-text-muted text-[10px] pb-1 border-b border-border mb-1">
-                        +--[ TECH_STACK_TELEMETRY ]--------------+
+                {/* Clean Monochrome Tech Tags */}
+                <div className="mb-6">
+                    <div className="text-[10px] text-text-muted uppercase tracking-wider mb-2">
+                        TECH_STACK
                     </div>
-                    {project.techStack.slice(0, 4).map((tech, i) => {
-                        const stat = getAsciiBar(i);
-                        return (
-                            <div key={i} className="flex items-center justify-between gap-2">
-                                <span className="text-text-main truncate">{tech}</span>
-                                <span className="text-accent shrink-0">
-                                    {stat.bar} {stat.pct}
-                                </span>
-                            </div>
-                        );
-                    })}
+                    <div className="flex flex-wrap gap-1.5">
+                        {project.techStack.map((tech, i) => (
+                            <span
+                                key={i}
+                                className="px-2.5 py-1 bg-primary border border-border text-text-main text-[11px]"
+                            >
+                                {tech}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </div>
 
-            <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-border mt-auto">
-                <span className="px-3 py-1.5 bg-primary border border-accent text-accent group-hover:bg-accent group-hover:text-primary text-xs font-bold transition-none">
+            <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-border mt-auto">
+                <span className="px-3.5 py-1.5 bg-primary border border-accent text-accent group-hover:bg-accent group-hover:text-primary text-xs font-bold transition-colors duration-150">
                     [ READ_MANUAL.MD -&gt; ]
                 </span>
                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -113,7 +130,7 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
                             href={project.githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2.5 py-1.5 bg-primary border border-border text-text-main hover:bg-accent hover:text-primary hover:border-accent text-xs font-bold transition-none"
+                            className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
                         >
                             [ SRC ]
                         </a>
@@ -123,7 +140,7 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
                             href={project.liveLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-accent text-primary border border-accent hover:bg-primary hover:text-accent text-xs font-bold transition-none"
+                            className="px-3.5 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
                         >
                             [ LAUNCH_LIVE ↗ ]
                         </a>
@@ -138,30 +155,24 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
     return (
         <div
             onClick={() => setSelectedProject(project)}
-            className="border border-border hover:border-accent bg-secondary flex flex-col group cursor-pointer h-full font-mono"
+            className="term-card flex flex-col group cursor-pointer h-full font-mono"
         >
-            <AsciiWindowHeader
+            <WindowHeader
                 index={index + 1}
                 title={project.title}
                 domain={getDomainLabel(project.liveLink, project.title)}
             />
-            <div className="relative aspect-video w-full dither-wrap border-b border-border shrink-0">
-                <img
+            <div className="border-b border-border shrink-0">
+                <ProjectThumbnail
                     src={project.image}
                     alt={project.title}
-                    className="aspect-video w-full object-cover object-top dither-img"
-                    loading="lazy"
+                    category={project.category}
                 />
-                <div className="absolute bottom-2 left-2 z-10">
-                    <span className="px-2 py-0.5 bg-primary border border-accent text-accent text-[10px] font-bold uppercase">
-                        [ {project.category} ]
-                    </span>
-                </div>
             </div>
 
-            <div className="p-5 flex flex-col grow">
+            <div className="p-5 sm:p-6 flex flex-col grow">
                 <div className="flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-text-main mb-2 uppercase">
+                    <h3 className="text-lg sm:text-xl font-bold text-text-main mb-2 uppercase group-hover:text-accent transition-colors duration-150">
                         {project.title}
                     </h3>
                     <p className="text-text-muted text-xs leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]">
@@ -170,29 +181,26 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
 
                     {project.highlight && (
                         <div className="bg-primary border border-border px-3 py-2 mb-4 text-xs truncate">
-                            <span className="text-accent font-bold">[IMPACT]: </span>
+                            <span className="text-accent font-bold">IMPACT: </span>
                             <span className="text-text-main">{project.highlight}</span>
                         </div>
                     )}
 
-                    {/* ASCII Progress Bar Stat Block */}
-                    <div className="border border-border bg-primary p-3 mb-5 mt-auto space-y-1 text-[11px]">
-                        {project.techStack.slice(0, 4).map((tech, i) => {
-                            const stat = getAsciiBar(i);
-                            return (
-                                <div key={i} className="flex items-center justify-between gap-2">
-                                    <span className="text-text-main truncate">{tech}</span>
-                                    <span className="text-accent shrink-0">
-                                        {stat.bar} {stat.pct}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                    {/* Clean Monochrome Tech Tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-5 mt-auto">
+                        {project.techStack.slice(0, 4).map((tech, i) => (
+                            <span
+                                key={i}
+                                className="px-2.5 py-1 bg-primary border border-border text-text-muted text-[11px]"
+                            >
+                                {tech}
+                            </span>
+                        ))}
                     </div>
                 </div>
 
-                <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-border mt-auto">
-                    <span className="px-2.5 py-1 bg-primary border border-border text-text-main group-hover:bg-accent group-hover:text-primary group-hover:border-accent text-xs font-bold transition-none">
+                <div className="flex flex-wrap justify-between items-center gap-2 pt-3.5 border-t border-border mt-auto">
+                    <span className="px-3 py-1 bg-primary border border-border text-text-main group-hover:border-accent group-hover:text-accent text-xs font-bold transition-colors duration-150">
                         [ VIEW_README.MD -&gt; ]
                     </span>
                     <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
@@ -201,7 +209,7 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                                 href={project.githubLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2 py-1 bg-primary border border-border text-text-muted hover:bg-accent hover:text-primary hover:border-accent text-xs font-bold transition-none"
+                                className="px-2.5 py-1 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
                             >
                                 [ SRC ]
                             </a>
@@ -211,7 +219,7 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                                 href={project.liveLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1 bg-accent text-primary border border-accent hover:bg-primary hover:text-accent text-xs font-bold transition-none"
+                                className="px-3 py-1 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
                             >
                                 [ LIVE ↗ ]
                             </a>
@@ -256,18 +264,18 @@ const ProjectsSection = () => {
     }, []);
 
     return (
-        <section id="projects" className="py-16 sm:py-24 bg-primary border-b border-border font-mono">
+        <section id="projects" className="py-24 sm:py-32 bg-primary border-b border-border font-mono">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Directory Listing Header */}
-                <div className="mb-10 border border-border bg-secondary p-4 sm:p-6">
+                <div className="mb-12 term-card p-6 sm:p-8">
                     <div className="text-xs text-accent font-bold mb-2">
                         root@andrei-dev:/srv/production/work# ls -la --case-studies
                     </div>
-                    <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase tracking-tight mb-2">
+                    <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase tracking-tight mb-2.5 text-balance">
                         02 // SELECTED_WORK &amp; CASE_STUDIES
                     </h2>
-                    <p className="text-text-muted text-xs sm:text-sm max-w-3xl">
-                        total 5 // Production-grade systems engineered with Generative AI, computer vision proctoring, multi-tenant SaaS architectures, and enterprise databases. Click any node to inspect its technical README manual.
+                    <p className="text-text-muted text-xs sm:text-sm max-w-3xl leading-relaxed">
+                        Production-grade systems engineered with Generative AI, computer vision proctoring, multi-tenant SaaS architectures, and enterprise databases. Select any project to inspect its full technical case study.
                     </p>
                 </div>
 
@@ -292,63 +300,65 @@ const ProjectsSection = () => {
                 </div>
             </div>
 
-            {/* Technical README / Retro Manual Modal */}
+            {/* Technical README / Case Study Modal */}
             {typeof document !== 'undefined' && selectedProject && createPortal(
                 <div
-                    className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-black/90 overflow-y-auto font-mono"
+                    className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xs overflow-y-auto font-mono"
                     onClick={() => setSelectedProject(null)}
                 >
                     <div
-                        className="bg-secondary w-full max-w-4xl border-2 border-accent max-h-[92vh] flex flex-col my-auto"
+                        className="term-card w-full max-w-4xl max-h-[92vh] flex flex-col my-auto"
                         onClick={(e) => e.stopPropagation()}
                         data-lenis-prevent
                     >
                         {/* Modal Top Bar */}
-                        <div className="flex items-center justify-between px-4 py-2.5 bg-primary border-b border-accent text-xs">
-                            <span className="text-accent font-bold truncate">
-                                ╔══[ MAN(1) // {selectedProject.title.toUpperCase()}_CASE_STUDY.MD ]
-                            </span>
+                        <div className="flex items-center justify-between px-5 py-3 bg-primary border-b border-border text-xs">
+                            <div className="flex items-center gap-2 truncate">
+                                <span className="w-2 h-2 bg-accent shrink-0" />
+                                <span className="text-text-main font-bold truncate">
+                                    MAN(1) // {selectedProject.title.toUpperCase()}_CASE_STUDY.MD
+                                </span>
+                            </div>
                             <button
                                 type="button"
                                 onClick={() => setSelectedProject(null)}
-                                className="px-2.5 py-0.5 bg-accent text-primary font-bold hover:bg-primary hover:text-accent border border-accent cursor-pointer transition-none"
+                                className="px-3 py-1 bg-primary text-accent font-bold hover:bg-accent hover:text-primary border border-accent cursor-pointer transition-colors duration-150"
                             >
                                 [ X ESC ]
                             </button>
                         </div>
 
                         {/* Scrollable Manual Body */}
-                        <div className="p-4 sm:p-8 overflow-y-auto space-y-6 text-xs sm:text-sm">
+                        <div className="p-5 sm:p-8 overflow-y-auto space-y-6 text-xs sm:text-sm">
                             {/* Dithered Banner */}
                             <div className="border border-border bg-primary">
-                                <div className="h-48 sm:h-64 w-full dither-wrap border-b border-border">
-                                    <img
-                                        src={selectedProject.image}
-                                        alt={selectedProject.title}
-                                        className="w-full h-full object-cover object-top dither-img"
-                                    />
-                                </div>
-                                <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <ProjectThumbnail
+                                    src={selectedProject.image}
+                                    alt={selectedProject.title}
+                                    category={selectedProject.category}
+                                    className="h-52 sm:h-68 w-full border-b border-border"
+                                />
+                                <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
                                         <span className="text-accent text-xs font-bold uppercase block">
-                                            [ CATEGORY: {selectedProject.category} ]
+                                            CATEGORY // {selectedProject.category}
                                         </span>
                                         <h3 className="text-xl sm:text-3xl font-bold text-text-main uppercase mt-1">
                                             {selectedProject.title}
                                         </h3>
                                         {selectedProject.subtitle && (
-                                            <p className="text-text-muted text-xs mt-0.5">
+                                            <p className="text-text-muted text-xs mt-1">
                                                 {selectedProject.subtitle}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="flex flex-wrap gap-2 shrink-0">
+                                    <div className="flex flex-wrap gap-2.5 shrink-0">
                                         {selectedProject.liveLink && selectedProject.liveLink !== '#' && (
                                             <a
                                                 href={selectedProject.liveLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="px-4 py-2 bg-accent text-primary font-bold text-xs border border-accent hover:bg-primary hover:text-accent transition-none"
+                                                className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
                                             >
                                                 [ LAUNCH_APPLICATION ↗ ]
                                             </a>
@@ -358,7 +368,7 @@ const ProjectsSection = () => {
                                                 href={selectedProject.githubLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="px-4 py-2 bg-primary text-text-main font-bold text-xs border border-border hover:bg-accent hover:text-primary hover:border-accent transition-none"
+                                                className="px-4 py-2 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent transition-colors duration-150"
                                             >
                                                 [ VIEW_SOURCE_REPO ]
                                             </a>
@@ -367,35 +377,30 @@ const ProjectsSection = () => {
                                 </div>
                             </div>
 
-                            {/* ASCII Divider */}
-                            <div className="text-text-muted text-[11px] overflow-hidden whitespace-nowrap select-none">
-                                +----------------------------------------------------------------------------------------------------+
-                            </div>
-
                             {/* Case Study Problem / Solution / Impact */}
                             {selectedProject.caseStudy && (
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-border">
                                     <div className="p-4 bg-primary border border-border">
-                                        <div className="text-accent font-bold text-xs mb-2 border-b border-border pb-1">
-                                            [01 // THE_BUSINESS_PROBLEM]
+                                        <div className="text-text-main font-bold text-xs mb-2 border-b border-border pb-1.5">
+                                            01 // THE_BUSINESS_PROBLEM
                                         </div>
                                         <p className="text-text-muted text-xs leading-relaxed">
                                             {selectedProject.caseStudy.problem}
                                         </p>
                                     </div>
                                     <div className="p-4 bg-primary border border-border">
-                                        <div className="text-accent font-bold text-xs mb-2 border-b border-border pb-1">
-                                            [02 // ARCHITECTURAL_SOLUTION]
+                                        <div className="text-text-main font-bold text-xs mb-2 border-b border-border pb-1.5">
+                                            02 // ARCHITECTURAL_SOLUTION
                                         </div>
                                         <p className="text-text-muted text-xs leading-relaxed">
                                             {selectedProject.caseStudy.solution}
                                         </p>
                                     </div>
                                     <div className="p-4 bg-primary border border-accent">
-                                        <div className="text-accent font-bold text-xs mb-2 border-b border-border pb-1">
-                                            [03 // MEASURABLE_IMPACT]
+                                        <div className="text-accent font-bold text-xs mb-2 border-b border-border pb-1.5">
+                                            03 // MEASURABLE_IMPACT
                                         </div>
-                                        <p className="text-text-main text-xs leading-relaxed font-bold">
+                                        <p className="text-text-main text-xs leading-relaxed font-semibold">
                                             {selectedProject.caseStudy.impact}
                                         </p>
                                     </div>
@@ -404,13 +409,13 @@ const ProjectsSection = () => {
 
                             {/* Telemetry Metrics */}
                             {selectedProject.metrics && selectedProject.metrics.length > 0 && (
-                                <div>
-                                    <div className="text-accent font-bold text-xs mb-3 uppercase">
-                                        &gt; SYSTEM_SPECIFICATIONS &amp; TELEMETRY:
+                                <div className="pt-2 border-t border-border">
+                                    <div className="text-text-main font-bold text-xs mb-3 uppercase">
+                                        &gt; SYSTEM_SPECIFICATIONS &amp; TELEMETRY
                                     </div>
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                         {selectedProject.metrics.map((metric, idx) => (
-                                            <div key={idx} className="p-3 bg-primary border border-border">
+                                            <div key={idx} className="p-3.5 bg-primary border border-border">
                                                 <div className="text-[10px] text-text-muted uppercase">
                                                     {metric.label}
                                                 </div>
@@ -425,15 +430,15 @@ const ProjectsSection = () => {
 
                             {/* Key Features */}
                             {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
-                                <div>
-                                    <div className="text-accent font-bold text-xs mb-3 uppercase">
-                                        &gt; CORE_MODULES_IMPLEMENTED:
+                                <div className="pt-2 border-t border-border">
+                                    <div className="text-text-main font-bold text-xs mb-3 uppercase">
+                                        &gt; CORE_MODULES_IMPLEMENTED
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {selectedProject.keyFeatures.map((feat, fIdx) => (
-                                            <div key={fIdx} className="p-3.5 bg-primary border border-border">
+                                            <div key={fIdx} className="p-4 bg-primary border border-border">
                                                 <div className="font-bold text-text-main text-xs mb-1">
-                                                    [+] {feat.title}
+                                                    + {feat.title}
                                                 </div>
                                                 <p className="text-text-muted text-xs leading-relaxed">
                                                     {feat.desc}
@@ -445,9 +450,9 @@ const ProjectsSection = () => {
                             )}
 
                             {/* Tech Stack */}
-                            <div>
-                                <div className="text-accent font-bold text-xs mb-2 uppercase">
-                                    &gt; DEPENDENCIES &amp; STACK:
+                            <div className="pt-2 border-t border-border">
+                                <div className="text-text-main font-bold text-xs mb-2.5 uppercase">
+                                    &gt; DEPENDENCIES &amp; STACK
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedProject.techStack.map((tech, i) => (
@@ -455,7 +460,7 @@ const ProjectsSection = () => {
                                             key={i}
                                             className="px-3 py-1 bg-primary text-text-main text-xs border border-border"
                                         >
-                                            [{tech}]
+                                            {tech}
                                         </span>
                                     ))}
                                 </div>

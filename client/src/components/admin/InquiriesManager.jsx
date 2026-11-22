@@ -57,26 +57,26 @@ const InquiriesManager = () => {
         }
     };
 
-    if (loading) return <div className="text-accent font-mono">[LOADING_INQUIRIES...]</div>;
+    if (loading) return <div className="text-accent font-mono">LOADING_INQUIRIES...</div>;
 
     return (
         <div className="space-y-6 font-mono text-xs">
-            <h2 className="text-xl font-bold text-text-main uppercase border-l-4 border-accent pl-3">
+            <h2 className="text-xl font-bold text-text-main uppercase border-l-2 border-accent pl-3">
                 CLIENT_INQUIRIES_LOG
             </h2>
 
             <div className="grid gap-4">
                 {inquiries.length === 0 ? (
-                    <p className="text-text-muted">[EMPTY] No inquiries found in database.</p>
+                    <p className="text-text-muted">EMPTY: No inquiries found in database.</p>
                 ) : (
                     inquiries.map((inquiry) => (
-                        <div key={inquiry._id} className="bg-secondary p-5 border border-border hover:border-accent">
+                        <div key={inquiry._id} className="term-card p-5">
                             <div className="flex flex-col md:flex-row justify-between gap-4">
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-3">
                                         <h3 className="text-base font-bold text-text-main uppercase">{inquiry.name}</h3>
-                                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-primary border border-accent text-accent">
-                                            [{inquiry.status}]
+                                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-primary border border-border text-accent">
+                                            {inquiry.status}
                                         </span>
                                     </div>
                                     <div className="text-accent font-bold">
@@ -104,14 +104,14 @@ const InquiriesManager = () => {
                                     <div className="flex gap-2">
                                         <a
                                             href={`mailto:${inquiry.email}`}
-                                            className="flex-1 bg-accent text-primary font-bold py-2 text-xs text-center border border-accent hover:bg-primary hover:text-accent transition-none"
+                                            className="flex-1 bg-primary text-accent font-bold py-2 text-xs text-center border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
                                         >
                                             [ REPLY ]
                                         </a>
                                         <button
                                             type="button"
                                             onClick={() => handleDelete(inquiry._id)}
-                                            className="px-3 py-2 bg-primary text-text-muted border border-border hover:bg-accent hover:text-primary font-bold cursor-pointer transition-none"
+                                            className="px-3 py-2 bg-primary text-text-muted border border-border hover:border-accent hover:text-accent font-bold cursor-pointer transition-colors duration-150"
                                         >
                                             [ DEL ]
                                         </button>

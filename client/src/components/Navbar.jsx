@@ -57,27 +57,31 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-primary border-b border-border font-mono">
-            {/* Top ASCII status hairline */}
-            <div className="bg-secondary border-b border-border px-4 py-1 text-[10px] text-text-muted flex items-center justify-between">
-                <span>SYS://ANDREI_DILAG_OS [TTY1]</span>
-                <span className="hidden sm:inline text-accent">STATUS: ONLINE // MEM: 640K OK</span>
-                <span>LOC: MNL_PH [UTC+8]</span>
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border font-mono">
+            {/* Top workstation status bar */}
+            <div className="bg-secondary border-b border-border px-4 sm:px-6 lg:px-8 py-1 text-[10px] text-text-muted flex items-center justify-between max-w-7xl mx-auto">
+                <span>SYS://ANDREI_DILAG_OS // TTY1</span>
+                <span className="hidden sm:inline items-center gap-1.5">
+                    <span className="inline-block w-1.5 h-1.5 bg-accent mr-1.5 align-middle" />
+                    <span className="text-text-main">ONLINE</span>
+                    <span className="text-text-muted"> // REGION: ASIA-MNL</span>
+                </span>
+                <span>UTC+8</span>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-12">
-                    {/* Terminal Prompt Brand */}
+                <div className="flex items-center justify-between h-14">
+                    {/* Workstation Brand */}
                     <Link
                         to="/"
-                        className="text-sm sm:text-base font-bold text-text-main hover:bg-accent hover:text-primary px-2 py-1 border border-transparent hover:border-accent transition-none flex items-center gap-1.5"
+                        className="text-sm sm:text-base font-bold text-text-main hover:text-accent px-2 py-1 transition-colors duration-150 flex items-center gap-1.5"
                     >
                         <span className="text-accent">&gt;</span>
                         <span>ANDREI.DEV</span>
                         <span className="text-accent animate-blink">█</span>
                     </Link>
 
-                    {/* Desktop RPG / Terminal Menu */}
+                    {/* Desktop Navigation */}
                     <div className="hidden lg:flex items-center gap-1.5">
                         {navLinks.map((link) => {
                             const isActive = activeSection === link.href.slice(1);
@@ -86,10 +90,10 @@ const Navbar = () => {
                                     key={link.name}
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
-                                    className={`px-2.5 py-1 text-xs font-bold tracking-wider border transition-none ${
+                                    className={`px-3 py-1.5 text-xs font-medium tracking-wider border transition-colors duration-150 ${
                                         isActive
-                                            ? 'bg-accent text-primary border-accent'
-                                            : 'bg-primary text-text-main border-transparent hover:bg-accent hover:text-primary hover:border-accent'
+                                            ? 'bg-secondary text-accent border-accent font-bold'
+                                            : 'bg-transparent text-text-muted border-transparent hover:text-text-main hover:border-border'
                                     }`}
                                 >
                                     [ {link.code}. {link.name} {isActive ? <span className="animate-blink">█</span> : null} ]
@@ -99,7 +103,7 @@ const Navbar = () => {
                         <a
                             href="#contact"
                             onClick={(e) => handleNavClick(e, '#contact')}
-                            className="ml-2 px-3 py-1 text-xs font-bold bg-secondary text-accent border border-accent hover:bg-accent hover:text-primary transition-none"
+                            className="ml-2 px-3.5 py-1.5 text-xs font-bold bg-primary text-accent border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
                         >
                             [ HIRE_ME -&gt; ]
                         </a>
@@ -110,7 +114,7 @@ const Navbar = () => {
                         <button
                             type="button"
                             onClick={() => setIsOpen(!isOpen)}
-                            className="px-2.5 py-1 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-none cursor-pointer"
+                            className="px-3 py-1.5 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-colors duration-150 cursor-pointer"
                             aria-label="Toggle Menu"
                         >
                             {isOpen ? '[ X CLOSE ]' : '[ = MENU ]'}
@@ -121,9 +125,9 @@ const Navbar = () => {
 
             {/* Mobile Terminal Dropdown */}
             {isOpen && (
-                <div className="lg:hidden bg-primary border-t border-border px-4 py-3 space-y-1.5">
-                    <div className="text-[10px] text-text-muted pb-1 border-b border-border">
-                        +--[ SELECT_DIRECTORY ]------------------+
+                <div className="lg:hidden bg-secondary border-t border-border px-4 py-4 space-y-1.5">
+                    <div className="text-[10px] text-text-muted pb-1.5 mb-1 border-b border-border uppercase tracking-wider">
+                        SELECT_DIRECTORY
                     </div>
                     {navLinks.map((link) => {
                         const isActive = activeSection === link.href.slice(1);
@@ -132,10 +136,10 @@ const Navbar = () => {
                                 key={link.name}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className={`block px-3 py-2 text-xs font-bold border transition-none ${
+                                className={`block px-3 py-2 text-xs font-medium border transition-colors duration-150 ${
                                     isActive
-                                        ? 'bg-accent text-primary border-accent'
-                                        : 'bg-secondary text-text-main border-border hover:bg-accent hover:text-primary'
+                                        ? 'bg-primary text-accent border-accent font-bold'
+                                        : 'bg-primary/60 text-text-main border-border hover:border-accent'
                                 }`}
                             >
                                 [ {link.code}. {link.name} {isActive ? '█' : ''} ]
@@ -145,7 +149,7 @@ const Navbar = () => {
                     <a
                         href="#contact"
                         onClick={(e) => handleNavClick(e, '#contact')}
-                        className="block w-full text-center mt-2 px-3 py-2 bg-accent text-primary font-bold text-xs border border-accent transition-none"
+                        className="block w-full text-center mt-2 px-3 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
                     >
                         [ INITIATE_CONTACT -&gt; ]
                     </a>

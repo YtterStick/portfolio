@@ -12,18 +12,18 @@ const AdminDashboard = () => {
             {/* Terminal Sidebar */}
             <aside className="w-full md:w-64 bg-secondary border-b md:border-b-0 md:border-r border-border flex flex-col">
                 <div className="p-4 border-b border-border bg-primary">
-                    <div className="text-accent font-bold">SYS://ADMIN_CONSOLE</div>
-                    <div className="text-[10px] text-text-muted">PORTFOLIO_OS v2.6</div>
+                    <div className="text-text-main font-bold">SYS://ADMIN_CONSOLE</div>
+                    <div className="text-[10px] text-accent">PORTFOLIO_OS v2.6</div>
                 </div>
 
                 <nav className="flex md:flex-col p-3 gap-2 flex-1">
                     <button
                         type="button"
                         onClick={() => setActiveTab('inquiries')}
-                        className={`flex-1 md:flex-none text-left px-3 py-2.5 border font-bold cursor-pointer transition-none ${
+                        className={`flex-1 md:flex-none text-left px-3 py-2.5 border font-bold cursor-pointer transition-colors duration-150 ${
                             activeTab === 'inquiries'
-                                ? 'bg-accent text-primary border-accent'
-                                : 'bg-primary text-text-main border-border hover:bg-accent hover:text-primary'
+                                ? 'bg-primary text-accent border-accent'
+                                : 'bg-primary text-text-muted border-border hover:text-text-main'
                         }`}
                     >
                         [ 01. INQUIRIES {activeTab === 'inquiries' ? '█' : ''} ]
@@ -32,10 +32,10 @@ const AdminDashboard = () => {
                     <button
                         type="button"
                         onClick={() => setActiveTab('projects')}
-                        className={`flex-1 md:flex-none text-left px-3 py-2.5 border font-bold cursor-pointer transition-none ${
+                        className={`flex-1 md:flex-none text-left px-3 py-2.5 border font-bold cursor-pointer transition-colors duration-150 ${
                             activeTab === 'projects'
-                                ? 'bg-accent text-primary border-accent'
-                                : 'bg-primary text-text-main border-border hover:bg-accent hover:text-primary'
+                                ? 'bg-primary text-accent border-accent'
+                                : 'bg-primary text-text-muted border-border hover:text-text-main'
                         }`}
                     >
                         [ 02. PROJECTS {activeTab === 'projects' ? '█' : ''} ]
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
                     <button
                         type="button"
                         onClick={logout}
-                        className="w-full px-3 py-2 bg-primary border border-border text-text-muted hover:bg-accent hover:text-primary hover:border-accent font-bold cursor-pointer transition-none"
+                        className="w-full px-3 py-2 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent font-bold cursor-pointer transition-colors duration-150"
                     >
                         [ LOGOUT_SESSION ]
                     </button>
@@ -56,11 +56,11 @@ const AdminDashboard = () => {
             {/* Main Terminal Pane */}
             <main className="flex-1 overflow-y-auto bg-primary">
                 <header className="sticky top-0 z-30 bg-secondary border-b border-border px-6 py-3 flex justify-between items-center">
-                    <h2 className="text-xs font-bold text-accent uppercase">
-                        ╔══[ /VAR/ADM/{activeTab.toUpperCase()} ]
+                    <h2 className="text-xs font-bold text-text-main uppercase">
+                        /VAR/ADM/{activeTab.toUpperCase()}
                     </h2>
-                    <span className="px-2 py-0.5 bg-primary border border-accent text-accent font-bold text-[10px]">
-                        [ROOT: AD]
+                    <span className="px-2 py-0.5 bg-primary border border-border text-accent font-bold text-[10px]">
+                        ROOT: AD
                     </span>
                 </header>
 
