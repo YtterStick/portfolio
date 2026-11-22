@@ -24,10 +24,10 @@ const Navbar = () => {
     useEffect(() => {
         const sectionToNav = {
             hero: 'hero',
-            about: 'about',
-            services: 'about',
-            skills: 'about',
             projects: 'projects',
+            about: 'about',
+            services: 'services',
+            skills: 'about',
             contact: 'contact'
         };
         const sectionIds = Object.keys(sectionToNav);
@@ -90,8 +90,9 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', href: '#hero' },
-        { name: 'About', href: '#about' },
         { name: 'Work', href: '#projects' },
+        { name: 'About', href: '#about' },
+        { name: 'Services', href: '#services' },
         { name: 'Contact', href: '#contact' },
     ];
 

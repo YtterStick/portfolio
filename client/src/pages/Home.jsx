@@ -18,10 +18,10 @@ const Home = () => {
                 <HeroSection />
             </div>
             <div className="relative z-10">
-                <AboutSection />
+                <ProjectsSection />
             </div>
             <div className="relative z-10">
-                <ProjectsSection />
+                <AboutSection />
             </div>
             <div className="relative z-10">
                 <ContactSection />
