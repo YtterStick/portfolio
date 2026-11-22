@@ -62,9 +62,26 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                             {project.subtitle}
                         </p>
                     )}
-                    <p className="text-text-muted text-sm leading-relaxed font-light mb-5 line-clamp-3">
-                        {project.description}
-                    </p>
+                    {project.caseStudy ? (
+                        <div className="space-y-2.5 mb-5 text-xs sm:text-[13px] leading-relaxed">
+                            <div>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300/90 mr-1.5">Problem:</span>
+                                <span className="text-text-muted font-light">{project.caseStudy.problem}</span>
+                            </div>
+                            <div>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-accent-hover mr-1.5">Solution:</span>
+                                <span className="text-text-muted font-light">{project.caseStudy.solution}</span>
+                            </div>
+                            <div className="bg-accent/10 border border-accent/25 rounded-lg px-2.5 py-2">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 mr-1.5">Impact:</span>
+                                <span className="text-text-main/95 font-medium">{project.caseStudy.impact}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-text-muted text-sm leading-relaxed font-light mb-5 line-clamp-3">
+                            {project.description}
+                        </p>
+                    )}
 
                     {/* Key Metrics / Highlights Pills */}
                     {project.metrics && (
@@ -303,14 +320,42 @@ const ProjectsSection = () => {
                                         )}
                                     </div>
 
-                                    {/* Architectural Overview */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-white mb-3">
-                                            System Overview
+                                    {/* Case Study / System Overview */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-lg font-semibold text-white">
+                                            Case Study Overview
                                         </h4>
                                         <p className="text-text-muted leading-relaxed text-sm sm:text-base font-light">
                                             {selectedProject.description}
                                         </p>
+                                        {selectedProject.caseStudy && (
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                                <div className="p-4 rounded-xl bg-primary/60 border border-border/50">
+                                                    <div className="text-[11px] font-bold uppercase tracking-wider text-rose-300 mb-1.5">
+                                                        The Business Problem
+                                                    </div>
+                                                    <p className="text-text-muted text-xs sm:text-sm leading-relaxed font-light">
+                                                        {selectedProject.caseStudy.problem}
+                                                    </p>
+                                                </div>
+                                                <div className="p-4 rounded-xl bg-primary/60 border border-border/50">
+                                                    <div className="text-[11px] font-bold uppercase tracking-wider text-accent-hover mb-1.5">
+                                                        The Solution
+                                                    </div>
+                                                    <p className="text-text-muted text-xs sm:text-sm leading-relaxed font-light">
+                                                        {selectedProject.caseStudy.solution}
+                                                    </p>
+                                                </div>
+                                                <div className="p-4 rounded-xl bg-accent/10 border border-accent/30">
+                                                    <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-300 mb-1.5">
+                                                        Measurable Impact
+                                                    </div>
+                                                    <p className="text-text-main text-xs sm:text-sm leading-relaxed font-medium">
+                                                        {selectedProject.caseStudy.impact}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Key Performance / Architecture Metrics */}

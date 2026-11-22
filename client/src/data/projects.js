@@ -5,12 +5,17 @@ export const projectsData = [
         subtitle: 'Assessment & Student Review Portal with AI & Anti-Cheat Proctoring',
         category: 'AI EdTech & Proctoring System',
         featured: true,
-        description: 'An advanced, full-stack classroom assessment and student review portal engineered with a strict anti-cheating proctoring engine and multi-tiered Generative AI. Its primary purpose is securing digital examinations by enforcing automatic full-screen mode that prevents Alt+Tab, Esc, Alt+F4, and window switching—automatically submitting the test after 3 warning strikes. Built for maximum flexibility, Evalo empowers educators to create comprehensive exams either with AI assistance or without AI (custom manual authoring), while giving students AI-generated study pointers, flashcard reviewers, practice quizzes, and automated computer vision bubble sheet grading.',
+        description: 'An end-to-end digital assessment platform combining strict anti-cheat proctoring, flexible AI-assisted or manual exam authoring, student AI study tools, and automated OpenCV OMR bubble-sheet grading.',
+        caseStudy: {
+            problem: 'Educators struggled with widespread online exam cheating, time-consuming manual quiz creation, and slow paper bubble-sheet grading.',
+            solution: 'Built a full-stack Next.js + FastAPI platform with 3-strike fullscreen anti-cheat proctoring, GenAI/manual exam authoring, and OpenCV OMR sheet scanning.',
+            impact: 'Cut exam prep & grading time by [X]% and reduced unauthorized tab-switching incidents by [X]% across [X]+ student assessments.'
+        },
         metrics: [
+            { label: 'Grading Time Saved', value: '[X]% Faster' },
             { label: 'Anti-Cheat Enforcement', value: '3-Strike Auto-Submit' },
-            { label: 'Exam Creation', value: 'With or Without AI' },
-            { label: 'Student AI Reviewer', value: 'Pointers & Flashcards' },
-            { label: 'Evaluation Engine', value: 'OpenCV OMR & Digital' }
+            { label: 'Assessments Processed', value: '[X]+ Exams' },
+            { label: 'Evaluation Engine', value: 'OpenCV OMR & AI' }
         ],
         keyFeatures: [
             {
@@ -42,9 +47,15 @@ export const projectsData = [
         category: 'Enterprise Solution',
         featured: false,
         badge: 'Enterprise Production',
-        description: 'Architected a full-stack, end-to-end enterprise solution utilizing a robust Spring Boot Java backend coupled with MongoDB for efficient, scalable data management. Developed a highly responsive user interface using React Vite and Tailwind CSS to streamline multi-site laundry logistics, customer order tracking, and real-time operations, reducing manual administrative friction by 40%.',
+        description: 'A full-stack Spring Boot, MongoDB, and React platform unifying multi-branch laundry logistics, customer self-service order tracking, and real-time executive reporting.',
+        caseStudy: {
+            problem: 'Multi-branch laundry operations relied on fragmented spreadsheets and manual status updates, causing order delays and high administrative overhead.',
+            solution: 'Architected a centralized Spring Boot + MongoDB backend with a React Vite self-service portal, automated branch dispatch, and RBAC admin dashboards.',
+            impact: 'Reduced manual administrative friction by 40%, accelerated order turnaround by [X]%, and unified tracking across [X]+ branch locations.'
+        },
         metrics: [
-            { label: 'Efficiency Gain', value: '40% Less Friction' },
+            { label: 'Admin Friction', value: '40% Reduction' },
+            { label: 'Order Turnaround', value: '[X]% Faster' },
             { label: 'Architecture', value: 'Spring Boot + React' },
             { label: 'Database', value: 'MongoDB Scaled' }
         ],
@@ -74,9 +85,15 @@ export const projectsData = [
         category: 'HR Management System',
         featured: false,
         badge: 'HR & Operations',
-        description: 'A comprehensive human resources and time & attendance (TNA) payroll management dashboard. Enables organizational administrators to configure multi-tier employee benefits, track attendance cycles, automate deductions, and process compliant payroll with detailed audit trails.',
+        description: 'An automated human resources, time-and-attendance (TNA), and payroll platform with multi-tier benefits configuration, tax/overtime calculations, and role-based audit trails.',
+        caseStudy: {
+            problem: 'Manual attendance reconciliation and spreadsheet payroll runs created costly calculation errors, compliance risks, and multi-day payout delays.',
+            solution: 'Built a centralized PHP + MySQL payroll engine that syncs attendance logs, automates tax/benefit deductions, and enforces role-based audit trails.',
+            impact: 'Eliminated [X]% of manual payroll calculation errors and cut cycle processing time from [X] days to [X] hours for [X]+ employees.'
+        },
         metrics: [
-            { label: 'Process Automation', value: 'End-to-End Payroll' },
+            { label: 'Cycle Time Saved', value: '[X]% Faster Runs' },
+            { label: 'Payroll Accuracy', value: '[X]% Error-Free' },
             { label: 'Architecture', value: 'PHP + MySQL + JS' },
             { label: 'Security', value: 'Role-Based Auditing' }
         ],

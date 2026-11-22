@@ -1,5 +1,8 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
+const LIVE_SITE_URL = import.meta.env.VITE_SITE_URL || 'https://portfolio-tnu.pages.dev';
+const LIVE_SITE_LABEL = LIVE_SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
 const Footer = () => {
     return (
         <footer className="relative z-10 bg-primary border-t border-border pt-16 pb-8">
@@ -15,15 +18,15 @@ const Footer = () => {
                             <span className="text-accent">.</span>
                         </h3>
                         <p className="text-text-muted text-sm font-light max-w-xs leading-relaxed">
-                            Full-stack developer & educator — dedicated to building scalable web applications and software solutions.
+                            Full-stack developer &amp; IT educator — building scalable web applications, AI workflows, and enterprise software solutions.
                         </p>
                         <a
-                            href="https://andrei-dev.vercel.app/"
+                            href={LIVE_SITE_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 text-xs text-accent hover:text-accent-hover font-mono transition-colors"
                         >
-                            andrei-dev.vercel.app
+                            {LIVE_SITE_LABEL}
                         </a>
                     </div>
 
@@ -43,7 +46,7 @@ const Footer = () => {
                         <h4 className="text-sm font-semibold text-white mb-4 tracking-widest uppercase">Contact</h4>
                         <ul className="space-y-2 text-text-muted text-sm">
                             <li className="font-light">Quezon City, Philippines</li>
-                            <li><a href="tel:09150475513" className="hover:text-accent transition-colors duration-300">09150475513</a></li>
+                            <li><a href="tel:+639150475513" className="hover:text-accent transition-colors duration-300">+63 915 047 5513</a></li>
                             <li><a href="mailto:andreidilag12@gmail.com" className="hover:text-accent transition-colors duration-300">andreidilag12@gmail.com</a></li>
                         </ul>
                     </div>

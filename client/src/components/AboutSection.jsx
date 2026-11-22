@@ -75,7 +75,7 @@ const AboutSection = () => {
             items: ['Generative AI (GenAI)', 'LLM Prompt Engineering', 'Multimodal AI', 'Semantic Routing', 'Fine-Tuning', 'n8n Workflow Automation', 'Microsoft Copilot Studio', 'Agent 365']
         },
         {
-            category: 'Advance Database & Data Engineering',
+            category: 'Advanced Database & Data Engineering',
             items: ['Relational Data Modeling', 'Complex SQL & Indexing', 'PostgreSQL / Supabase', 'MySQL', 'MongoDB', 'ACID Transactions', 'Query Optimization', 'Stored Procedures & Triggers', 'Data Normalization']
         },
         {
@@ -123,25 +123,46 @@ const AboutSection = () => {
         }
     ];
 
+    const services = [
+        {
+            title: 'Custom Web & SaaS Applications',
+            stack: 'Next.js • React • FastAPI • Spring Boot',
+            outcome: 'Turn product ideas into fast, conversion-focused web platforms and multi-tenant SaaS applications built for scale, security, and clean UX.',
+            deliverables: ['Customer Portals & MVPs', 'RESTful APIs & Auth (JWT/RBAC)', 'Responsive UI Systems']
+        },
+        {
+            title: 'AI & Workflow Automation',
+            stack: 'LLMs • n8n • Copilot Studio • Computer Vision',
+            outcome: 'Automate repetitive operational tasks, document processing, and decision workflows with practical AI integrations that save hours every week.',
+            deliverables: ['Custom LLM Assistants', 'n8n & Copilot Workflows', 'OpenCV / OMR Vision Pipelines']
+        },
+        {
+            title: 'Enterprise & Internal Tools',
+            stack: 'Payroll • Logistics • Admin Dashboards • SQL Optimization',
+            outcome: 'Replace error-prone spreadsheets with reliable internal systems, real-time operations dashboards, and high-throughput database architectures.',
+            deliverables: ['Payroll & HR Systems', 'Multi-Site Logistics Tracking', 'Query & Schema Optimization']
+        }
+    ];
+
     const experience = [
         {
-            year: '2025 – Present',
-            role: 'Faculty Teacher — Advance Database & Network Technology 2',
+            year: 'Aug 2025 – Present',
+            role: 'Faculty Teacher — Advanced Database & Network Technology 2',
             company: 'STI College Fairview',
             highlight: 'Educator & Curriculum Mentor',
             description: 'Instructing and mentoring IT college students in advanced database engineering, complex SQL architectures, and enterprise computer networking.',
             details: [
-                'Instructed Advance Database coursework covering relational data modeling, query optimization, indexing, ACID transactions, normalization, and stored procedures.',
+                'Instructed Advanced Database coursework covering relational data modeling, query optimization, indexing, ACID transactions, normalization, and stored procedures.',
                 'Facilitated Network Technology 2 hands-on labs focusing on enterprise routing & switching, VLANs, subnetting, TCP/IP protocols, and network troubleshooting.',
                 'Designed practical hands-on assessments, real-world coding challenges, and guided student capstone architectures.',
                 'Fostered high-standard coding ethics, industry-grade database schema design, and technical problem-solving capabilities.'
             ]
         },
         {
-            year: '2026',
+            year: 'Jan 2026 – May 2026',
             role: 'Software Developer — NLP Business Development Services',
             company: '3 AM Digital Media',
-            highlight: 'AI Integration & Backend APIs',
+            highlight: 'Concurrent Industry Role • AI & Backend APIs',
             description: 'Developed and optimized software solutions focusing on NLP-driven business development.',
             details: [
                 'Contributed to the design and implementation of backend systems and APIs.',
@@ -151,7 +172,7 @@ const AboutSection = () => {
             ]
         },
         {
-            year: '2024',
+            year: 'Jan 2024 – Dec 2024',
             role: 'Student Assistant — Management Information System',
             company: 'STI College Fairview',
             highlight: 'Infrastructure & Support',
@@ -226,17 +247,17 @@ const AboutSection = () => {
                             <span>About Me</span>
                         </div>
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 sm:mb-8 tracking-tight">
-                            Full-Stack Developer
+                            Engineering Systems Built for Business Impact
                         </h2>
                         <div className="text-text-muted text-base sm:text-lg leading-relaxed space-y-4 sm:space-y-5 font-light">
                             <p>
-                                I am a <span className="text-white font-medium">Full-Stack Developer and Educator</span>. While I teach Advance Database and Network Technology at STI College Fairview, <span className="text-accent font-medium">software development is my true passion and primary goal</span>.
+                                I partner with businesses, startup founders, and engineering teams to ship <span className="text-white font-medium">production-ready web applications, AI-integrated platforms, and enterprise internal tools</span> using <span className="text-white font-medium">React, Next.js, Python FastAPI, Java Spring Boot, and Node.js</span>.
                             </p>
                             <p>
-                                I specialize in building complete, production-ready web applications and AI-integrated platforms using <span className="text-white font-medium">React, Next.js, Python FastAPI, Java Spring Boot, and Node.js</span>—focusing on clean architecture, high speed, and intuitive UX.
+                                Alongside shipping client and industry software, I serve as an <span className="text-accent font-medium">Advanced Database and Network Technology educator</span> at STI College Fairview—a role that keeps my fundamentals razor-sharp in relational data modeling, query optimization, ACID reliability, and systems architecture.
                             </p>
                             <p>
-                                Recognized as a <span className="text-accent font-medium">CodeFest Champion and National Finalist</span>, I thrive on turning complex problems into scalable digital systems like Evalo and enterprise software tools.
+                                Recognized as a <span className="text-accent font-medium">CodeFest Champion and National Finalist</span>, I focus on turning complex operational bottlenecks into fast, maintainable software that delivers measurable ROI.
                             </p>
                         </div>
 
@@ -307,6 +328,58 @@ const AboutSection = () => {
                     </motion.div>
                 </div>
 
+                {/* Services / What I Can Build Section */}
+                <div className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-10 sm:mb-12"
+                    >
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
+                            <span>Services</span>
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4">What I Can Build for You</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2">
+                            Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                        {services.map((service, sIdx) => (
+                            <motion.div
+                                key={sIdx}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.45, delay: sIdx * 0.08 }}
+                                viewport={{ once: true }}
+                                className="group bg-primary/40 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                            >
+                                <div>
+                                    <span className="inline-block text-[11px] font-mono text-accent-hover bg-accent/10 border border-accent/25 px-2.5 py-1 rounded-md mb-4">
+                                        {service.stack}
+                                    </span>
+                                    <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-accent-hover transition-colors">
+                                        {service.title}
+                                    </h3>
+                                    <p className="text-text-muted text-sm leading-relaxed font-light mb-5">
+                                        {service.outcome}
+                                    </p>
+                                </div>
+                                <ul className="space-y-2 pt-4 border-t border-border/50">
+                                    {service.deliverables.map((item, dIdx) => (
+                                        <li key={dIdx} className="text-xs text-text-main/90 flex items-center gap-2">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Skills Section */}
                 <div className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
                     <motion.div
@@ -362,14 +435,14 @@ const AboutSection = () => {
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                                 
-                                <h4 className="text-xs font-semibold text-accent tracking-widest uppercase mb-3 sm:mb-4 relative z-10">
+                                <h4 className="text-xs sm:text-[13px] font-bold text-accent-hover tracking-widest uppercase mb-3 sm:mb-4 relative z-10">
                                     {category.category}
                                 </h4>
                                 <div className="flex flex-wrap gap-1.5 sm:gap-2 relative z-10 pt-1">
                                     {category.items.map((item, skillIndex) => (
                                         <span
                                             key={skillIndex}
-                                            className="bg-secondary/90 text-text-muted text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 font-medium hover:bg-accent/15 hover:text-white hover:border-accent/40 transition-all duration-200 cursor-default"
+                                            className="bg-secondary text-text-main/90 text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/70 font-medium hover:bg-accent/20 hover:text-white hover:border-accent/50 transition-all duration-200 cursor-default"
                                         >
                                             {item}
                                         </span>

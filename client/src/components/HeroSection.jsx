@@ -91,22 +91,28 @@ const HeroSection = () => {
                     transition={{ duration: 0.7, delay: 0.2 }}
                     className="text-text-muted text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-light px-2 sm:px-0"
                 >
-                    Full-stack developer and IT educator. While I teach advance database and networking, building scalable web applications and high-impact software solutions is my true passion and primary goal.
+                    I help businesses and startups launch scalable web applications, AI-integrated platforms, and custom enterprise tools that eliminate operational bottlenecks—backed by deep architectural mastery as an Advanced Database &amp; Networking educator.
                 </motion.p>
 
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.3 }}
-                    className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-6 w-full max-w-xs sm:max-w-none mx-auto"
+                    className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5 w-full max-w-xs sm:max-w-none mx-auto"
                 >
                     <a
                         href="#projects"
-                        className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-accent text-white font-semibold rounded-xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base shadow-lg shadow-accent/25 text-center"
+                        className="w-full sm:w-auto px-8 sm:px-9 py-3.5 sm:py-4 bg-accent text-white font-semibold rounded-xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base shadow-lg shadow-accent/25 text-center"
                     >
                         View Selected Work
                     </a>
-                    <div className="flex items-center justify-center gap-7 pt-2 sm:pt-0">
+                    <a
+                        href="#contact"
+                        className="w-full sm:w-auto px-8 sm:px-9 py-3.5 sm:py-4 border border-accent/50 bg-secondary/70 text-white font-semibold rounded-xl hover:bg-accent/15 hover:border-accent transition-all duration-300 text-sm sm:text-base text-center"
+                    >
+                        Hire Me / Book a Call
+                    </a>
+                    <div className="flex items-center justify-center gap-7 pt-2 sm:pt-0 sm:pl-2">
                         <SocialLink href="https://github.com/YtterStick" icon={<FaGithub />} label="GitHub" />
                         <SocialLink href="https://www.linkedin.com/in/andrei-dilag-79b018268/" icon={<FaLinkedin />} label="LinkedIn" />
                         <SocialLink href="mailto:andreidilag12@gmail.com" icon={<FaEnvelope />} label="Email" />
