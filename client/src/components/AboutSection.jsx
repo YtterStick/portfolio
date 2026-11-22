@@ -8,6 +8,122 @@ import {
     FaExternalLinkAlt
 } from 'react-icons/fa';
 
+const ServiceInteractivePreview = ({ index }) => {
+    // Card 0: SaaS Workspace Preview
+    const [tenant, setTenant] = useState('Client Portal');
+    // Card 1: AI Pipeline Preview
+    const [step, setStep] = useState(2);
+    // Card 2: Enterprise Payroll/SQL Preview
+    const [optimized, setOptimized] = useState(true);
+
+    if (index === 0) {
+        const tenantData = {
+            'Client Portal': { metric: '98.4% CSAT', status: 'Live Sync', badge: 'RBAC: Client' },
+            'Admin Console': { metric: '₱412K MRR', status: 'Multi-Branch', badge: 'RBAC: Owner' },
+            'API Gateway': { metric: '14ms p95', status: 'JWT Verified', badge: 'FastAPI + Next' }
+        };
+        const active = tenantData[tenant];
+        return (
+            <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
+                <div className="flex items-center justify-between gap-1 mb-2.5">
+                    {Object.keys(tenantData).map((t) => (
+                        <button
+                            key={t}
+                            type="button"
+                            onClick={() => setTenant(t)}
+                            className={`flex-1 py-1 px-1.5 rounded-lg text-[10px] font-mono transition-all cursor-pointer truncate ${
+                                tenant === t
+                                    ? 'bg-accent text-white font-semibold'
+                                    : 'bg-secondary/70 text-text-muted hover:text-white'
+                            }`}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+                <div className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-secondary/90 border border-border/50 text-xs font-mono">
+                    <div>
+                        <span className="text-[10px] text-text-muted block">{active.status}</span>
+                        <span className="text-white font-bold">{active.metric}</span>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                        {active.badge}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    if (index === 1) {
+        const nodes = ['Webhook Input', 'LLM / OpenCV', 'Auto-Action'];
+        return (
+            <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
+                <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[10px] font-mono text-text-muted uppercase">Interactive Pipeline</span>
+                    <button
+                        type="button"
+                        onClick={() => setStep((s) => (s + 1) % 3)}
+                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent/20 text-accent-hover hover:bg-accent hover:text-white transition-colors cursor-pointer"
+                    >
+                        ▶ Step Node
+                    </button>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                    {nodes.map((node, i) => (
+                        <button
+                            key={node}
+                            type="button"
+                            onClick={() => setStep(i)}
+                            className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                                step === i
+                                    ? 'bg-accent/20 border-accent text-white'
+                                    : 'bg-secondary/60 border-border/50 text-text-muted'
+                            }`}
+                        >
+                            <span className="text-[9px] font-mono block opacity-70">0{i + 1}</span>
+                            <span className="text-[10px] font-medium block truncate">{node}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
+            <div className="flex items-center justify-between mb-2.5">
+                <span className="text-[10px] font-mono text-text-muted uppercase">Engine Mode</span>
+                <button
+                    type="button"
+                    onClick={() => setOptimized((o) => !o)}
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors cursor-pointer ${
+                        optimized
+                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                            : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+                    }`}
+                >
+                    {optimized ? '✓ Automated ACID' : '⚠ Manual Sheet'}
+                </button>
+            </div>
+            <div className="space-y-1.5 font-mono text-[11px]">
+                <div className="flex justify-between">
+                    <span className="text-text-muted">Batch Reconciliation:</span>
+                    <span className={optimized ? 'text-emerald-400 font-semibold' : 'text-rose-400'}>
+                        {optimized ? '0.4s (Zero Errors)' : '4.5 hrs (Manual)'}
+                    </span>
+                </div>
+                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                    <div
+                        className={`h-full transition-all duration-300 ${
+                            optimized ? 'w-1/6 bg-emerald-400' : 'w-full bg-rose-500'
+                        }`}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AboutSection = () => {
     const [activeTab, setActiveTab] = useState('technical');
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -357,11 +473,13 @@ const AboutSection = () => {
                                 className="group bg-primary/40 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
                             >
                                 <div className="flex-1 flex flex-col">
-                                    <div className="min-h-[34px] mb-4 flex items-start">
+                                    <div className="min-h-[34px] mb-3 flex items-start justify-between gap-2">
                                         <span className="inline-block text-[11px] font-mono text-accent-hover bg-accent/10 border border-accent/25 px-2.5 py-1 rounded-md">
                                             {service.stack}
                                         </span>
+                                        <span className="text-[10px] font-mono text-text-muted">0{sIdx + 1}</span>
                                     </div>
+                                    <ServiceInteractivePreview index={sIdx} />
                                     <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-accent-hover transition-colors text-balance">
                                         {service.title}
                                     </h3>
