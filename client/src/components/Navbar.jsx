@@ -6,6 +6,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [activeSection, setActiveSection] = useState('hero');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,6 +19,34 @@ const Navbar = () => {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const sectionIds = ['hero', 'about', 'projects', 'contact'];
+        const elements = sectionIds
+            .map((id) => document.getElementById(id))
+            .filter(Boolean);
+
+        if (elements.length === 0) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visible = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+                if (visible.length > 0) {
+                    setActiveSection(visible[0].target.id);
+                }
+            },
+            {
+                rootMargin: '-25% 0px -55% 0px',
+                threshold: [0.1, 0.25, 0.5]
+            }
+        );
+
+        elements.forEach((el) => observer.observe(el));
+        return () => observer.disconnect();
     }, []);
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -61,17 +90,26 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-center space-x-8">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    onClick={(e) => handleNavClick(e, link.href)}
-                                    className="text-text-muted hover:text-white font-medium text-sm transition-colors duration-300 relative group"
-                                >
-                                    {link.name}
-                                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = activeSection === link.href.slice(1);
+                                return (
+                                    <a
+                                        key={link.name}
+                                        href={link.href}
+                                        onClick={(e) => handleNavClick(e, link.href)}
+                                        className={`font-medium text-sm transition-colors duration-300 relative group ${
+                                            isActive ? 'text-white' : 'text-text-muted hover:text-white'
+                                        }`}
+                                    >
+                                        {link.name}
+                                        <span
+                                            className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
+                                                isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                                            }`}
+                                        ></span>
+                                    </a>
+                                );
+                            })}
                             <a
                                 href="#contact"
                                 onClick={(e) => handleNavClick(e, '#contact')}
@@ -106,16 +144,23 @@ const Navbar = () => {
                         className="md:hidden bg-primary/95 backdrop-blur-md border-t border-border"
                     >
                         <div className="px-4 pt-3 pb-4 space-y-1">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    onClick={(e) => handleNavClick(e, link.href)}
-                                    className="text-text-muted hover:text-white hover:bg-surface block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300"
-                                >
-                                    {link.name}
-                                </a>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = activeSection === link.href.slice(1);
+                                return (
+                                    <a
+                                        key={link.name}
+                                        href={link.href}
+                                        onClick={(e) => handleNavClick(e, link.href)}
+                                        className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 ${
+                                            isActive
+                                                ? 'text-white bg-accent/15 border border-accent/30'
+                                                : 'text-text-muted hover:text-white hover:bg-surface'
+                                        }`}
+                                    >
+                                        {link.name}
+                                    </a>
+                                );
+                            })}
                             <a
                                 href="#contact"
                                 onClick={(e) => handleNavClick(e, '#contact')}

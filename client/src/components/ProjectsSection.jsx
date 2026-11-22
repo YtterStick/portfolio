@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaTimes, FaCheckCircle, FaShieldAlt, FaRobot } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaTimes, FaCheckCircle } from 'react-icons/fa';
 import { useScroll } from '../context/ScrollContext';
 import axios from 'axios';
 import { projectsData } from '../data/projects';
@@ -28,24 +28,9 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity duration-300" />
                 
-                {/* Badge Chip */}
-                {project.badge && (
-                    <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-10 flex items-center gap-1.5">
-                        <span className="px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-accent/90 text-white shadow-md shadow-accent/30 flex items-center gap-1 backdrop-blur-md">
-                            {project.featured ? <FaRobot className="text-[10px]" /> : null}
-                            {project.badge}
-                        </span>
-                        {project.featured && (
-                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md flex items-center gap-1">
-                                <FaShieldAlt className="text-[10px]" /> Anti-Cheat
-                            </span>
-                        )}
-                    </div>
-                )}
-
                 {/* Category & Title */}
                 <div className="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 z-10">
-                    <span className="text-accent text-[10px] sm:text-[11px] font-bold tracking-[0.18em] uppercase mb-0.5 sm:mb-1 block">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-accent/20 border border-accent/40 text-accent-hover text-[10px] font-bold tracking-[0.16em] uppercase mb-1.5 backdrop-blur-xs">
                         {project.category}
                     </span>
                     <h3 className="text-xl sm:text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 truncate">
@@ -277,11 +262,6 @@ const ProjectsSection = () => {
                                             <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-accent/90 text-white text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase rounded-full">
                                                 {selectedProject.category}
                                             </span>
-                                            {selectedProject.badge && (
-                                                <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-primary/80 border border-border text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase rounded-full">
-                                                    {selectedProject.badge}
-                                                </span>
-                                            )}
                                         </div>
                                         <h3 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
                                             {selectedProject.title}

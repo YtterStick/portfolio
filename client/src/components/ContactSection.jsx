@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaCopy, FaCheck } from 'react-icons/fa';
 
 const ContactSection = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +11,25 @@ const ContactSection = () => {
         message: ''
     });
     const [status, setStatus] = useState('');
+    const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+    const [copied, setCopied] = useState(false);
+
+    const showToast = (type, message) => {
+        setToast({ type, message });
+        setTimeout(() => {
+            setToast((prev) => (prev?.message === message ? null : prev));
+        }, 5000);
+    };
+
+    const handleCopyEmail = async () => {
+        try {
+            await navigator.clipboard.writeText('andreidilag12@gmail.com');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            showToast('error', 'Could not copy email automatically. Please copy andreidilag12@gmail.com.');
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,32 +37,66 @@ const ContactSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setStatus('sending');
+        const trimmed = {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            subject: formData.subject.trim(),
+            message: formData.message.trim()
+        };
 
-        const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-        const apiEndpoint = API_BASE ? `${API_BASE}/api/inquiries` : '/api/inquiries';
-
-        // Tier 1: Attempt backend API (/api/inquiries or configured VITE_API_URL)
-        let backendSuccess = false;
-        try {
-            const res = await axios.post(apiEndpoint, formData, {
-                headers: { 'Content-Type': 'application/json' },
-                timeout: 7000
-            });
-            if (res.status >= 200 && res.status < 300) {
-                backendSuccess = true;
-            }
-        } catch (apiError) {
-            console.warn('Backend API submission skipped or unavailable; attempting direct delivery fallback...', apiError?.message);
+        if (!trimmed.name || !trimmed.email || !trimmed.subject || !trimmed.message) {
+            showToast('error', 'Please fill out all required fields before sending.');
+            return;
         }
-
-        if (backendSuccess) {
-            setStatus('success');
-            setFormData({ name: '', email: '', subject: '', message: '' });
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) {
+            showToast('error', 'Please enter a valid email address.');
             return;
         }
 
-        // Tier 2: Automatic failover to direct email delivery (FormSubmit -> andreidilag12@gmail.com)
+        setStatus('sending');
+        setToast(null);
+
+        const FORM_ENDPOINT = (import.meta.env.VITE_FORM_ENDPOINT || import.meta.env.NEXT_PUBLIC_FORM_ENDPOINT || '').trim();
+        const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
+        // Tier 1: Configured static-site form endpoint (Web3Forms / Formspree)
+        if (FORM_ENDPOINT) {
+            try {
+                const res = await fetch(FORM_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(trimmed)
+                });
+                if (res.ok) {
+                    setStatus('success');
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                    showToast('success', 'Message sent! I will get back to you within 24 hours.');
+                    return;
+                }
+            } catch (err) {
+                console.warn('Configured form endpoint failed; falling back...', err);
+            }
+        }
+
+        // Tier 2: Optional backend API if VITE_API_URL is configured
+        if (API_BASE) {
+            try {
+                const res = await axios.post(`${API_BASE}/api/inquiries`, trimmed, {
+                    headers: { 'Content-Type': 'application/json' },
+                    timeout: 7000
+                });
+                if (res.status >= 200 && res.status < 300) {
+                    setStatus('success');
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                    showToast('success', 'Message sent! I will get back to you within 24 hours.');
+                    return;
+                }
+            } catch (apiError) {
+                console.warn('Backend API unavailable; attempting FormSubmit fallback...', apiError?.message);
+            }
+        }
+
+        // Tier 3: Direct FormSubmit AJAX delivery -> andreidilag12@gmail.com
         try {
             const fallbackRes = await fetch('https://formsubmit.co/ajax/andreidilag12@gmail.com', {
                 method: 'POST',
@@ -52,10 +105,10 @@ const ContactSection = () => {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    _subject: `New Portfolio Message: ${formData.subject || 'No Subject'} from ${formData.name}`,
-                    message: formData.message
+                    name: trimmed.name,
+                    email: trimmed.email,
+                    _subject: `New Portfolio Message: ${trimmed.subject} from ${trimmed.name}`,
+                    message: trimmed.message
                 })
             });
 
@@ -63,14 +116,16 @@ const ContactSection = () => {
             if (fallbackRes.ok && (data.success === true || data.success === 'true' || data.message)) {
                 setStatus('success');
                 setFormData({ name: '', email: '', subject: '', message: '' });
+                showToast('success', 'Message sent! I will get back to you within 24 hours.');
                 return;
             }
         } catch (fallbackError) {
             console.error('Direct fallback delivery error:', fallbackError);
         }
 
-        // Tier 3: If network error or adblocker prevented automated delivery
+        // Tier 4: Clean mailto fallback
         setStatus('error');
+        showToast('error', 'Automated delivery was blocked on this connection. Use the direct email button below.');
     };
 
     return (
@@ -122,11 +177,36 @@ const ContactSection = () => {
                                     <div className="bg-accent/10 p-3 rounded-lg text-accent">
                                         <FaEnvelope size={18} />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0 flex-1">
                                         <p className="text-xs text-text-muted mb-1 tracking-widest uppercase">Email</p>
-                                        <a href="mailto:andreidilag12@gmail.com" className="text-white hover:text-accent transition-colors duration-300 font-medium text-sm break-all">
-                                            andreidilag12@gmail.com
-                                        </a>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <a href="mailto:andreidilag12@gmail.com" className="text-white hover:text-accent transition-colors duration-300 font-medium text-sm break-all">
+                                                andreidilag12@gmail.com
+                                            </a>
+                                            <div className="relative inline-flex items-center">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleCopyEmail}
+                                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-secondary border border-border hover:border-accent text-[11px] text-text-muted hover:text-white transition-colors cursor-pointer"
+                                                    aria-label="Copy email address"
+                                                >
+                                                    {copied ? <FaCheck className="text-emerald-400" size={10} /> : <FaCopy size={10} />}
+                                                    <span>{copied ? 'Copied!' : 'Copy'}</span>
+                                                </button>
+                                                <AnimatePresence>
+                                                    {copied && (
+                                                        <motion.span
+                                                            initial={{ opacity: 0, y: 4 }}
+                                                            animate={{ opacity: 1, y: 0 }}
+                                                            exit={{ opacity: 0, y: 4 }}
+                                                            className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-emerald-500 text-white text-[10px] font-semibold whitespace-nowrap shadow-md pointer-events-none"
+                                                        >
+                                                            Copied!
+                                                        </motion.span>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -264,6 +344,24 @@ const ContactSection = () => {
                                             </>
                                         )}
                                     </button>
+
+                                    <AnimatePresence>
+                                        {toast && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 8 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 8 }}
+                                                role="status"
+                                                className={`mt-4 p-3.5 rounded-lg border text-sm font-medium text-center ${
+                                                    toast.type === 'success'
+                                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                                        : 'bg-red-500/10 border-red-500/30 text-red-300'
+                                                }`}
+                                            >
+                                                {toast.message}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
                                     {status === 'error' && (
                                         <div className="mt-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-center space-y-2">

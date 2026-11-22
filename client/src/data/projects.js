@@ -3,19 +3,19 @@ export const projectsData = [
         _id: '1',
         title: 'Evalo',
         subtitle: 'Assessment & Student Review Portal with AI & Anti-Cheat Proctoring',
-        category: 'AI EdTech & Proctoring System',
+        category: 'AI EDTECH',
         featured: true,
         description: 'An end-to-end digital assessment platform combining strict anti-cheat proctoring, flexible AI-assisted or manual exam authoring, student AI study tools, and automated OpenCV OMR bubble-sheet grading.',
         caseStudy: {
             problem: 'Educators struggled with widespread online exam cheating, time-consuming manual quiz creation, and slow paper bubble-sheet grading.',
             solution: 'Built a full-stack Next.js + FastAPI platform with 3-strike fullscreen anti-cheat proctoring, GenAI/manual exam authoring, and OpenCV OMR sheet scanning.',
-            impact: 'Cut exam prep & grading time by [X]% and reduced unauthorized tab-switching incidents by [X]% across [X]+ student assessments.'
+            impact: 'Automated quiz generation and OMR bubble-sheet grading while enforcing 3-strike fullscreen proctoring across classroom assessments.'
         },
         metrics: [
-            { label: 'Grading Time Saved', value: '[X]% Faster' },
-            { label: 'Anti-Cheat Enforcement', value: '3-Strike Auto-Submit' },
-            { label: 'Assessments Processed', value: '[X]+ Exams' },
-            { label: 'Evaluation Engine', value: 'OpenCV OMR & AI' }
+            { label: 'GRADING', value: 'Automated OMR' },
+            { label: 'PROCTORING', value: '3-Strike Lock' },
+            { label: 'EXAM AUTHORING', value: 'AI & Manual Modes' },
+            { label: 'STUDY TOOLS', value: 'Pointers & Flashcards' }
         ],
         keyFeatures: [
             {
@@ -44,20 +44,19 @@ export const projectsData = [
         _id: '2',
         title: 'StarWashPH',
         subtitle: 'Enterprise Laundry Logistics & Multi-Site Operations Platform',
-        category: 'Enterprise Solution',
+        category: 'ENTERPRISE LOGISTICS',
         featured: false,
-        badge: 'Enterprise Production',
         description: 'A full-stack Spring Boot, MongoDB, and React platform unifying multi-branch laundry logistics, customer self-service order tracking, and real-time executive reporting.',
         caseStudy: {
             problem: 'Multi-branch laundry operations relied on fragmented spreadsheets and manual status updates, causing order delays and high administrative overhead.',
             solution: 'Architected a centralized Spring Boot + MongoDB backend with a React Vite self-service portal, automated branch dispatch, and RBAC admin dashboards.',
-            impact: 'Reduced manual administrative friction by 40%, accelerated order turnaround by [X]%, and unified tracking across [X]+ branch locations.'
+            impact: 'Reduced manual administrative friction by 40%, streamlined branch dispatch, and unified real-time order tracking across multiple branches.'
         },
         metrics: [
-            { label: 'Admin Friction', value: '40% Reduction' },
-            { label: 'Order Turnaround', value: '[X]% Faster' },
-            { label: 'Architecture', value: 'Spring Boot + React' },
-            { label: 'Database', value: 'MongoDB Scaled' }
+            { label: 'ADMIN FRICTION', value: '40% Reduction' },
+            { label: 'OPERATIONS', value: 'Multi-Branch Sync' },
+            { label: 'ARCHITECTURE', value: 'Spring Boot + React' },
+            { label: 'DATABASE', value: 'MongoDB Scaled' }
         ],
         keyFeatures: [
             {
@@ -82,20 +81,18 @@ export const projectsData = [
         _id: '3',
         title: 'HR TNA Payroll',
         subtitle: 'Time & Attendance, Payroll Cycles and Benefits Management System',
-        category: 'HR Management System',
+        category: 'HR & PAYROLL',
         featured: false,
-        badge: 'HR & Operations',
         description: 'An automated human resources, time-and-attendance (TNA), and payroll platform with multi-tier benefits configuration, tax/overtime calculations, and role-based audit trails.',
         caseStudy: {
             problem: 'Manual attendance reconciliation and spreadsheet payroll runs created costly calculation errors, compliance risks, and multi-day payout delays.',
             solution: 'Built a centralized PHP + MySQL payroll engine that syncs attendance logs, automates tax/benefit deductions, and enforces role-based audit trails.',
-            impact: 'Eliminated [X]% of manual payroll calculation errors and cut cycle processing time from [X] days to [X] hours for [X]+ employees.'
+            impact: 'Eliminated manual spreadsheet reconciliation by automating attendance-to-payroll calculations, tax/benefit deductions, and audit logs.'
         },
         metrics: [
-            { label: 'Cycle Time Saved', value: '[X]% Faster Runs' },
-            { label: 'Payroll Accuracy', value: '[X]% Error-Free' },
-            { label: 'Architecture', value: 'PHP + MySQL + JS' },
-            { label: 'Security', value: 'Role-Based Auditing' }
+            { label: 'PAYROLL ENGINE', value: 'Automated Runs' },
+            { label: 'COMPLIANCE', value: 'Role-Based Audits' },
+            { label: 'ARCHITECTURE', value: 'PHP + MySQL + JS' }
         ],
         keyFeatures: [
             {
@@ -120,20 +117,19 @@ export const projectsData = [
         _id: '4',
         title: 'Tactiq',
         subtitle: 'Unified Business Operating System for CRM, Invoicing & Project Delivery',
-        category: 'SaaS & Business OS',
-        featured: true,
-        badge: 'Multi-Workspace SaaS',
+        category: 'MULTI-TENANT SAAS',
+        featured: false,
         description: 'A unified Next.js business operating system that brings customer relationships, invoicing, client portals, and project delivery into a single connected workspace—eliminating app-switching and data silos.',
         caseStudy: {
             problem: 'Growing service businesses and agencies lose visibility and billable hours juggling disconnected CRM, invoicing, and project tracking tools.',
             solution: 'Built a multi-workspace Next.js platform featuring isolated client portals, role-based audit trails, and timezone/currency-aware (Asia/Manila, PHP) operations.',
-            impact: 'Eliminated [X]+ hours of weekly app-switching and centralized [X]% of client communication, billing, and delivery into one workspace.'
+            impact: 'Consolidated client portals, CRM, invoicing, and project tracking into a single multi-tenant workspace built for agency operations.'
         },
         metrics: [
-            { label: 'App-Switching Saved', value: '[X]+ hrs/week' },
-            { label: 'Architecture', value: 'Next.js Multi-Tenant' },
-            { label: 'Auditability', value: 'Full Action Trail' },
-            { label: 'Localization', value: 'Multi-Currency & TZ' }
+            { label: 'WORKSPACE', value: 'All-in-One OS' },
+            { label: 'ARCHITECTURE', value: 'Next.js Multi-Tenant' },
+            { label: 'AUDITABILITY', value: 'Full Action Trail' },
+            { label: 'LOCALIZATION', value: 'Multi-Currency & TZ' }
         ],
         keyFeatures: [
             {
@@ -162,20 +158,19 @@ export const projectsData = [
         _id: '5',
         title: 'AniVerse',
         subtitle: 'Dark-Mode Anime Discovery, Watchlist & Streaming Platform',
-        category: 'Media & Streaming Web App',
+        category: 'STREAMING WEB APP',
         featured: false,
-        badge: 'Cloudflare Pages',
         description: 'A fast, responsive dark-themed anime discovery and streaming dashboard engineered for smooth browsing of trending series, personal watchlist management, and persistent watch history tracking.',
         caseStudy: {
             problem: 'Many streaming portals suffer from cluttered layouts, intrusive popups, and poor mobile responsiveness when tracking ongoing series.',
             solution: 'Engineered a sleek, edge-deployed React + Vite streaming interface with instant search, curated trending feeds, watchlist management, and watch-history sync.',
-            impact: 'Delivered sub-second page loads on Cloudflare Edge and improved episode discovery & resume-watching speed by [X]%.'
+            impact: 'Delivered sub-second edge page loads on Cloudflare Pages with instant search, watchlist sync, and distraction-free mobile playback.'
         },
         metrics: [
-            { label: 'Edge Delivery', value: 'Cloudflare Pages' },
-            { label: 'Load Performance', value: 'Sub-Second UI' },
-            { label: 'State Tracking', value: 'Watchlist & History' },
-            { label: 'UX Design', value: 'Mobile-First Dark UI' }
+            { label: 'EDGE DELIVERY', value: 'Cloudflare Pages' },
+            { label: 'PERFORMANCE', value: 'Sub-Second UI' },
+            { label: 'STATE TRACKING', value: 'Watchlist & History' },
+            { label: 'UX DESIGN', value: 'Mobile-First Dark UI' }
         ],
         keyFeatures: [
             {
