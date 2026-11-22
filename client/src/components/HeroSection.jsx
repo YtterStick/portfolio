@@ -285,30 +285,34 @@ const HeroSection = () => {
 
                         <div className="space-y-4 text-xs sm:text-sm">
                             <p className="text-accent font-bold tracking-wide">
-                                &gt; FULL-STACK SOFTWARE ENGINEER &amp; IT EDUCATOR
+                                &gt; IT FACULTY TEACHER (STI FAIRVIEW) &amp; FULL-STACK ENGINEER
                             </p>
                             <h1 className="text-2xl sm:text-4xl font-bold text-text-main tracking-tight leading-snug uppercase text-balance">
                                 Building Scalable Web Apps, AI Automation &amp; Enterprise Systems
                             </h1>
                             <p className="text-text-muted leading-relaxed">
-                                I help businesses, startup founders, and engineering teams ship high-throughput web platforms, AI workflows, and internal tools—backed by deep architectural mastery teaching{' '}
-                                <span className="text-text-main font-semibold">Advanced Database &amp; Network Technology</span>.
+                                Currently serving as an{' '}
+                                <span className="text-text-main font-semibold">IT Faculty Teacher for Advanced Database &amp; Network Technology 2</span>{' '}
+                                at STI College Fairview (Aug 2025 – Present), while engineering production SaaS platforms, AI-automated tools, and enterprise systems for businesses and startups.
                             </p>
                         </div>
 
                         {/* Clean CSS Telemetry Grid */}
                         <div className="my-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="border border-accent/60 bg-primary p-3.5">
+                                <div className="text-[10px] text-text-muted uppercase">CURRENT_FACULTY</div>
+                                <div className="text-sm font-bold text-accent mt-1">Adv. DB &amp; Net Tech 2</div>
+                                <div className="text-[10px] text-text-muted mt-0.5">STI Fairview • Aug 2025–Now</div>
+                            </div>
                             <div className="border border-border bg-primary p-3.5">
                                 <div className="text-[10px] text-text-muted uppercase">SHIPPED_SYSTEMS</div>
                                 <div className="text-sm font-bold text-text-main mt-1">5+ Live Platforms</div>
+                                <div className="text-[10px] text-text-muted mt-0.5">Evalo • Tactiq • AniVerse</div>
                             </div>
                             <div className="border border-border bg-primary p-3.5">
                                 <div className="text-[10px] text-text-muted uppercase">HACKATHON_RANK</div>
                                 <div className="text-sm font-bold text-text-main mt-1">CodeFest Champion</div>
-                            </div>
-                            <div className="border border-border bg-primary p-3.5">
-                                <div className="text-[10px] text-text-muted uppercase">ACADEMIC_ROLE</div>
-                                <div className="text-sm font-bold text-accent mt-1">Advanced DB Faculty</div>
+                                <div className="text-[10px] text-text-muted mt-0.5">Cluster &amp; Nat&apos;l Finalist</div>
                             </div>
                         </div>
 

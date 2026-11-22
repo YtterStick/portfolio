@@ -71,12 +71,6 @@ const Footer = () => {
                                 <span className="text-text-main font-semibold">LOC :</span> Quezon City, Philippines
                             </li>
                             <li>
-                                <span className="text-text-main font-semibold">TEL :</span>{' '}
-                                <a href="tel:+639150475513" className="text-text-main hover:text-accent transition-colors duration-150">
-                                    +63 915 047 5513
-                                </a>
-                            </li>
-                            <li>
                                 <span className="text-text-main font-semibold">MAIL:</span>{' '}
                                 <a href="mailto:andreidilag12@gmail.com" className="text-text-main hover:text-accent transition-colors duration-150 break-all">
                                     andreidilag12@gmail.com

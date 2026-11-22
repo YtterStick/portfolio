@@ -148,16 +148,6 @@ const ContactSection = () => {
 
                             <div className="space-y-4 text-xs">
                                 <div className="p-3.5 bg-primary border border-border">
-                                    <div className="text-[10px] text-text-muted">VOICE_TEL_ENDPOINT:</div>
-                                    <a
-                                        href="tel:+639150475513"
-                                        className="text-sm font-bold text-text-main hover:text-accent inline-block mt-1 transition-colors duration-150"
-                                    >
-                                        +63 915 047 5513
-                                    </a>
-                                </div>
-
-                                <div className="p-3.5 bg-primary border border-border">
                                     <div className="text-[10px] text-text-muted">SMTP_MAIL_ENDPOINT:</div>
                                     <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
                                         <a
@@ -173,6 +163,28 @@ const ContactSection = () => {
                                         >
                                             {copied ? '[ COPIED! ]' : '[ COPY ]'}
                                         </button>
+                                    </div>
+                                </div>
+
+                                <div className="p-3.5 bg-primary border border-border">
+                                    <div className="text-[10px] text-text-muted">SOCIAL_CHANNELS:</div>
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        <a
+                                            href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                        >
+                                            [ LINKEDIN ↗ ]
+                                        </a>
+                                        <a
+                                            href="https://github.com/YtterStick"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                        >
+                                            [ GITHUB ↗ ]
+                                        </a>
                                     </div>
                                 </div>
 

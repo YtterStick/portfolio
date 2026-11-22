@@ -1,12 +1,56 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const ASCII_AVATAR = `
-  .----------.
- /   _    _   \\
-|   (o)  (o)   |
-|      __      |
- \\   \\____/   /
- /|  ANDREI  |\\`;
+const TerminalIdCard = () => {
+    const [imgError, setImgError] = useState(false);
+
+    return (
+        <div className="mb-6 border border-border bg-primary p-4 flex flex-col sm:flex-row items-center sm:items-stretch gap-4">
+            {/* Monochrome / Pixelated Portrait Frame */}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 border border-accent/60 dither-wrap bg-secondary">
+                {!imgError ? (
+                    <img
+                        src="/grad_pic.png"
+                        alt="Andrei Dilag Portrait"
+                        onError={() => setImgError(true)}
+                        className="w-full h-full object-cover object-top dither-img"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-accent font-bold text-lg">
+                        AD
+                    </div>
+                )}
+                <span className="absolute bottom-1 right-1 z-10 w-2 h-2 bg-accent" title="Active" />
+            </div>
+
+            {/* Structured Terminal ID Metadata */}
+            <div className="flex-1 flex flex-col justify-between text-xs w-full">
+                <div className="flex items-center justify-between border-b border-border pb-1.5 mb-2">
+                    <span className="font-bold text-text-main tracking-wider">ID // ANDREI_DILAG</span>
+                    <span className="text-[10px] text-accent font-bold">[ ACTIVE ]</span>
+                </div>
+                <div className="space-y-1 text-[11px]">
+                    <div className="flex justify-between gap-2">
+                        <span className="text-text-muted">ROLE:</span>
+                        <span className="text-text-main font-semibold text-right">IT Faculty &amp; Full-Stack Eng</span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                        <span className="text-text-muted">INST:</span>
+                        <span className="text-accent font-semibold text-right">STI College Fairview</span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                        <span className="text-text-muted">COURSES:</span>
+                        <span className="text-text-main text-right">Adv. DB &amp; Net Tech 2</span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                        <span className="text-text-muted">TERM:</span>
+                        <span className="text-text-muted text-right">AUG 2025 – PRESENT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const ServiceInteractivePreview = ({ index }) => {
     const [tenant, setTenant] = useState('CLIENT_PORTAL');
@@ -44,7 +88,7 @@ const ServiceInteractivePreview = ({ index }) => {
                         <span className="text-text-main font-bold">{active.metric}</span>
                     </div>
                     <span className="text-[10px] px-2 py-0.5 bg-primary text-accent border border-border">
-                        {active.badge}
+                        [ {active.badge} ]
                     </span>
                 </div>
             </div>
@@ -117,7 +161,7 @@ const ServiceInteractivePreview = ({ index }) => {
 };
 
 const AboutSection = () => {
-    const [activeTab, setActiveTab] = useState('technical');
+    const [skillTab, setSkillTab] = useState('fullstack');
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -125,25 +169,21 @@ const AboutSection = () => {
         {
             image: '/codefest-champ.jpg',
             caption: 'STI Tagisan ng Talino: Codefest Cluster Champion',
-            badge: 'CLUSTER_CHAMPION',
             link: 'https://www.facebook.com/photo/?fbid=1129894329173285&set=pcb.1129900962505955'
         },
         {
             image: '/codefest-national-award.jpg',
-            caption: 'STI Tagisan ng Talino: National Finalist Stage Award Ceremony',
-            badge: 'NATIONAL_FINALIST',
+            caption: 'STI Tagisan ng Talino: National Finalist Award Ceremony',
             link: 'https://www.facebook.com/photo?fbid=468410408855890&set=pcb.468410498855881'
         },
         {
             image: '/codefest-champion-again.jpg',
             caption: 'Codefest National Entrant Team',
-            badge: 'NATIONAL_STAGE',
             link: 'https://www.facebook.com/photo?fbid=468410408855890&set=pcb.468410498855881'
         },
         {
             image: '/recognition-andrei.jpg',
             caption: 'Meet Our Coding Champ: BSIT Student Feature',
-            badge: 'CAMPUS_FEATURE',
             link: 'https://www.facebook.com/fairview.sti.edu/posts/-meet-%F0%9D%90%80%F0%9D%90%A7%F0%9D%90%9D%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%A2-%F0%9D%90%83%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%A0-our-coding-champ-and-2nd-year-bs-in-information-technology-st/892945256201528/'
         }
     ];
@@ -185,101 +225,87 @@ const AboutSection = () => {
         }
     ];
 
-    const technicalSkills = [
-        {
-            category: 'AI & Large Language Models',
-            items: ['Generative AI (GenAI)', 'LLM Prompt Engineering', 'Multimodal AI', 'Semantic Routing', 'Fine-Tuning', 'n8n Workflow Automation', 'Microsoft Copilot Studio', 'Agent 365']
+    const skillGroups = {
+        fullstack: {
+            label: '01. FULLSTACK & AI',
+            rows: [
+                {
+                    group: 'Frontend & UI',
+                    items: ['React Vite', 'Next.js 14', 'TypeScript', 'JavaScript (ES6+)', 'Tailwind CSS', 'Responsive UI']
+                },
+                {
+                    group: 'Backend & APIs',
+                    items: ['Python FastAPI', 'Java Spring Boot', 'Node.js / Express', 'Laravel (PHP)', 'ASP.NET Core', 'REST / JWT / RBAC']
+                },
+                {
+                    group: 'AI & Automation',
+                    items: ['Generative AI / LLMs', 'Prompt Engineering', 'OpenCV (OMR & CV)', 'n8n Workflows', 'Microsoft Copilot Studio', 'Agent 365']
+                }
+            ]
         },
-        {
-            category: 'Advanced Database & Data Engineering',
-            items: ['Relational Data Modeling', 'Complex SQL & Indexing', 'PostgreSQL / Supabase', 'MySQL', 'MongoDB', 'ACID Transactions', 'Query Optimization', 'Stored Procedures & Triggers', 'Data Normalization']
+        database: {
+            label: '02. DATABASE & NETWORK',
+            rows: [
+                {
+                    group: 'Advanced Database',
+                    items: ['PostgreSQL / Supabase', 'MySQL', 'MongoDB', 'Relational Modeling', 'Complex SQL & Indexing', 'ACID Transactions', 'Query Optimization', 'Stored Procedures']
+                },
+                {
+                    group: 'Network Technology',
+                    items: ['Enterprise Routing & Switching', 'VLAN Configuration', 'IPv4/IPv6 Subnetting', 'TCP/IP Protocol Suite', 'Packet Inspection', 'Network Troubleshooting']
+                }
+            ]
         },
-        {
-            category: 'Network Technology & Infrastructure',
-            items: ['Enterprise Routing & Switching', 'VLAN Configuration', 'IPv4/IPv6 Subnetting', 'TCP/IP Protocol Suite', 'Network Troubleshooting', 'Packet Inspection', 'Network Security Policies']
-        },
-        {
-            category: 'Backend & Systems Architecture',
-            items: ['Python FastAPI', 'Java Spring Boot', 'Node.js / Express', 'RESTful APIs', 'OpenCV (OMR & CV)', 'Authentication (JWT / RBAC)', 'End-to-End System Design']
-        },
-        {
-            category: 'Frontend & UI Engineering',
-            items: ['React Vite', 'Next.js 14', 'Tailwind CSS', 'Framer Motion', 'JavaScript (ES6+)', 'TypeScript', 'Responsive Design', 'SASS / SCSS']
-        },
-        {
-            category: 'DevOps & Enterprise Tools',
-            items: ['Git & GitHub', 'CI/CD Pipelines', 'Docker', 'Google Cloud / Drive APIs', 'SAP S/4HANA', 'Agile / Scrum']
+        devops: {
+            label: '03. DEVOPS & TOOLS',
+            rows: [
+                {
+                    group: 'Cloud & Deployment',
+                    items: ['Cloudflare Pages & Workers', 'Docker', 'CI/CD Pipelines', 'Google Cloud / Drive APIs', 'Git & GitHub']
+                },
+                {
+                    group: 'Enterprise & Delivery',
+                    items: ['SAP S/4HANA', 'Agile / Scrum', 'End-to-End System Design', 'Schema Migrations', 'Technical Curriculum Mentoring']
+                }
+            ]
         }
-    ];
-
-    const programmingSkills = [
-        {
-            category: 'Python',
-            items: ['FastAPI', 'OpenCV (Computer Vision)', 'NumPy', 'Automation Scripts', 'AsyncIO', 'Data Parsing']
-        },
-        {
-            category: 'Java',
-            items: ['Spring Boot', 'Spring Data JPA', 'Hibernate', 'Maven', 'Gradle', 'Java Swing']
-        },
-        {
-            category: 'JavaScript & TypeScript',
-            items: ['React', 'Next.js', 'Node.js', 'Express', 'Tailwind CSS', 'ES6+ Syntax', 'DOM & Canvas APIs']
-        },
-        {
-            category: 'Database Query Languages',
-            items: ['SQL (PostgreSQL, MySQL)', 'Mongoose / MongoDB Aggregations', 'Database Indexing', 'Schema Migration']
-        },
-        {
-            category: 'C# & .NET',
-            items: ['ASP.NET Core', 'Entity Framework', 'OOP Architecture', 'System Integration']
-        },
-        {
-            category: 'PHP',
-            items: ['Laravel', 'Server-Side Scripting', 'REST API Construction', 'Composer']
-        }
-    ];
+    };
 
     const experience = [
         {
             hash: 'a9f4c21',
             branch: 'HEAD -> main, faculty',
-            year: 'Aug 2025 – Present',
-            role: 'Faculty Teacher — Advanced Database & Network Technology 2',
+            year: 'AUG 2025 – PRESENT',
+            role: 'IT Faculty Teacher — Advanced Database & Network Technology 2',
             company: 'STI College Fairview',
             highlight: 'Educator & Curriculum Mentor',
             details: [
-                'Instructed Advanced Database coursework covering relational data modeling, query optimization, indexing, ACID transactions, normalization, and stored procedures.',
-                'Facilitated Network Technology 2 hands-on labs focusing on enterprise routing & switching, VLANs, subnetting, TCP/IP protocols, and network troubleshooting.',
-                'Designed practical hands-on assessments, real-world coding challenges, and guided student capstone architectures.',
-                'Fostered high-standard coding ethics, industry-grade database schema design, and technical problem-solving capabilities.'
+                'Instructing college IT students in Advanced Database engineering: relational data modeling, query optimization, indexing, ACID transactions, normalization, and stored procedures.',
+                'Facilitating Network Technology 2 hands-on labs covering enterprise routing & switching, VLANs, subnetting, TCP/IP protocols, and network troubleshooting.',
+                'Designing practical coding assessments and mentoring student capstone system architectures.'
             ]
         },
         {
             hash: '7b3e104',
             branch: 'origin/industry-nlp',
-            year: 'Jan 2026 – May 2026',
+            year: 'JAN 2026 – MAY 2026',
             role: 'Software Developer — NLP Business Development Services',
             company: '3 AM Digital Media',
             highlight: 'Concurrent Industry Role • AI & Backend APIs',
             details: [
-                'Contributed to the design and implementation of backend systems and APIs.',
-                'Assisted in integrating AI models into business applications.',
-                'Collaborated with a cross-functional team to deliver scalable software solutions.',
-                'Applied modern development practices to ensure code quality and performance.'
+                'Contributed to the architecture and implementation of production backend systems and APIs.',
+                'Integrated NLP & AI models into business development applications with cross-functional teams.'
             ]
         },
         {
             hash: '2c1d889',
             branch: 'tag: v1.0-mis',
-            year: 'Jan 2024 – Dec 2024',
+            year: 'JAN 2024 – DEC 2024',
             role: 'Student Assistant — Management Information System',
             company: 'STI College Fairview',
             highlight: 'Infrastructure & Support',
             details: [
-                'Resolved technical issues and maintained system functionality across campus infrastructure.',
-                'Managed and updated student record databases for accuracy and compliance.',
-                'Demonstrated and presented systems to evaluators during institutional assessments.',
-                'Provided ongoing system management and troubleshooting support.'
+                'Maintained campus IT infrastructure, updated student record databases for compliance, and presented systems during institutional evaluations.'
             ]
         }
     ];
@@ -289,7 +315,7 @@ const AboutSection = () => {
             title: 'Codefest National Entrant',
             year: '2024 – 2025',
             org: 'STI Education Services Group',
-            description: '32-hour national mobile app development finalist challenge.'
+            description: '32-hour national mobile app finalist challenge.'
         },
         {
             title: 'Codefest Cluster Champion',
@@ -304,67 +330,54 @@ const AboutSection = () => {
             description: '1st place branch mobile app development champion.'
         },
         {
-            title: 'SAP S/4HANA',
+            title: 'SAP S/4HANA Certification',
             year: '2025',
             org: 'STI College',
-            description: 'Enterprise resource planning & business process integration.'
+            description: 'Enterprise resource planning & process integration.'
         },
         {
             title: 'Full Stack Web Development',
             year: '2022',
             org: 'Course Certification',
-            description: 'Modern full-stack web architecture with React and Node.js.'
+            description: 'Modern web engineering with React & Node.js.'
         },
         {
-            title: 'Student Assistantship',
+            title: 'MIS Student Assistantship',
             year: '2023 – 2024',
             org: 'STI College Fairview',
-            description: 'Campus IT infrastructure operations & database administration.'
+            description: 'Campus IT operations & database administration.'
         }
     ];
+
+    const activeSkillGroup = skillGroups[skillTab];
 
     return (
         <section id="about" className="py-24 sm:py-32 bg-primary border-b border-border font-mono">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
-                {/* 1. Top Row: About Bio + ASCII Avatar & Git Commit Log Experience */}
+                {/* 1. Profile ID Card + Git Log Career Timeline */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Left: Profile & ASCII Avatar */}
                     <div className="lg:col-span-5 term-card p-6 sm:p-7 flex flex-col justify-between">
                         <div>
                             <div className="text-xs text-text-main font-bold border-b border-border pb-2.5 mb-5 flex items-center justify-between">
                                 <span>03 // PROFILE_SPEC.TXT</span>
-                                <span className="text-accent text-[10px]">VERIFIED</span>
+                                <span className="text-accent text-[10px]">[ VERIFIED ]</span>
                             </div>
 
-                            {/* Clean CSS Bordered Avatar Block */}
-                            <div className="flex items-center gap-4 mb-6 p-4 bg-primary border border-border">
-                                <pre className="text-[9px] leading-[1.15] text-text-main font-mono select-none shrink-0 border-r border-border pr-4">
-                                    {ASCII_AVATAR}
-                                </pre>
-                                <div className="text-xs space-y-1">
-                                    <div className="text-text-main font-bold">ANDREI_DILAG</div>
-                                    <div className="text-accent text-[11px]">FULL-STACK_ARCHITECT</div>
-                                    <div className="text-text-muted text-[11px]">ADV_DB_EDUCATOR</div>
-                                </div>
-                            </div>
+                            {/* High-Contrast Monochrome Terminal ID Card */}
+                            <TerminalIdCard />
 
                             <h2 className="text-xl sm:text-2xl font-bold text-text-main mb-4 uppercase text-balance">
-                                Engineering Systems Built for Business Impact
+                                IT Faculty Teacher &amp; Full-Stack Engineer
                             </h2>
                             <div className="text-text-muted text-xs sm:text-sm leading-relaxed space-y-3.5">
                                 <p>
-                                    I partner with businesses, startup founders, and engineering teams to ship{' '}
-                                    <span className="text-text-main font-semibold">production-ready web applications, AI-integrated platforms, and enterprise internal tools</span>{' '}
-                                    using React, Next.js, Python FastAPI, Java Spring Boot, and Node.js.
+                                    I serve as an{' '}
+                                    <span className="text-accent font-semibold">IT Faculty Teacher at STI College Fairview</span>{' '}
+                                    (Aug 2025 – Present), teaching Advanced Database &amp; Network Technology 2 while engineering production software for businesses and startups.
                                 </p>
                                 <p>
-                                    Alongside shipping client and industry software, I serve as an{' '}
-                                    <span className="text-accent font-semibold">Advanced Database and Network Technology educator</span>{' '}
-                                    at STI College Fairview—keeping my fundamentals razor-sharp in relational data modeling, query optimization, ACID reliability, and systems architecture.
-                                </p>
-                                <p>
-                                    Recognized as a{' '}
-                                    <span className="text-text-main font-semibold">CodeFest Champion and National Finalist</span>, I turn complex operational bottlenecks into fast, maintainable software that delivers measurable ROI.
+                                    My dual track in academia and industry keeps my fundamentals razor-sharp—from relational data modeling, indexing, and ACID reliability to modern full-stack delivery with{' '}
+                                    <span className="text-text-main font-semibold">Next.js, React, Python FastAPI, Java Spring Boot, and AI workflows</span>.
                                 </p>
                             </div>
                         </div>
@@ -388,7 +401,7 @@ const AboutSection = () => {
                         </div>
                     </div>
 
-                    {/* Right: Git Commit Log Experience Timeline */}
+                    {/* Git Commit Log Experience Timeline */}
                     <div className="lg:col-span-7 term-card p-6 sm:p-7">
                         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2.5 mb-5 text-xs">
                             <span className="text-text-main font-bold">
@@ -397,16 +410,21 @@ const AboutSection = () => {
                             <span className="text-text-muted">3 COMMITS</span>
                         </div>
 
-                        <div className="space-y-5">
+                        <div className="space-y-4">
                             {experience.map((item, index) => (
-                                <div key={index} className="border border-border bg-primary p-4 sm:p-5">
+                                <div
+                                    key={index}
+                                    className={`border bg-primary p-4 sm:p-5 ${
+                                        index === 0 ? 'border-accent/60' : 'border-border'
+                                    }`}
+                                >
                                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2 pb-2 border-b border-border">
                                         <div>
                                             <span className="text-accent font-bold">* commit {item.hash}</span>{' '}
                                             <span className="text-text-muted">({item.branch})</span>
                                         </div>
                                         <span className="px-2 py-0.5 bg-secondary border border-border text-text-main text-[10px] font-bold uppercase">
-                                            {item.year}
+                                            [ {item.year} ]
                                         </span>
                                     </div>
 
@@ -414,7 +432,7 @@ const AboutSection = () => {
                                         {item.role}
                                     </h4>
                                     <div className="text-xs text-text-muted mt-0.5 mb-3">
-                                        Author: {item.company} &lt;{item.highlight}&gt;
+                                        {item.company} — {item.highlight}
                                     </div>
 
                                     <ul className="space-y-1.5 text-xs text-text-muted">
@@ -447,10 +465,7 @@ const AboutSection = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                         {services.map((service, sIdx) => (
-                            <div
-                                key={sIdx}
-                                className="term-card p-6 flex flex-col"
-                            >
+                            <div key={sIdx} className="term-card p-6 flex flex-col">
                                 <div className="flex-1 flex flex-col">
                                     <div className="min-h-[30px] mb-3.5 flex items-center justify-between gap-2 border-b border-border pb-2">
                                         <span className="text-[11px] font-mono text-accent font-bold truncate">
@@ -479,59 +494,52 @@ const AboutSection = () => {
                     </div>
                 </div>
 
-                {/* 3. Condensed Core Competencies & Certifications Side-by-Side / Compact Tables */}
-                <div id="skills" className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Compact Core Competencies Table (7 cols) */}
-                    <div className="lg:col-span-7 term-card p-6 sm:p-7">
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 mb-5">
+                {/* 3. Interactive Tabbed Core Competencies & Compact 2-Column Certifications */}
+                <div id="skills" className="space-y-8">
+                    {/* Interactive 3-Tab Skills Panel */}
+                    <div className="term-card p-6 sm:p-7">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border pb-4 mb-5">
                             <div>
                                 <div className="text-[11px] text-accent font-bold">
-                                    /PROC/SKILLS // COMPETENCY_INDEX
+                                    /PROC/SKILLS // INTERACTIVE_STACK_VIEWER
                                 </div>
-                                <h2 className="text-lg sm:text-xl font-bold text-text-main uppercase">
+                                <h2 className="text-xl sm:text-2xl font-bold text-text-main uppercase">
                                     CORE_COMPETENCIES &amp; STACK
                                 </h2>
                             </div>
 
-                            <div className="inline-flex border border-border bg-primary">
-                                <button
-                                    type="button"
-                                    onClick={() => setActiveTab('technical')}
-                                    className={`px-3 py-1.5 text-[11px] font-bold cursor-pointer transition-colors duration-150 ${
-                                        activeTab === 'technical'
-                                            ? 'bg-secondary text-accent border-r border-accent'
-                                            : 'text-text-muted hover:text-text-main'
-                                    }`}
-                                >
-                                    [ TECHNICAL ]
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setActiveTab('programming')}
-                                    className={`px-3 py-1.5 text-[11px] font-bold cursor-pointer transition-colors duration-150 ${
-                                        activeTab === 'programming'
-                                            ? 'bg-secondary text-accent border-l border-accent'
-                                            : 'text-text-muted hover:text-text-main'
-                                    }`}
-                                >
-                                    [ LANGUAGES ]
-                                </button>
+                            {/* 3 Interactive Terminal Tabs */}
+                            <div className="flex flex-wrap gap-1.5">
+                                {Object.entries(skillGroups).map(([key, group]) => (
+                                    <button
+                                        key={key}
+                                        type="button"
+                                        onClick={() => setSkillTab(key)}
+                                        className={`px-3 py-1.5 text-[11px] font-bold border cursor-pointer transition-colors duration-150 ${
+                                            skillTab === key
+                                                ? 'bg-primary text-accent border-accent'
+                                                : 'bg-primary text-text-muted border-border hover:text-text-main'
+                                        }`}
+                                    >
+                                        [ {group.label} ]
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
                         <div className="divide-y divide-border border border-border bg-primary">
-                            {(activeTab === 'technical' ? technicalSkills : programmingSkills).map((group, idx) => (
-                                <div key={`${activeTab}-${idx}`} className="p-3.5 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+                            {activeSkillGroup.rows.map((row, idx) => (
+                                <div key={`${skillTab}-${idx}`} className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
                                     <div className="sm:w-48 shrink-0 text-xs font-bold text-text-main uppercase">
-                                        {group.category}
+                                        {row.group}
                                     </div>
-                                    <div className="flex flex-wrap gap-1.5 flex-1">
-                                        {group.items.map((item, i) => (
+                                    <div className="flex flex-wrap gap-2 flex-1">
+                                        {row.items.map((item, i) => (
                                             <span
                                                 key={i}
-                                                className="px-2 py-0.5 bg-secondary border border-border text-text-muted text-[11px]"
+                                                className="px-2.5 py-1 bg-secondary border border-border text-text-main text-[11px]"
                                             >
-                                                {item}
+                                                [ {item} ]
                                             </span>
                                         ))}
                                     </div>
@@ -540,27 +548,30 @@ const AboutSection = () => {
                         </div>
                     </div>
 
-                    {/* Compact Certifications & Accolades Log (5 cols) */}
-                    <div className="lg:col-span-5 term-card p-6 sm:p-7 flex flex-col justify-between">
-                        <div>
-                            <div className="border-b border-border pb-3 mb-5">
-                                <div className="text-[11px] text-accent font-bold">
-                                    /VAR/LOG/ACCOLADES // VERIFIED
+                    {/* Compact 2-Column Certifications & Archive Row */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                        <div className="lg:col-span-8 term-card p-6 sm:p-7">
+                            <div className="border-b border-border pb-3 mb-5 flex items-center justify-between">
+                                <div>
+                                    <div className="text-[11px] text-accent font-bold">
+                                        /VAR/LOG/ACCOLADES // VERIFIED
+                                    </div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-text-main uppercase">
+                                        CERTIFICATIONS &amp; AWARDS
+                                    </h2>
                                 </div>
-                                <h2 className="text-lg sm:text-xl font-bold text-text-main uppercase">
-                                    CERTIFICATIONS &amp; AWARDS
-                                </h2>
+                                <span className="text-[10px] text-text-muted">6 ENTRIES</span>
                             </div>
 
-                            <div className="divide-y divide-border border border-border bg-primary">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {certificates.map((cert, index) => (
-                                    <div key={index} className="p-3.5 space-y-1">
+                                    <div key={index} className="p-3.5 bg-primary border border-border space-y-1">
                                         <div className="flex items-center justify-between gap-2 text-xs">
-                                            <span className="font-bold text-text-main uppercase">
+                                            <span className="font-bold text-text-main uppercase truncate">
                                                 {cert.title}
                                             </span>
                                             <span className="text-[10px] text-accent shrink-0">
-                                                {cert.year}
+                                                [ {cert.year} ]
                                             </span>
                                         </div>
                                         <div className="text-[11px] text-text-muted">
@@ -573,32 +584,32 @@ const AboutSection = () => {
 
                         {/* Compact Spotlight Archive Switcher */}
                         <div
-                            className="mt-6 border border-border bg-primary p-3.5"
+                            className="lg:col-span-4 term-card p-5 flex flex-col justify-between"
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
                         >
-                            <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-border text-[11px]">
+                            <div className="flex items-center justify-between gap-2 pb-2.5 mb-3 border-b border-border text-[11px]">
                                 <span className="text-text-main font-bold">
-                                    ARCHIVE_REEL // 0{currentSlide + 1} OF 0{totalSlides}
+                                    ARCHIVE // 0{currentSlide + 1}/0{totalSlides}
                                 </span>
                                 <div className="flex gap-1.5">
                                     <button
                                         type="button"
                                         onClick={prevSlide}
-                                        className="px-2 py-0.5 border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
+                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
                                     >
                                         [ &lt; ]
                                     </button>
                                     <button
                                         type="button"
                                         onClick={nextSlide}
-                                        className="px-2 py-0.5 border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
+                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
                                     >
                                         [ &gt; ]
                                     </button>
                                 </div>
                             </div>
-                            <div className="h-44 dither-wrap border border-border mb-2.5 bg-secondary">
+                            <div className="h-48 dither-wrap border border-border mb-3 bg-primary">
                                 <img
                                     src={spotlights[currentSlide].image}
                                     alt={spotlights[currentSlide].caption}

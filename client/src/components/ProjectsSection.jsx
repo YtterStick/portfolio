@@ -3,29 +3,28 @@ import { createPortal } from 'react-dom';
 import { useScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
 
-const getDomainLabel = (liveLink, title) => {
-    if (!liveLink || liveLink === '#') return `${title.toLowerCase().replace(/\s+/g, '_')}.bin`;
+const getDomainLabel = (project) => {
+    if (project.isPrivate) return 'PRIVATE_ENTERPRISE';
+    if (!project.liveLink || project.liveLink === '#') {
+        return `${project.title.toLowerCase().replace(/\s+/g, '_')}.app`;
+    }
     try {
-        const host = new URL(liveLink).hostname.replace(/^www\./, '');
-        if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
-            return 'hr-tna-payroll.internal';
-        }
-        return host;
+        return new URL(project.liveLink).hostname.replace(/^www\./, '');
     } catch {
-        return `${title.toLowerCase().replace(/\s+/g, '_')}.bin`;
+        return `${project.title.toLowerCase().replace(/\s+/g, '_')}.app`;
     }
 };
 
-const WindowHeader = ({ index, title, domain }) => (
+const WindowHeader = ({ index, project }) => (
     <div className="flex items-center justify-between px-4 py-2.5 bg-primary border-b border-border text-[11px] font-mono">
         <div className="flex items-center gap-2 truncate">
             <span className="w-1.5 h-1.5 bg-accent shrink-0" />
             <span className="text-text-main font-bold truncate">
-                0{index + 1} // {title.toUpperCase()}
+                0{index + 1} // {project.title.toUpperCase()}
             </span>
         </div>
         <span className="text-text-muted truncate max-w-[45%] text-[10px]">
-            {domain}
+            {getDomainLabel(project)}
         </span>
     </div>
 );
@@ -55,25 +54,21 @@ const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full
             )}
             <div className="absolute bottom-2.5 left-3 z-10">
                 <span className="px-2.5 py-0.5 bg-primary/95 border border-border text-accent text-[10px] font-bold uppercase tracking-wider">
-                    {category}
+                    [ {category} ]
                 </span>
             </div>
         </div>
     );
 };
 
-const FlagshipProjectCard = ({ project, setSelectedProject }) => (
+const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
     <div
         onClick={() => setSelectedProject(project)}
-        className="mb-8 term-card grid grid-cols-1 lg:grid-cols-12 group cursor-pointer font-mono"
+        className="term-card grid grid-cols-1 lg:grid-cols-12 group cursor-pointer font-mono"
     >
-        {/* Left: Dithered 16:9 Screenshot with Clean Window Header */}
+        {/* Left: Large Dithered 16:9 Screenshot */}
         <div className="lg:col-span-7 flex flex-col bg-primary border-b lg:border-b-0 lg:border-r border-border">
-            <WindowHeader
-                index={0}
-                title={project.title}
-                domain={getDomainLabel(project.liveLink, project.title)}
-            />
+            <WindowHeader index={index} project={project} />
             <ProjectThumbnail
                 src={project.image}
                 alt={project.title}
@@ -81,12 +76,12 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
             />
         </div>
 
-        {/* Right: Technical Directory Spec */}
+        {/* Right: Flagship Case Study Pitch */}
         <div className="lg:col-span-5 p-6 sm:p-7 flex flex-col justify-between">
             <div>
                 <div className="flex items-center gap-2 text-[11px] text-accent font-bold mb-2">
                     <span className="w-1.5 h-1.5 bg-accent inline-block" />
-                    <span>FLAGSHIP_CASE_STUDY // PRODUCTION</span>
+                    <span>FLAGSHIP_0{index + 1} // PRODUCTION</span>
                 </div>
                 <h3 className="text-2xl font-bold text-text-main mb-2.5 uppercase group-hover:text-accent transition-colors duration-150">
                     {project.title}
@@ -108,12 +103,12 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
                         TECH_STACK
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                        {project.techStack.map((tech, i) => (
+                        {project.techStack.slice(0, 5).map((tech, i) => (
                             <span
                                 key={i}
                                 className="px-2.5 py-1 bg-primary border border-border text-text-main text-[11px]"
                             >
-                                {tech}
+                                [ {tech} ]
                             </span>
                         ))}
                     </div>
@@ -122,7 +117,7 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
 
             <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-border mt-auto">
                 <span className="px-3.5 py-1.5 bg-primary border border-accent text-accent group-hover:bg-accent group-hover:text-primary text-xs font-bold transition-colors duration-150">
-                    [ READ_MANUAL.MD -&gt; ]
+                    [ VIEW_README.MD -&gt; ]
                 </span>
                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {project.githubLink && project.githubLink !== '#' && (
@@ -135,7 +130,7 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
                             [ SRC ]
                         </a>
                     )}
-                    {project.liveLink && project.liveLink !== '#' && (
+                    {project.liveLink && project.liveLink !== '#' && !project.isPrivate && (
                         <a
                             href={project.liveLink}
                             target="_blank"
@@ -151,17 +146,13 @@ const FlagshipProjectCard = ({ project, setSelectedProject }) => (
     </div>
 );
 
-const ProjectCard = ({ project, index, setSelectedProject }) => {
+const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
     return (
         <div
             onClick={() => setSelectedProject(project)}
             className="term-card flex flex-col group cursor-pointer h-full font-mono"
         >
-            <WindowHeader
-                index={index + 1}
-                title={project.title}
-                domain={getDomainLabel(project.liveLink, project.title)}
-            />
+            <WindowHeader index={index} project={project} />
             <div className="border-b border-border shrink-0">
                 <ProjectThumbnail
                     src={project.image}
@@ -193,14 +184,14 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                                 key={i}
                                 className="px-2.5 py-1 bg-primary border border-border text-text-muted text-[11px]"
                             >
-                                {tech}
+                                [ {tech} ]
                             </span>
                         ))}
                     </div>
                 </div>
 
                 <div className="flex flex-wrap justify-between items-center gap-2 pt-3.5 border-t border-border mt-auto">
-                    <span className="px-3 py-1 bg-primary border border-border text-text-main group-hover:border-accent group-hover:text-accent text-xs font-bold transition-colors duration-150">
+                    <span className="px-3 py-1.5 bg-primary border border-border text-text-main group-hover:border-accent group-hover:text-accent text-xs font-bold transition-colors duration-150">
                         [ VIEW_README.MD -&gt; ]
                     </span>
                     <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
@@ -209,20 +200,26 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
                                 href={project.githubLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
+                                className="px-2.5 py-1.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
                             >
                                 [ SRC ]
                             </a>
                         )}
-                        {project.liveLink && project.liveLink !== '#' && (
-                            <a
-                                href={project.liveLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
-                            >
-                                [ LIVE ↗ ]
-                            </a>
+                        {project.isPrivate ? (
+                            <span className="px-2.5 py-1.5 bg-primary border border-border text-text-muted text-[11px] font-bold">
+                                [ PRIVATE_ENTERPRISE ]
+                            </span>
+                        ) : (
+                            project.liveLink && project.liveLink !== '#' && (
+                                <a
+                                    href={project.liveLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
+                                >
+                                    [ LIVE ↗ ]
+                                </a>
+                            )
                         )}
                     </div>
                 </div>
@@ -235,6 +232,9 @@ const ProjectsSection = () => {
     const [projects] = useState(projectsData);
     const [selectedProject, setSelectedProject] = useState(null);
     const { lenis } = useScroll();
+
+    const flagshipProjects = projects.slice(0, 3);
+    const additionalProjects = projects.slice(3);
 
     useEffect(() => {
         if (selectedProject) {
@@ -269,28 +269,20 @@ const ProjectsSection = () => {
                 {/* Directory Listing Header */}
                 <div className="mb-12 term-card p-6 sm:p-8">
                     <div className="text-xs text-accent font-bold mb-2">
-                        root@andrei-dev:/srv/production/work# ls -la --case-studies
+                        root@andrei-dev:/srv/production/work# ls -la --flagship
                     </div>
                     <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase tracking-tight mb-2.5 text-balance">
-                        02 // SELECTED_WORK &amp; CASE_STUDIES
+                        02 // SELECTED_WORK &amp; FLAGSHIP_SYSTEMS
                     </h2>
                     <p className="text-text-muted text-xs sm:text-sm max-w-3xl leading-relaxed">
-                        Production-grade systems engineered with Generative AI, computer vision proctoring, multi-tenant SaaS architectures, and enterprise databases. Select any project to inspect its full technical case study.
+                        Top 3 flagship platforms engineered with Generative AI, computer vision proctoring, multi-tenant Next.js SaaS architecture, and Cloudflare Edge delivery—followed by additional enterprise deployments.
                     </p>
                 </div>
 
-                {/* Flagship Spotlight */}
-                {projects[0] && (
-                    <FlagshipProjectCard
-                        project={projects[0]}
-                        setSelectedProject={setSelectedProject}
-                    />
-                )}
-
-                {/* 2x2 Inventory Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
-                    {projects.slice(1).map((project, index) => (
-                        <ProjectCard
+                {/* Top 3 Flagship Projects: Evalo, Tactiq, AniVerse */}
+                <div className="space-y-8 mb-16">
+                    {flagshipProjects.map((project, index) => (
+                        <FlagshipProjectCard
                             key={project._id || index}
                             project={project}
                             index={index}
@@ -298,6 +290,34 @@ const ProjectsSection = () => {
                         />
                     ))}
                 </div>
+
+                {/* Additional Systems Sub-Header + 2-Column Row */}
+                {additionalProjects.length > 0 && (
+                    <div>
+                        <div className="flex items-center justify-between border-b border-border pb-3 mb-6">
+                            <div className="flex items-center gap-2.5">
+                                <span className="w-2 h-2 bg-accent inline-block" />
+                                <h3 className="text-sm sm:text-base font-bold text-text-main uppercase tracking-wider">
+                                    ADDITIONAL_SYSTEMS // ENTERPRISE &amp; INTERNAL TOOLS
+                                </h3>
+                            </div>
+                            <span className="text-[11px] text-text-muted">
+                                {additionalProjects.length} MODULES
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+                            {additionalProjects.map((project, idx) => (
+                                <AdditionalProjectCard
+                                    key={project._id || idx}
+                                    project={project}
+                                    index={idx + 3}
+                                    setSelectedProject={setSelectedProject}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Technical README / Case Study Modal */}
@@ -353,15 +373,21 @@ const ProjectsSection = () => {
                                         )}
                                     </div>
                                     <div className="flex flex-wrap gap-2.5 shrink-0">
-                                        {selectedProject.liveLink && selectedProject.liveLink !== '#' && (
-                                            <a
-                                                href={selectedProject.liveLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
-                                            >
-                                                [ LAUNCH_APPLICATION ↗ ]
-                                            </a>
+                                        {selectedProject.isPrivate ? (
+                                            <span className="px-4 py-2 bg-secondary text-text-muted font-bold text-xs border border-border">
+                                                [ PRIVATE_ENTERPRISE ]
+                                            </span>
+                                        ) : (
+                                            selectedProject.liveLink && selectedProject.liveLink !== '#' && (
+                                                <a
+                                                    href={selectedProject.liveLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
+                                                >
+                                                    [ LAUNCH_APPLICATION ↗ ]
+                                                </a>
+                                            )
                                         )}
                                         {selectedProject.githubLink && selectedProject.githubLink !== '#' && (
                                             <a
@@ -460,7 +486,7 @@ const ProjectsSection = () => {
                                             key={i}
                                             className="px-3 py-1 bg-primary text-text-main text-xs border border-border"
                                         >
-                                            {tech}
+                                            [ {tech} ]
                                         </span>
                                     ))}
                                 </div>

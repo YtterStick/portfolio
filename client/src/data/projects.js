@@ -44,6 +44,88 @@ export const projectsData = [
     },
     {
         _id: '2',
+        title: 'Tactiq',
+        subtitle: 'Unified Business Operating System for CRM, Invoicing & Project Delivery',
+        category: 'MULTI-TENANT SAAS',
+        featured: true,
+        valueProp: 'Multi-tenant Next.js business OS unifying client portals, CRM, invoicing, and project delivery in one connected workspace.',
+        highlight: 'Unified CRM, Invoicing & Portals',
+        description: 'A unified Next.js business operating system that brings customer relationships, invoicing, client portals, and project delivery into a single connected workspace—eliminating app-switching and data silos.',
+        caseStudy: {
+            problem: 'Growing service businesses and agencies lose visibility and billable hours juggling disconnected CRM, invoicing, and project tracking tools.',
+            solution: 'Built a multi-workspace Next.js platform featuring isolated client portals, role-based audit trails, and timezone/currency-aware (Asia/Manila, PHP) operations.',
+            impact: 'Consolidated client portals, CRM, invoicing, and project tracking into a single multi-tenant workspace built for agency operations.'
+        },
+        metrics: [
+            { label: 'WORKSPACE', value: 'All-in-One OS' },
+            { label: 'ARCHITECTURE', value: 'Next.js Multi-Tenant' },
+            { label: 'AUDITABILITY', value: 'Full Action Trail' },
+            { label: 'LOCALIZATION', value: 'Multi-Currency & TZ' }
+        ],
+        keyFeatures: [
+            {
+                title: 'Multiple Isolated Workspaces',
+                desc: 'Single sign-on to manage every business unit or client workspace independently with clean data separation.'
+            },
+            {
+                title: 'Dedicated Client Portal',
+                desc: 'Share live project progress, deliverables, and invoices with clients without exposing internal operations.'
+            },
+            {
+                title: 'Comprehensive Audit Trail',
+                desc: 'Every critical change across CRM records, invoices, and tasks is logged with user attribution and timestamps.'
+            },
+            {
+                title: 'Timezone & Currency Aware',
+                desc: 'Configurable per workspace (defaulting to Asia/Manila and PHP) for accurate billing and scheduling.'
+            }
+        ],
+        techStack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Multi-Tenant SaaS'],
+        image: '/images/tactiq.png',
+        githubLink: '#',
+        liveLink: 'https://tactiq-web.onrender.com/'
+    },
+    {
+        _id: '3',
+        title: 'AniVerse',
+        subtitle: 'Dark-Mode Anime Discovery, Watchlist & Streaming Platform',
+        category: 'STREAMING WEB APP',
+        featured: true,
+        valueProp: 'Edge-deployed dark-mode anime discovery and streaming web app on Cloudflare Pages with instant search and watchlist sync.',
+        highlight: 'Sub-Second Edge Streaming',
+        description: 'A fast, responsive dark-themed anime discovery and streaming dashboard engineered for smooth browsing of trending series, personal watchlist management, and persistent watch history tracking.',
+        caseStudy: {
+            problem: 'Many streaming portals suffer from cluttered layouts, intrusive popups, and poor mobile responsiveness when tracking ongoing series.',
+            solution: 'Engineered a sleek, edge-deployed React + Vite streaming interface with instant search, curated trending feeds, watchlist management, and watch-history sync.',
+            impact: 'Delivered sub-second edge page loads on Cloudflare Pages with instant search, watchlist sync, and distraction-free mobile playback.'
+        },
+        metrics: [
+            { label: 'EDGE DELIVERY', value: 'Cloudflare Pages' },
+            { label: 'PERFORMANCE', value: 'Sub-Second UI' },
+            { label: 'STATE TRACKING', value: 'Watchlist & History' },
+            { label: 'UX DESIGN', value: 'Mobile-First Dark UI' }
+        ],
+        keyFeatures: [
+            {
+                title: 'Trending & Catalog Discovery',
+                desc: 'Curated dark-mode dashboard showcasing trending anime series, genres, and instant search filtering.'
+            },
+            {
+                title: 'Watchlist & History Tracking',
+                desc: 'Seamless episode progress tracking and personal watchlist management across sessions.'
+            },
+            {
+                title: 'Edge-Deployed Performance',
+                desc: 'Hosted globally on Cloudflare Pages for low-latency asset delivery and responsive mobile playback.'
+            }
+        ],
+        techStack: ['React', 'Vite', 'Tailwind CSS', 'Cloudflare Pages', 'REST APIs'],
+        image: '/images/aniverse.png',
+        githubLink: '#',
+        liveLink: 'https://anime-verse-ytter.pages.dev/'
+    },
+    {
+        _id: '4',
         title: 'StarWashPH',
         subtitle: 'Enterprise Laundry Logistics & Multi-Site Operations Platform',
         category: 'ENTERPRISE LOGISTICS',
@@ -82,11 +164,12 @@ export const projectsData = [
         liveLink: 'https://www.starwashph.com/'
     },
     {
-        _id: '3',
+        _id: '5',
         title: 'HR TNA Payroll',
         subtitle: 'Time & Attendance, Payroll Cycles and Benefits Management System',
         category: 'HR & PAYROLL',
         featured: false,
+        isPrivate: true,
         valueProp: 'Centralized HR & time-attendance payroll system automating tax, benefits, overtime deductions, and audit logs.',
         highlight: 'Automated Payroll & Audit Logs',
         description: 'An automated human resources, time-and-attendance (TNA), and payroll platform with multi-tier benefits configuration, tax/overtime calculations, and role-based audit trails.',
@@ -117,88 +200,6 @@ export const projectsData = [
         techStack: ['PHP', 'MySQL', 'JavaScript', 'HTML5/CSS3'],
         image: '/payroll.jpg',
         githubLink: '#',
-        liveLink: 'http://54.179.49.80/hr-tools/hr-tna-payroll/public/organization/settings'
-    },
-    {
-        _id: '4',
-        title: 'Tactiq',
-        subtitle: 'Unified Business Operating System for CRM, Invoicing & Project Delivery',
-        category: 'MULTI-TENANT SAAS',
-        featured: false,
-        valueProp: 'Unified Next.js business OS combining client portals, CRM, invoicing, and project delivery in one workspace.',
-        highlight: 'Unified CRM, Invoicing & Portals',
-        description: 'A unified Next.js business operating system that brings customer relationships, invoicing, client portals, and project delivery into a single connected workspace—eliminating app-switching and data silos.',
-        caseStudy: {
-            problem: 'Growing service businesses and agencies lose visibility and billable hours juggling disconnected CRM, invoicing, and project tracking tools.',
-            solution: 'Built a multi-workspace Next.js platform featuring isolated client portals, role-based audit trails, and timezone/currency-aware (Asia/Manila, PHP) operations.',
-            impact: 'Consolidated client portals, CRM, invoicing, and project tracking into a single multi-tenant workspace built for agency operations.'
-        },
-        metrics: [
-            { label: 'WORKSPACE', value: 'All-in-One OS' },
-            { label: 'ARCHITECTURE', value: 'Next.js Multi-Tenant' },
-            { label: 'AUDITABILITY', value: 'Full Action Trail' },
-            { label: 'LOCALIZATION', value: 'Multi-Currency & TZ' }
-        ],
-        keyFeatures: [
-            {
-                title: 'Multiple Isolated Workspaces',
-                desc: 'Single sign-on to manage every business unit or client workspace independently with clean data separation.'
-            },
-            {
-                title: 'Dedicated Client Portal',
-                desc: 'Share live project progress, deliverables, and invoices with clients without exposing internal operations.'
-            },
-            {
-                title: 'Comprehensive Audit Trail',
-                desc: 'Every critical change across CRM records, invoices, and tasks is logged with user attribution and timestamps.'
-            },
-            {
-                title: 'Timezone & Currency Aware',
-                desc: 'Configurable per workspace (defaulting to Asia/Manila and PHP) for accurate billing and scheduling.'
-            }
-        ],
-        techStack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Multi-Tenant SaaS'],
-        image: '/images/tactiq.png',
-        githubLink: '#',
-        liveLink: 'https://tactiq-web.onrender.com/'
-    },
-    {
-        _id: '5',
-        title: 'AniVerse',
-        subtitle: 'Dark-Mode Anime Discovery, Watchlist & Streaming Platform',
-        category: 'STREAMING WEB APP',
-        featured: false,
-        valueProp: 'Edge-deployed dark-mode anime discovery and streaming dashboard with instant search and watchlist sync.',
-        highlight: 'Sub-Second Edge Streaming',
-        description: 'A fast, responsive dark-themed anime discovery and streaming dashboard engineered for smooth browsing of trending series, personal watchlist management, and persistent watch history tracking.',
-        caseStudy: {
-            problem: 'Many streaming portals suffer from cluttered layouts, intrusive popups, and poor mobile responsiveness when tracking ongoing series.',
-            solution: 'Engineered a sleek, edge-deployed React + Vite streaming interface with instant search, curated trending feeds, watchlist management, and watch-history sync.',
-            impact: 'Delivered sub-second edge page loads on Cloudflare Pages with instant search, watchlist sync, and distraction-free mobile playback.'
-        },
-        metrics: [
-            { label: 'EDGE DELIVERY', value: 'Cloudflare Pages' },
-            { label: 'PERFORMANCE', value: 'Sub-Second UI' },
-            { label: 'STATE TRACKING', value: 'Watchlist & History' },
-            { label: 'UX DESIGN', value: 'Mobile-First Dark UI' }
-        ],
-        keyFeatures: [
-            {
-                title: 'Trending & Catalog Discovery',
-                desc: 'Curated dark-mode dashboard showcasing trending anime series, genres, and instant search filtering.'
-            },
-            {
-                title: 'Watchlist & History Tracking',
-                desc: 'Seamless episode progress tracking and personal watchlist management across sessions.'
-            },
-            {
-                title: 'Edge-Deployed Performance',
-                desc: 'Hosted globally on Cloudflare Pages for low-latency asset delivery and responsive mobile playback.'
-            }
-        ],
-        techStack: ['React', 'Vite', 'Tailwind CSS', 'Cloudflare Pages', 'REST APIs'],
-        image: '/images/aniverse.png',
-        githubLink: '#',
-        liveLink: 'https://anime-verse-ytter.pages.dev/'
+        liveLink: '#'
     }
 ];
