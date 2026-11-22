@@ -5,6 +5,8 @@ export const projectsData = [
         subtitle: 'Assessment & Student Review Portal with AI & Anti-Cheat Proctoring',
         category: 'AI EDTECH',
         featured: true,
+        valueProp: 'AI-powered exam platform with 3-strike anti-cheat proctoring and automated OpenCV OMR bubble-sheet grading.',
+        highlight: 'Automated OMR & 3-Strike Lock',
         description: 'An end-to-end digital assessment platform combining strict anti-cheat proctoring, flexible AI-assisted or manual exam authoring, student AI study tools, and automated OpenCV OMR bubble-sheet grading.',
         caseStudy: {
             problem: 'Educators struggled with widespread online exam cheating, time-consuming manual quiz creation, and slow paper bubble-sheet grading.',
@@ -46,6 +48,8 @@ export const projectsData = [
         subtitle: 'Enterprise Laundry Logistics & Multi-Site Operations Platform',
         category: 'ENTERPRISE LOGISTICS',
         featured: false,
+        valueProp: 'Full-stack Spring Boot & React operations platform unifying multi-branch laundry logistics and customer order tracking.',
+        highlight: '40% Less Admin Friction',
         description: 'A full-stack Spring Boot, MongoDB, and React platform unifying multi-branch laundry logistics, customer self-service order tracking, and real-time executive reporting.',
         caseStudy: {
             problem: 'Multi-branch laundry operations relied on fragmented spreadsheets and manual status updates, causing order delays and high administrative overhead.',
@@ -83,6 +87,8 @@ export const projectsData = [
         subtitle: 'Time & Attendance, Payroll Cycles and Benefits Management System',
         category: 'HR & PAYROLL',
         featured: false,
+        valueProp: 'Centralized HR & time-attendance payroll system automating tax, benefits, overtime deductions, and audit logs.',
+        highlight: 'Automated Payroll & Audit Logs',
         description: 'An automated human resources, time-and-attendance (TNA), and payroll platform with multi-tier benefits configuration, tax/overtime calculations, and role-based audit trails.',
         caseStudy: {
             problem: 'Manual attendance reconciliation and spreadsheet payroll runs created costly calculation errors, compliance risks, and multi-day payout delays.',
@@ -119,6 +125,8 @@ export const projectsData = [
         subtitle: 'Unified Business Operating System for CRM, Invoicing & Project Delivery',
         category: 'MULTI-TENANT SAAS',
         featured: false,
+        valueProp: 'Unified Next.js business OS combining client portals, CRM, invoicing, and project delivery in one workspace.',
+        highlight: 'Unified CRM, Invoicing & Portals',
         description: 'A unified Next.js business operating system that brings customer relationships, invoicing, client portals, and project delivery into a single connected workspace—eliminating app-switching and data silos.',
         caseStudy: {
             problem: 'Growing service businesses and agencies lose visibility and billable hours juggling disconnected CRM, invoicing, and project tracking tools.',
@@ -150,7 +158,7 @@ export const projectsData = [
             }
         ],
         techStack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Multi-Tenant SaaS'],
-        image: '/tactiq.jpg',
+        image: '/images/tactiq.png',
         githubLink: '#',
         liveLink: 'https://tactiq-web.onrender.com/'
     },
@@ -160,6 +168,8 @@ export const projectsData = [
         subtitle: 'Dark-Mode Anime Discovery, Watchlist & Streaming Platform',
         category: 'STREAMING WEB APP',
         featured: false,
+        valueProp: 'Edge-deployed dark-mode anime discovery and streaming dashboard with instant search and watchlist sync.',
+        highlight: 'Sub-Second Edge Streaming',
         description: 'A fast, responsive dark-themed anime discovery and streaming dashboard engineered for smooth browsing of trending series, personal watchlist management, and persistent watch history tracking.',
         caseStudy: {
             problem: 'Many streaming portals suffer from cluttered layouts, intrusive popups, and poor mobile responsiveness when tracking ongoing series.',
@@ -187,7 +197,7 @@ export const projectsData = [
             }
         ],
         techStack: ['React', 'Vite', 'Tailwind CSS', 'Cloudflare Pages', 'REST APIs'],
-        image: '/aniverse.jpg',
+        image: '/images/aniverse.png',
         githubLink: '#',
         liveLink: 'https://anime-verse-ytter.pages.dev/'
     }

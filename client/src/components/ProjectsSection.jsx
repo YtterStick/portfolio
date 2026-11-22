@@ -18,90 +18,54 @@ const ProjectCard = ({ project, index, setSelectedProject }) => {
             className="rounded-2xl overflow-hidden border border-border/70 hover:border-accent/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.18)] transition-all duration-300 flex flex-col group cursor-pointer bg-secondary/80 backdrop-blur-md h-full"
             onClick={() => setSelectedProject(project)}
         >
-            {/* Image Header with Fixed Height for Uniformity */}
-            <div className="relative overflow-hidden h-48 sm:h-56 bg-primary shrink-0">
+            {/* 16:9 Project Thumbnail with Single Category Badge */}
+            <div className="relative overflow-hidden aspect-video w-full bg-primary shrink-0">
                 <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="aspect-video w-full object-cover object-top transition-transform duration-300 ease-out group-hover:scale-105"
                     loading="lazy"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity duration-300" />
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-secondary via-secondary/70 to-transparent pointer-events-none" />
                 
-                {/* Category & Title */}
-                <div className="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 z-10">
-                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-accent/20 border border-accent/40 text-accent-hover text-[10px] font-bold tracking-[0.16em] uppercase mb-1.5 backdrop-blur-xs">
+                {/* Category Badge */}
+                <div className="absolute bottom-3 left-4 z-10">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-primary/85 border border-accent/40 text-accent-hover text-[10px] font-bold tracking-[0.16em] uppercase backdrop-blur-sm shadow-sm">
                         {project.category}
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 truncate">
-                        {project.title}
-                    </h3>
                 </div>
             </div>
 
             {/* Content Body */}
-            <div className="p-4 sm:p-6 flex flex-col justify-between grow">
-                <div>
-                    {project.subtitle && (
-                        <p className="text-accent/90 text-xs font-medium mb-3 line-clamp-1">
-                            {project.subtitle}
-                        </p>
-                    )}
-                    {project.caseStudy ? (
-                        <div className="space-y-2.5 mb-5 text-xs sm:text-[13px] leading-relaxed">
-                            <div>
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300/90 mr-1.5">Problem:</span>
-                                <span className="text-text-muted font-light">{project.caseStudy.problem}</span>
-                            </div>
-                            <div>
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-accent-hover mr-1.5">Solution:</span>
-                                <span className="text-text-muted font-light">{project.caseStudy.solution}</span>
-                            </div>
-                            <div className="bg-accent/10 border border-accent/25 rounded-lg px-2.5 py-2">
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 mr-1.5">Impact:</span>
-                                <span className="text-text-main/95 font-medium">{project.caseStudy.impact}</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-text-muted text-sm leading-relaxed font-light mb-5 line-clamp-3">
-                            {project.description}
-                        </p>
-                    )}
+            <div className="p-5 sm:p-6 flex flex-col grow">
+                <div className="flex-1 flex flex-col">
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-white group-hover:text-accent-hover transition-colors duration-300 mb-2">
+                        {project.title}
+                    </h3>
+                    <p className="text-text-muted text-sm leading-relaxed font-light mb-4 line-clamp-2 min-h-[2.75rem]">
+                        {project.valueProp || project.description}
+                    </p>
 
-                    {/* Key Metrics / Highlights Pills */}
-                    {project.metrics && (
-                        <div className="grid grid-cols-2 gap-2 mb-5">
-                            {project.metrics.slice(0, 2).map((metric, mIdx) => (
-                                <div
-                                    key={mIdx}
-                                    className="bg-primary/60 border border-border/40 rounded-xl px-3 py-2 text-center"
-                                >
-                                    <span className="text-[9px] text-text-muted uppercase tracking-wider block font-medium truncate">
-                                        {metric.label}
-                                    </span>
-                                    <span className="text-xs font-semibold text-white truncate block">
-                                        {metric.value}
-                                    </span>
-                                </div>
-                            ))}
+                    {/* Compact Highlight Strip */}
+                    {project.highlight && (
+                        <div className="bg-primary/65 border border-border/50 rounded-xl px-3.5 py-2 mb-4 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                            <span className="text-xs font-semibold text-text-main truncate">
+                                {project.highlight}
+                            </span>
                         </div>
                     )}
 
-                    {/* Tech Stack Pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-6">
-                        {project.techStack.slice(0, 5).map((tech, i) => (
+                    {/* Top 4 Tech Stack Pills (Max 1 Row) */}
+                    <div className="flex items-center gap-1.5 overflow-hidden whitespace-nowrap mb-5 mt-auto">
+                        {project.techStack.slice(0, 4).map((tech, i) => (
                             <span
                                 key={i}
-                                className="text-[11px] bg-primary/80 text-text-muted px-2.5 py-1 rounded-lg border border-border/50 group-hover:border-accent/30 transition-colors"
+                                className="text-[11px] bg-primary/80 text-zinc-300 px-2.5 py-1 rounded-lg border border-border/60 group-hover:border-accent/35 transition-colors shrink-0"
                             >
                                 {tech}
                             </span>
                         ))}
-                        {project.techStack.length > 5 && (
-                            <span className="text-[10px] text-text-muted/70 px-2 py-1 self-center">
-                                +{project.techStack.length - 5} more
-                            </span>
-                        )}
                     </div>
                 </div>
 
