@@ -1,53 +1,53 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    FaDownload, 
-    FaLinkedin, 
-    FaChevronLeft, 
-    FaChevronRight, 
-    FaExternalLinkAlt
-} from 'react-icons/fa';
+import { useState, useEffect, useCallback } from 'react';
+
+const ASCII_AVATAR = `
+   ╔══════════════════╗
+   ║   .----------.   ║
+   ║  /   _    _   \\  ║
+   ║ |   (o)  (o)   | ║
+   ║ |      __      | ║
+   ║  \\   \\____/   /  ║
+   ║  /            \\  ║
+   ║ /|  ANDREI.D  |\\ ║
+   ╚══════════════════╝`;
 
 const ServiceInteractivePreview = ({ index }) => {
-    // Card 0: SaaS Workspace Preview
-    const [tenant, setTenant] = useState('Client Portal');
-    // Card 1: AI Pipeline Preview
+    const [tenant, setTenant] = useState('CLIENT_PORTAL');
     const [step, setStep] = useState(2);
-    // Card 2: Enterprise Payroll/SQL Preview
     const [optimized, setOptimized] = useState(true);
 
     if (index === 0) {
         const tenantData = {
-            'Client Portal': { metric: '98.4% CSAT', status: 'Live Sync', badge: 'RBAC: Client' },
-            'Admin Console': { metric: '₱412K MRR', status: 'Multi-Branch', badge: 'RBAC: Owner' },
-            'API Gateway': { metric: '14ms p95', status: 'JWT Verified', badge: 'FastAPI + Next' }
+            CLIENT_PORTAL: { metric: '98.4% CSAT', status: 'SYNC_OK', badge: 'RBAC:CLIENT' },
+            ADMIN_CONSOLE: { metric: 'PHP 412K', status: 'MULTI_SITE', badge: 'RBAC:OWNER' },
+            API_GATEWAY: { metric: '14ms p95', status: 'JWT_LOCK', badge: 'FASTAPI+NEXT' }
         };
         const active = tenantData[tenant];
         return (
-            <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
-                <div className="flex items-center justify-between gap-1 mb-2.5">
+            <div className="mb-4 p-3 bg-primary border border-border text-[11px]">
+                <div className="flex gap-1 mb-2">
                     {Object.keys(tenantData).map((t) => (
                         <button
                             key={t}
                             type="button"
                             onClick={() => setTenant(t)}
-                            className={`flex-1 py-1 px-1.5 rounded-lg text-[10px] font-mono transition-all cursor-pointer truncate ${
+                            className={`flex-1 py-1 px-1 text-[9px] font-bold border cursor-pointer transition-none truncate ${
                                 tenant === t
-                                    ? 'bg-accent text-white font-semibold'
-                                    : 'bg-secondary/70 text-text-muted hover:text-white'
+                                    ? 'bg-accent text-primary border-accent'
+                                    : 'bg-secondary text-text-muted border-border hover:bg-accent hover:text-primary'
                             }`}
                         >
-                            {t}
+                            [{t.split('_')[0]}]
                         </button>
                     ))}
                 </div>
-                <div className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-secondary/90 border border-border/50 text-xs font-mono">
+                <div className="flex items-center justify-between px-2 py-1.5 bg-secondary border border-border">
                     <div>
-                        <span className="text-[10px] text-text-muted block">{active.status}</span>
-                        <span className="text-white font-bold">{active.metric}</span>
+                        <span className="text-[9px] text-text-muted block">{active.status}</span>
+                        <span className="text-text-main font-bold">{active.metric}</span>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                        {active.badge}
+                    <span className="text-[10px] px-1.5 py-0.5 bg-primary text-accent border border-accent">
+                        [{active.badge}]
                     </span>
                 </div>
             </div>
@@ -55,33 +55,32 @@ const ServiceInteractivePreview = ({ index }) => {
     }
 
     if (index === 1) {
-        const nodes = ['Webhook Input', 'LLM / OpenCV', 'Auto-Action'];
+        const nodes = ['01:WEBHOOK', '02:LLM_CV', '03:DB_COMMIT'];
         return (
-            <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
-                <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[10px] font-mono text-text-muted uppercase">Interactive Pipeline</span>
+            <div className="mb-4 p-3 bg-primary border border-border text-[11px]">
+                <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] text-text-muted">PIPELINE_TRACE</span>
                     <button
                         type="button"
                         onClick={() => setStep((s) => (s + 1) % 3)}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent/20 text-accent-hover hover:bg-accent hover:text-white transition-colors cursor-pointer"
+                        className="text-[10px] px-2 py-0.5 bg-secondary text-accent border border-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-none"
                     >
-                        ▶ Step Node
+                        [ + STEP_NODE ]
                     </button>
                 </div>
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-3 gap-1">
                     {nodes.map((node, i) => (
                         <button
                             key={node}
                             type="button"
                             onClick={() => setStep(i)}
-                            className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                            className={`p-1.5 border text-center cursor-pointer transition-none ${
                                 step === i
-                                    ? 'bg-accent/20 border-accent text-white'
-                                    : 'bg-secondary/60 border-border/50 text-text-muted'
+                                    ? 'bg-accent text-primary border-accent font-bold'
+                                    : 'bg-secondary border-border text-text-muted'
                             }`}
                         >
-                            <span className="text-[9px] font-mono block opacity-70">0{i + 1}</span>
-                            <span className="text-[10px] font-medium block truncate">{node}</span>
+                            <span className="text-[9px] block truncate">{node}</span>
                         </button>
                     ))}
                 </div>
@@ -90,34 +89,26 @@ const ServiceInteractivePreview = ({ index }) => {
     }
 
     return (
-        <div className="mb-5 p-3.5 rounded-xl bg-[#090910] border border-border/70">
-            <div className="flex items-center justify-between mb-2.5">
-                <span className="text-[10px] font-mono text-text-muted uppercase">Engine Mode</span>
+        <div className="mb-4 p-3 bg-primary border border-border text-[11px]">
+            <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-text-muted">ENGINE_MODE</span>
                 <button
                     type="button"
                     onClick={() => setOptimized((o) => !o)}
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors cursor-pointer ${
-                        optimized
-                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                            : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                    }`}
+                    className="text-[10px] px-2 py-0.5 border border-accent bg-secondary text-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-none"
                 >
-                    {optimized ? '✓ Automated ACID' : '⚠ Manual Sheet'}
+                    {optimized ? '[ ACID_AUTO: ON ]' : '[ MANUAL_CSV: OFF ]'}
                 </button>
             </div>
-            <div className="space-y-1.5 font-mono text-[11px]">
-                <div className="flex justify-between">
-                    <span className="text-text-muted">Batch Reconciliation:</span>
-                    <span className={optimized ? 'text-emerald-400 font-semibold' : 'text-rose-400'}>
-                        {optimized ? '0.4s (Zero Errors)' : '4.5 hrs (Manual)'}
+            <div className="space-y-1">
+                <div className="flex justify-between text-[10px]">
+                    <span className="text-text-muted">BATCH_TIME:</span>
+                    <span className="text-accent font-bold">
+                        {optimized ? '0.4s [0_ERRORS]' : '4.5h [DRIFT_RISK]'}
                     </span>
                 </div>
-                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                    <div
-                        className={`h-full transition-all duration-300 ${
-                            optimized ? 'w-1/6 bg-emerald-400' : 'w-full bg-rose-500'
-                        }`}
-                    />
+                <div className="text-accent text-[11px]">
+                    {optimized ? 'LOAD: [██░░░░░░░░] 12%' : 'LOAD: [██████████] 99%'}
                 </div>
             </div>
         </div>
@@ -133,25 +124,25 @@ const AboutSection = () => {
         {
             image: '/codefest-champ.jpg',
             caption: 'STI Tagisan ng Talino: Codefest Cluster Champion',
-            badge: 'Cluster Champion',
+            badge: 'CLUSTER_CHAMPION',
             link: 'https://www.facebook.com/photo/?fbid=1129894329173285&set=pcb.1129900962505955'
         },
         {
             image: '/codefest-national-award.jpg',
             caption: 'STI Tagisan ng Talino: National Finalist Stage Award Ceremony',
-            badge: 'National Finalist',
+            badge: 'NATIONAL_FINALIST',
             link: 'https://www.facebook.com/photo?fbid=468410408855890&set=pcb.468410498855881'
         },
         {
             image: '/codefest-champion-again.jpg',
             caption: 'Codefest National Entrant Team',
-            badge: 'National Stage',
+            badge: 'NATIONAL_STAGE',
             link: 'https://www.facebook.com/photo?fbid=468410408855890&set=pcb.468410498855881'
         },
         {
             image: '/recognition-andrei.jpg',
             caption: 'Meet Our Coding Champ: BSIT Student Feature',
-            badge: 'Campus Feature',
+            badge: 'CAMPUS_FEATURE',
             link: 'https://www.facebook.com/fairview.sti.edu/posts/-meet-%F0%9D%90%80%F0%9D%90%A7%F0%9D%90%9D%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%A2-%F0%9D%90%83%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%A0-our-coding-champ-and-2nd-year-bs-in-information-technology-st/892945256201528/'
         }
     ];
@@ -166,78 +157,11 @@ const AboutSection = () => {
         setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
     }, [totalSlides]);
 
-    // Auto-slide by default every 4.5 seconds (pauses when hovered/dragged)
     useEffect(() => {
         if (isHovered) return;
         const timer = setInterval(nextSlide, 4500);
         return () => clearInterval(timer);
     }, [nextSlide, isHovered]);
-
-    // Allow user to move / swipe the image freely
-    const handleDragEnd = (event, info) => {
-        const threshold = 40;
-        const velocityThreshold = 180;
-
-        if (info.offset.x < -threshold || info.velocity.x < -velocityThreshold) {
-            nextSlide();
-        } else if (info.offset.x > threshold || info.velocity.x > velocityThreshold) {
-            prevSlide();
-        }
-    };
-
-    const technicalSkills = [
-        {
-            category: 'AI & Large Language Models',
-            items: ['Generative AI (GenAI)', 'LLM Prompt Engineering', 'Multimodal AI', 'Semantic Routing', 'Fine-Tuning', 'n8n Workflow Automation', 'Microsoft Copilot Studio', 'Agent 365']
-        },
-        {
-            category: 'Advanced Database & Data Engineering',
-            items: ['Relational Data Modeling', 'Complex SQL & Indexing', 'PostgreSQL / Supabase', 'MySQL', 'MongoDB', 'ACID Transactions', 'Query Optimization', 'Stored Procedures & Triggers', 'Data Normalization']
-        },
-        {
-            category: 'Network Technology & Infrastructure',
-            items: ['Enterprise Routing & Switching', 'VLAN Configuration', 'IPv4/IPv6 Subnetting', 'TCP/IP Protocol Suite', 'Network Troubleshooting', 'Packet Inspection', 'Network Security Policies']
-        },
-        {
-            category: 'Backend & Systems Architecture',
-            items: ['Python FastAPI', 'Java Spring Boot', 'Node.js / Express', 'RESTful APIs', 'OpenCV (OMR & CV)', 'Authentication (JWT / RBAC)', 'End-to-End System Design']
-        },
-        {
-            category: 'Frontend & UI Engineering',
-            items: ['React Vite', 'Next.js 14', 'Tailwind CSS', 'Framer Motion', 'JavaScript (ES6+)', 'TypeScript', 'Responsive Design', 'SASS / SCSS']
-        },
-        {
-            category: 'DevOps & Enterprise Tools',
-            items: ['Git & GitHub', 'CI/CD Pipelines', 'Docker', 'Google Cloud / Drive APIs', 'SAP S/4HANA', 'Agile / Scrum']
-        }
-    ];
-
-    const programmingSkills = [
-        {
-            category: 'Python',
-            items: ['FastAPI', 'OpenCV (Computer Vision)', 'NumPy', 'Automation Scripts', 'AsyncIO', 'Data Parsing']
-        },
-        {
-            category: 'Java',
-            items: ['Spring Boot', 'Spring Data JPA', 'Hibernate', 'Maven', 'Gradle', 'Java Swing']
-        },
-        {
-            category: 'JavaScript & TypeScript',
-            items: ['React', 'Next.js', 'Node.js', 'Express', 'Tailwind CSS', 'ES6+ Syntax', 'DOM & Canvas APIs']
-        },
-        {
-            category: 'Database Query Languages',
-            items: ['SQL (PostgreSQL, MySQL)', 'Mongoose / MongoDB Aggregations', 'Database Indexing', 'Schema Migration']
-        },
-        {
-            category: 'C# & .NET',
-            items: ['ASP.NET Core', 'Entity Framework', 'OOP Architecture', 'System Integration']
-        },
-        {
-            category: 'PHP',
-            items: ['Laravel', 'Server-Side Scripting', 'REST API Construction', 'Composer']
-        }
-    ];
 
     const services = [
         {
@@ -260,13 +184,80 @@ const AboutSection = () => {
         }
     ];
 
+    const technicalSkills = [
+        {
+            category: 'AI & Large Language Models',
+            level: '[█████████░] 94%',
+            items: ['Generative AI (GenAI)', 'LLM Prompt Engineering', 'Multimodal AI', 'Semantic Routing', 'Fine-Tuning', 'n8n Workflow Automation', 'Microsoft Copilot Studio', 'Agent 365']
+        },
+        {
+            category: 'Advanced Database & Data Engineering',
+            level: '[██████████] 98%',
+            items: ['Relational Data Modeling', 'Complex SQL & Indexing', 'PostgreSQL / Supabase', 'MySQL', 'MongoDB', 'ACID Transactions', 'Query Optimization', 'Stored Procedures & Triggers', 'Data Normalization']
+        },
+        {
+            category: 'Network Technology & Infrastructure',
+            level: '[█████████░] 92%',
+            items: ['Enterprise Routing & Switching', 'VLAN Configuration', 'IPv4/IPv6 Subnetting', 'TCP/IP Protocol Suite', 'Network Troubleshooting', 'Packet Inspection', 'Network Security Policies']
+        },
+        {
+            category: 'Backend & Systems Architecture',
+            level: '[██████████] 96%',
+            items: ['Python FastAPI', 'Java Spring Boot', 'Node.js / Express', 'RESTful APIs', 'OpenCV (OMR & CV)', 'Authentication (JWT / RBAC)', 'End-to-End System Design']
+        },
+        {
+            category: 'Frontend & UI Engineering',
+            level: '[█████████░] 95%',
+            items: ['React Vite', 'Next.js 14', 'Tailwind CSS', 'Framer Motion', 'JavaScript (ES6+)', 'TypeScript', 'Responsive Design', 'SASS / SCSS']
+        },
+        {
+            category: 'DevOps & Enterprise Tools',
+            level: '[█████████░] 90%',
+            items: ['Git & GitHub', 'CI/CD Pipelines', 'Docker', 'Google Cloud / Drive APIs', 'SAP S/4HANA', 'Agile / Scrum']
+        }
+    ];
+
+    const programmingSkills = [
+        {
+            category: 'Python',
+            level: '[██████████] 96%',
+            items: ['FastAPI', 'OpenCV (Computer Vision)', 'NumPy', 'Automation Scripts', 'AsyncIO', 'Data Parsing']
+        },
+        {
+            category: 'Java',
+            level: '[█████████░] 92%',
+            items: ['Spring Boot', 'Spring Data JPA', 'Hibernate', 'Maven', 'Gradle', 'Java Swing']
+        },
+        {
+            category: 'JavaScript & TypeScript',
+            level: '[██████████] 96%',
+            items: ['React', 'Next.js', 'Node.js', 'Express', 'Tailwind CSS', 'ES6+ Syntax', 'DOM & Canvas APIs']
+        },
+        {
+            category: 'Database Query Languages',
+            level: '[██████████] 98%',
+            items: ['SQL (PostgreSQL, MySQL)', 'Mongoose / MongoDB Aggregations', 'Database Indexing', 'Schema Migration']
+        },
+        {
+            category: 'C# & .NET',
+            level: '[████████░░] 85%',
+            items: ['ASP.NET Core', 'Entity Framework', 'OOP Architecture', 'System Integration']
+        },
+        {
+            category: 'PHP',
+            level: '[█████████░] 88%',
+            items: ['Laravel', 'Server-Side Scripting', 'REST API Construction', 'Composer']
+        }
+    ];
+
     const experience = [
         {
+            hash: 'a9f4c21',
+            branch: 'HEAD -> main, faculty',
             year: 'Aug 2025 – Present',
             role: 'Faculty Teacher — Advanced Database & Network Technology 2',
             company: 'STI College Fairview',
             highlight: 'Educator & Curriculum Mentor',
-            description: 'Instructing and mentoring IT college students in advanced database engineering, complex SQL architectures, and enterprise computer networking.',
             details: [
                 'Instructed Advanced Database coursework covering relational data modeling, query optimization, indexing, ACID transactions, normalization, and stored procedures.',
                 'Facilitated Network Technology 2 hands-on labs focusing on enterprise routing & switching, VLANs, subnetting, TCP/IP protocols, and network troubleshooting.',
@@ -275,11 +266,12 @@ const AboutSection = () => {
             ]
         },
         {
+            hash: '7b3e104',
+            branch: 'origin/industry-nlp',
             year: 'Jan 2026 – May 2026',
             role: 'Software Developer — NLP Business Development Services',
             company: '3 AM Digital Media',
             highlight: 'Concurrent Industry Role • AI & Backend APIs',
-            description: 'Developed and optimized software solutions focusing on NLP-driven business development.',
             details: [
                 'Contributed to the design and implementation of backend systems and APIs.',
                 'Assisted in integrating AI models into business applications.',
@@ -288,11 +280,12 @@ const AboutSection = () => {
             ]
         },
         {
+            hash: '2c1d889',
+            branch: 'tag: v1.0-mis',
             year: 'Jan 2024 – Dec 2024',
             role: 'Student Assistant — Management Information System',
             company: 'STI College Fairview',
             highlight: 'Infrastructure & Support',
-            description: 'Technical troubleshooting, system maintenance, and supporting academic systems.',
             details: [
                 'Resolved technical issues and maintained system functionality across campus infrastructure.',
                 'Managed and updated student record databases for accuracy and compliance.',
@@ -342,98 +335,103 @@ const AboutSection = () => {
     ];
 
     return (
-        <section id="about" className="py-16 sm:py-28 bg-secondary relative overflow-hidden">
-            {/* Subtle ambient background — GPU radial gradient with 0 blur overhead */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.08]">
-                <div className="absolute -top-40 -left-40 w-96 h-96 bg-[radial-gradient(circle,rgba(99,102,241,0.5)_0%,transparent_70%)]" />
-                <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(99,102,241,0.4)_0%,transparent_70%)]" />
-            </div>
+        <section id="about" className="py-16 sm:py-24 bg-secondary border-b border-border font-mono">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Top Row: About Bio + ASCII Avatar & Git Commit Log Experience */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+                    {/* Left: Profile & ASCII Avatar */}
+                    <div className="lg:col-span-5 border border-border bg-primary p-5 sm:p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="text-xs text-accent font-bold border-b border-border pb-2 mb-4">
+                                ╔══[ 03 // CAT /ETC/ANDREI/PROFILE.TXT ]
+                            </div>
 
-            <div className="container mx-auto px-4 sm:px-6 relative z-10">
-                {/* Top Row: About Story & Experience */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-14 sm:mb-20">
-                    {/* About Story */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                    >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-4">
-                            <span>About Me</span>
-                        </div>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6 sm:mb-8 tracking-tight text-balance">
-                            Engineering Systems Built for Business Impact
-                        </h2>
-                        <div className="text-text-muted text-base sm:text-lg leading-relaxed space-y-4 sm:space-y-5 font-light">
-                            <p>
-                                I partner with businesses, startup founders, and engineering teams to ship <span className="text-white font-medium">production-ready web applications, AI-integrated platforms, and enterprise internal tools</span> using <span className="text-white font-medium">React, Next.js, Python FastAPI, Java Spring Boot, and Node.js</span>.
-                            </p>
-                            <p>
-                                Alongside shipping client and industry software, I serve as an <span className="text-accent font-medium">Advanced Database and Network Technology educator</span> at STI College Fairview—a role that keeps my fundamentals razor-sharp in relational data modeling, query optimization, ACID reliability, and systems architecture.
-                            </p>
-                            <p>
-                                Recognized as a <span className="text-accent font-medium">CodeFest Champion and National Finalist</span>, I focus on turning complex operational bottlenecks into fast, maintainable software that delivers measurable ROI.
-                            </p>
+                            {/* ASCII Avatar + Dithered Portrait Block */}
+                            <div className="flex flex-col sm:flex-row items-center gap-4 mb-5 p-3 bg-secondary border border-border">
+                                <pre className="text-[9px] leading-[1.15] text-accent font-mono select-none shrink-0">
+                                    {ASCII_AVATAR}
+                                </pre>
+                                <div className="text-xs space-y-1">
+                                    <div className="text-accent font-bold">USR: ANDREI_DILAG</div>
+                                    <div className="text-text-main">CLASS: FULL-STACK_ARCHITECT</div>
+                                    <div className="text-text-muted">SUBCLASS: ADV_DB_EDUCATOR</div>
+                                    <div className="text-accent text-[11px] pt-1">LVL: [██████████] 99</div>
+                                </div>
+                            </div>
+
+                            <h2 className="text-xl sm:text-2xl font-bold text-text-main mb-4 uppercase text-balance">
+                                Engineering Systems Built for Business Impact
+                            </h2>
+                            <div className="text-text-muted text-xs sm:text-sm leading-relaxed space-y-3">
+                                <p>
+                                    I partner with businesses, startup founders, and engineering teams to ship{' '}
+                                    <span className="text-text-main font-bold">production-ready web applications, AI-integrated platforms, and enterprise internal tools</span>{' '}
+                                    using React, Next.js, Python FastAPI, Java Spring Boot, and Node.js.
+                                </p>
+                                <p>
+                                    Alongside shipping client and industry software, I serve as an{' '}
+                                    <span className="text-accent font-bold">Advanced Database and Network Technology educator</span>{' '}
+                                    at STI College Fairview—keeping my fundamentals razor-sharp in relational data modeling, query optimization, ACID reliability, and systems architecture.
+                                </p>
+                                <p>
+                                    Recognized as a{' '}
+                                    <span className="text-accent font-bold">CodeFest Champion and National Finalist</span>, I turn complex operational bottlenecks into fast, maintainable software that delivers measurable ROI.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
+                        <div className="flex flex-col sm:flex-row gap-2.5 mt-6 pt-4 border-t border-border">
                             <a
                                 href="/andrei_dilag_resume.pdf"
                                 download="andrei_dilag_resume.pdf"
-                                className="w-full sm:w-auto px-6 py-3.5 sm:py-3 bg-white text-primary font-semibold rounded-xl hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-white/10 text-sm"
+                                className="px-4 py-2.5 bg-accent text-primary font-bold text-xs border border-accent hover:bg-primary hover:text-accent text-center transition-none"
                             >
-                                <FaDownload /> Download Resume
+                                [ DOWNLOAD_RESUME.PDF ↓ ]
                             </a>
                             <a
                                 href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:w-auto px-6 py-3.5 sm:py-3 border border-border/80 text-white font-medium rounded-xl hover:border-accent hover:text-accent transition-colors duration-300 flex items-center justify-center gap-2 text-sm"
+                                className="px-4 py-2.5 bg-secondary text-text-main font-bold text-xs border border-border hover:bg-accent hover:text-primary hover:border-accent text-center transition-none"
                             >
-                                <FaLinkedin /> Connect on LinkedIn
+                                [ CONNECT_LINKEDIN ↗ ]
                             </a>
                         </div>
-                    </motion.div>
+                    </div>
 
-                    {/* Experience Timeline */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
-                        viewport={{ once: true }}
-                    >
-                        <h3 className="text-2xl font-semibold text-white mb-8 border-b border-border/60 pb-4 flex items-center justify-between">
-                            <span>Professional Experience</span>
-                            <span className="text-xs font-normal text-text-muted">Education & Industry</span>
-                        </h3>
-                        <div className="space-y-10 border-l border-border/80 pl-7 relative mt-8">
+                    {/* Right: Git Commit Log Experience Timeline */}
+                    <div className="lg:col-span-7 border border-border bg-primary p-5 sm:p-6">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2 mb-5 text-xs">
+                            <span className="text-accent font-bold">
+                                root@andrei-dev:~# git log --graph --decorate --career
+                            </span>
+                            <span className="text-text-muted">[3 COMMITS]</span>
+                        </div>
+
+                        <div className="space-y-6">
                             {experience.map((item, index) => (
-                                <div key={index} className="relative group">
-                                    <div className="absolute -left-8.75 top-1.5 w-4 h-4 bg-accent rounded-full border-4 border-secondary group-hover:scale-125 transition-transform duration-300 shadow-md shadow-accent/40" />
-                                    
-                                    <div className="flex flex-wrap justify-between items-start mb-1 gap-2">
-                                        <h4 className="text-lg font-semibold text-white group-hover:text-accent transition-colors">
-                                            {item.role}
-                                        </h4>
-                                        <span className="text-accent text-[11px] font-semibold tracking-wider uppercase bg-accent/10 px-3 py-1 rounded-full whitespace-nowrap border border-accent/20">
-                                            {item.year}
+                                <div key={index} className="border border-border bg-secondary p-4">
+                                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2 pb-2 border-b border-border">
+                                        <div>
+                                            <span className="text-accent font-bold">* commit {item.hash}</span>{' '}
+                                            <span className="text-text-muted">({item.branch})</span>
+                                        </div>
+                                        <span className="px-2 py-0.5 bg-primary border border-accent text-accent text-[10px] font-bold uppercase">
+                                            [{item.year}]
                                         </span>
                                     </div>
 
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <p className="text-text-muted text-sm font-medium">{item.company}</p>
-                                        {item.highlight && (
-                                            <span className="text-[10px] text-text-muted/60 bg-primary/60 px-2 py-0.5 rounded border border-border/40">
-                                                {item.highlight}
-                                            </span>
-                                        )}
+                                    <h4 className="text-sm sm:text-base font-bold text-text-main">
+                                        {item.role}
+                                    </h4>
+                                    <div className="text-xs text-text-muted mt-0.5 mb-3">
+                                        Author: {item.company} &lt;{item.highlight}&gt;
                                     </div>
 
-                                    <ul className="space-y-2 mt-3">
+                                    <ul className="space-y-1.5 text-xs text-text-muted">
                                         {item.details.map((detail, dIndex) => (
-                                            <li key={dIndex} className="text-text-muted/80 font-light flex items-start gap-2 text-xs sm:text-sm leading-relaxed">
-                                                <span className="text-accent mt-1 shrink-0">•</span>
+                                            <li key={dIndex} className="flex items-start gap-2 leading-relaxed">
+                                                <span className="text-accent shrink-0">+</span>
                                                 <span>{detail}</span>
                                             </li>
                                         ))}
@@ -441,300 +439,232 @@ const AboutSection = () => {
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Services / What I Can Build Section */}
-                <div id="services" className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-10 sm:mb-12"
-                    >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
-                            <span>Services</span>
+                <div id="services" className="pt-14 border-t border-border mt-12">
+                    <div className="mb-8 border border-border bg-primary p-4 sm:p-6">
+                        <div className="text-xs text-accent font-bold mb-1">
+                            root@andrei-dev:/usr/bin/services# ./list_capabilities --business-outcomes
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4 text-balance">What I Can Build for You</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
+                            04 // WHAT_I_CAN_BUILD_FOR_YOU (SERVICES)
+                        </h2>
+                        <p className="text-text-muted text-xs sm:text-sm mt-1 text-balance">
                             Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
                         </p>
-                    </motion.div>
+                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                         {services.map((service, sIdx) => (
-                            <motion.div
+                            <div
                                 key={sIdx}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.45, delay: sIdx * 0.08 }}
-                                viewport={{ once: true }}
-                                className="group bg-primary/40 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                                className="bg-primary p-5 border border-border hover:border-accent flex flex-col"
                             >
                                 <div className="flex-1 flex flex-col">
-                                    <div className="min-h-[34px] mb-3 flex items-start justify-between gap-2">
-                                        <span className="inline-block text-[11px] font-mono text-accent-hover bg-accent/10 border border-accent/25 px-2.5 py-1 rounded-md">
-                                            {service.stack}
+                                    <div className="min-h-[30px] mb-3 flex items-center justify-between gap-2 border-b border-border pb-2">
+                                        <span className="text-[10px] font-mono text-accent font-bold truncate">
+                                            [{service.stack}]
                                         </span>
-                                        <span className="text-[10px] font-mono text-text-muted">0{sIdx + 1}</span>
+                                        <span className="text-[10px] text-text-muted">MOD_0{sIdx + 1}</span>
                                     </div>
                                     <ServiceInteractivePreview index={sIdx} />
-                                    <h3 className="text-xl font-serif font-bold text-white mb-3 group-hover:text-accent-hover transition-colors text-balance">
+                                    <h3 className="text-base sm:text-lg font-bold text-text-main mb-2 uppercase text-balance">
                                         {service.title}
                                     </h3>
-                                    <p className="text-text-muted text-sm leading-relaxed font-light mb-5">
+                                    <p className="text-text-muted text-xs leading-relaxed mb-4">
                                         {service.outcome}
                                     </p>
                                 </div>
-                                <ul className="space-y-2 pt-4 border-t border-border/50 mt-auto">
+                                <ul className="space-y-1.5 pt-3 border-t border-border mt-auto text-xs">
                                     {service.deliverables.map((item, dIdx) => (
-                                        <li key={dIdx} className="text-xs text-text-main/90 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                                        <li key={dIdx} className="text-text-main flex items-center gap-2">
+                                            <span className="text-accent font-bold">[x]</span>
                                             <span>{item}</span>
                                         </li>
                                     ))}
                                 </ul>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Skills Section */}
-                <div id="skills" className="pt-14 sm:pt-20 border-t border-border/60 mt-12 sm:mt-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-10 sm:mb-12"
-                    >
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 sm:mb-4 text-balance">Core Competencies &amp; Skills</h2>
-                        <p className="text-text-muted max-w-xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
-                            Synthesizing strong academic fundamentals with modern enterprise and AI tooling.
-                        </p>
-                        
-                        {/* Tab Buttons: Responsive Segmented Control */}
-                        <div className="flex justify-center mt-6 sm:mt-8 px-2">
-                            <div className="inline-flex flex-wrap sm:flex-nowrap w-fit max-w-full items-center justify-center gap-1 p-1 bg-primary/80 border border-border/70 rounded-2xl sm:rounded-full">
-                                <button 
-                                    onClick={() => setActiveTab('technical')}
-                                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-200 text-center whitespace-nowrap cursor-pointer ${
-                                        activeTab === 'technical' 
-                                            ? 'bg-accent/90 text-white border border-accent-hover/40' 
-                                            : 'text-zinc-300 hover:text-white border border-transparent'
-                                    }`}
-                                >
-                                    <span className="sm:hidden">Technical Skills</span>
-                                    <span className="hidden sm:inline">Technical &amp; Architectural Skills</span>
-                                </button>
-                                <button 
-                                    onClick={() => setActiveTab('programming')}
-                                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium transition-all duration-200 text-center whitespace-nowrap cursor-pointer ${
-                                        activeTab === 'programming' 
-                                            ? 'bg-accent/90 text-white border border-accent-hover/40' 
-                                            : 'text-zinc-300 hover:text-white border border-transparent'
-                                    }`}
-                                >
-                                    <span className="sm:hidden">Languages &amp; Stacks</span>
-                                    <span className="hidden sm:inline">Programming Languages &amp; Frameworks</span>
-                                </button>
+                <div id="skills" className="pt-14 border-t border-border mt-14">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border border-border bg-primary p-4 sm:p-6">
+                        <div>
+                            <div className="text-xs text-accent font-bold mb-1">
+                                root@andrei-dev:/proc/skills# cat competencies.conf
                             </div>
+                            <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
+                                CORE_COMPETENCIES &amp; SKILL_MATRIX
+                            </h2>
+                            <p className="text-text-muted text-xs sm:text-sm mt-1 text-balance">
+                                Synthesizing strong academic fundamentals with modern enterprise and AI tooling.
+                            </p>
                         </div>
-                    </motion.div>
 
-                    {/* Tab Content */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                        {(activeTab === 'technical' ? technicalSkills : programmingSkills).map((category, catIndex) => (
-                            <motion.div 
-                                key={`${activeTab}-${catIndex}`}
-                                initial={{ opacity: 0, scale: 0.96 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3, delay: catIndex * 0.04 }}
-                                className="group bg-primary/40 backdrop-blur-md p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                        {/* Retro Segmented Toggle */}
+                        <div className="inline-flex flex-wrap sm:flex-nowrap w-fit max-w-full border border-accent bg-secondary">
+                            <button
+                                type="button"
+                                onClick={() => setActiveTab('technical')}
+                                className={`px-3.5 py-2 text-xs font-bold cursor-pointer transition-none whitespace-nowrap ${
+                                    activeTab === 'technical'
+                                        ? 'bg-accent text-primary'
+                                        : 'bg-secondary text-text-main hover:bg-accent hover:text-primary'
+                                }`}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                                
-                                <h4 className="text-xs sm:text-[13px] font-bold text-accent-hover tracking-widest uppercase mb-3 sm:mb-4 relative z-10">
-                                    {category.category}
-                                </h4>
-                                <div className="flex flex-wrap gap-1.5 sm:gap-2 relative z-10 pt-1">
+                                [ 01. TECHNICAL_ARCH ]
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setActiveTab('programming')}
+                                className={`px-3.5 py-2 text-xs font-bold border-l border-accent cursor-pointer transition-none whitespace-nowrap ${
+                                    activeTab === 'programming'
+                                        ? 'bg-accent text-primary'
+                                        : 'bg-secondary text-text-main hover:bg-accent hover:text-primary'
+                                }`}
+                            >
+                                [ 02. LANG_STACKS ]
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {(activeTab === 'technical' ? technicalSkills : programmingSkills).map((category, catIndex) => (
+                            <div
+                                key={`${activeTab}-${catIndex}`}
+                                className="bg-primary p-5 border border-border hover:border-accent"
+                            >
+                                <div className="flex items-center justify-between gap-2 border-b border-border pb-2 mb-3">
+                                    <h4 className="text-xs font-bold text-accent uppercase truncate">
+                                        {category.category}
+                                    </h4>
+                                    <span className="text-[10px] text-text-main shrink-0">
+                                        {category.level}
+                                    </span>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
                                     {category.items.map((item, skillIndex) => (
                                         <span
                                             key={skillIndex}
-                                            className="bg-secondary text-text-main/90 text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/70 font-medium hover:bg-accent/20 hover:text-white hover:border-accent/50 transition-all duration-200 cursor-default"
+                                            className="bg-secondary text-text-main text-[11px] px-2.5 py-1 border border-border hover:border-accent hover:bg-accent hover:text-primary transition-none cursor-default"
                                         >
                                             {item}
                                         </span>
                                     ))}
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Certifications Section */}
-                <div className="mt-28 pt-24 border-t border-border/60">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl font-serif font-bold text-white mb-4 text-balance">Certifications &amp; Accolades</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto font-light text-balance">
-                            Recognition for competitive hackathon triumphs and enterprise certifications.
-                        </p>
-                    </motion.div>
+                <div className="mt-14 pt-14 border-t border-border">
+                    <div className="mb-8 border border-border bg-primary p-4 sm:p-6">
+                        <div className="text-xs text-accent font-bold mb-1">
+                            root@andrei-dev:/var/log/accolades# grep &quot;UNLOCKED&quot;
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
+                            CERTIFICATIONS &amp; HACKATHON_ACCOLADES
+                        </h2>
+                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {certificates.map((cert, index) => (
-                            <motion.div
+                            <div
                                 key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.45, delay: index * 0.07 }}
-                                viewport={{ once: true }}
-                                className="group bg-primary/40 backdrop-blur-md p-7 rounded-2xl border border-border/50 hover:border-accent/50 hover:bg-primary/60 hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
+                                className="bg-primary p-5 border border-border hover:border-accent flex flex-col justify-between"
                             >
-                                <div className="relative z-10">
-                                    <div className="flex justify-between items-start mb-5">
-                                        <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all duration-400">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                        </div>
-                                        <span className="text-[10px] font-semibold uppercase tracking-wider text-text-muted bg-secondary/90 px-3 py-1 rounded-full border border-border/30">
-                                            {cert.year}
-                                        </span>
+                                <div>
+                                    <div className="flex justify-between items-center mb-3 pb-2 border-b border-border text-[11px]">
+                                        <span className="text-accent font-bold">[ACHIEVEMENT_0{index + 1}]</span>
+                                        <span className="text-text-muted">[{cert.year}]</span>
                                     </div>
-                                    <h4 className="text-lg font-semibold text-white mb-1.5 leading-snug">
+                                    <h4 className="text-base font-bold text-text-main mb-1 uppercase">
                                         {cert.title}
                                     </h4>
-                                    <p className="text-accent text-xs font-semibold uppercase tracking-wider mb-3">
-                                        {cert.org}
+                                    <p className="text-accent text-xs font-bold uppercase mb-2">
+                                        &gt; {cert.org}
                                     </p>
-                                    <p className="text-text-muted/80 text-xs sm:text-sm font-light leading-relaxed">
+                                    <p className="text-text-muted text-xs leading-relaxed">
                                         {cert.description}
                                     </p>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Spotlight Gallery Section: Fast, Auto-slides by default, Movable on Drag */}
-                <div className="mt-16 sm:mt-28 pt-14 sm:pt-24 border-t border-border/60">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-8 sm:mb-10"
-                    >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold uppercase tracking-widest mb-3">
-                            <span>Achievements Showcase</span>
+                {/* Spotlight Dithered Gallery */}
+                <div className="mt-14 pt-14 border-t border-border">
+                    <div className="mb-8 border border-border bg-primary p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div className="text-xs text-accent font-bold mb-1">
+                                root@andrei-dev:/media/archives# ./view_dither_reel.sh
+                            </div>
+                            <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
+                                SPOTLIGHT_ARCHIVE_GALLERY
+                            </h2>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3 text-balance">Spotlight Gallery</h2>
-                        <p className="text-text-muted max-w-2xl mx-auto text-xs sm:text-base font-light px-2 text-balance">
-                            Moments captured from championship hackathons and academic recognitions.
-                        </p>
-                    </motion.div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={prevSlide}
+                                className="px-3 py-1.5 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-xs font-bold cursor-pointer transition-none"
+                            >
+                                [ &lt; PREV ]
+                            </button>
+                            <span className="text-xs text-text-main px-2">
+                                0{currentSlide + 1} / 0{totalSlides}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={nextSlide}
+                                className="px-3 py-1.5 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-xs font-bold cursor-pointer transition-none"
+                            >
+                                [ NEXT &gt; ]
+                            </button>
+                        </div>
+                    </div>
 
-                    {/* Fast, Clean Carousel Container */}
-                    <div 
-                        className="relative max-w-4xl mx-auto"
+                    <div
+                        className="max-w-4xl mx-auto border border-accent bg-primary"
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                     >
-                        {/* Image Viewer Stage with Natural Drag & Move */}
-                        <div className="overflow-hidden rounded-2xl border border-border/70 bg-primary/80 relative shadow-2xl h-72 sm:h-110 lg:h-125 select-none flex items-center justify-center">
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentSlide}
-                                    initial={{ opacity: 0, x: 50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
-                                    transition={{ duration: 0.35, ease: 'easeOut' }}
-                                    drag="x"
-                                    dragConstraints={{ left: 0, right: 0 }}
-                                    dragElastic={0.4}
-                                    onDragEnd={handleDragEnd}
-                                    className="w-full h-full relative flex items-center justify-center cursor-grab active:cursor-grabbing"
-                                >
-                                    <img
-                                        src={spotlights[currentSlide].image}
-                                        alt={spotlights[currentSlide].caption}
-                                        className="w-full h-full object-contain pointer-events-none drop-shadow-lg"
-                                        draggable="false"
-                                        loading="lazy"
-                                    />
-
-                                    {/* Caption Bar */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-linear-to-t from-primary via-primary/85 to-transparent pointer-events-none z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
-                                        <div>
-                                            <span className="text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase text-accent bg-accent/15 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-accent/25 inline-block mb-1 sm:mb-2">
-                                                {spotlights[currentSlide].badge}
-                                            </span>
-                                            <p className="text-white font-semibold text-sm sm:text-xl leading-snug drop-shadow-md line-clamp-2 sm:line-clamp-none">
-                                                {spotlights[currentSlide].caption}
-                                            </p>
-                                        </div>
-                                        {spotlights[currentSlide].link && (
-                                            <a
-                                                href={spotlights[currentSlide].link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="pointer-events-auto shrink-0 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-secondary/90 hover:bg-accent border border-border/60 hover:border-accent text-white text-xs font-medium transition-all duration-300 flex items-center gap-1.5 sm:gap-2 shadow-md w-fit"
-                                            >
-                                                Verify Post <FaExternalLinkAlt size={10} />
-                                            </a>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            </AnimatePresence>
-
-                            {/* Floating Left & Right Chevrons */}
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
-                                aria-label="Previous Slide"
-                            >
-                                <FaChevronLeft size={14} />
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-accent text-white border border-white/10 hover:border-accent/40 flex items-center justify-center transition-all duration-300 z-20 shadow-xl cursor-pointer"
-                                aria-label="Next Slide"
-                            >
-                                <FaChevronRight size={14} />
-                            </button>
+                        <div className="px-3 py-2 border-b border-border flex justify-between items-center text-xs">
+                            <span className="text-accent font-bold">
+                                [{spotlights[currentSlide].badge}]
+                            </span>
+                            <span className="text-text-muted">DITHER_SHADER: ACTIVE</span>
                         </div>
 
-                        {/* Thumbnail Indicators */}
-                        <div className="flex justify-center items-center gap-2 sm:gap-3 mt-4 sm:mt-6">
-                            {spotlights.map((item, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setCurrentSlide(index)}
-                                    className={`relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
-                                        index === currentSlide
-                                            ? 'ring-2 ring-accent scale-105 shadow-lg shadow-accent/30 opacity-100 w-14 sm:w-20 h-10 sm:h-14'
-                                            : 'opacity-40 hover:opacity-80 w-10 sm:w-16 h-8 sm:h-12 border border-border/60'
-                                    }`}
-                                    aria-label={`Jump to slide ${index + 1}`}
+                        <div className="h-72 sm:h-105 dither-wrap flex items-center justify-center bg-primary border-b border-border">
+                            <img
+                                src={spotlights[currentSlide].image}
+                                alt={spotlights[currentSlide].caption}
+                                className="w-full h-full object-contain dither-img"
+                                loading="lazy"
+                            />
+                        </div>
+
+                        <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-secondary">
+                            <p className="text-text-main font-bold text-xs sm:text-sm">
+                                &gt; {spotlights[currentSlide].caption}
+                            </p>
+                            {spotlights[currentSlide].link && (
+                                <a
+                                    href={spotlights[currentSlide].link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1.5 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary text-xs font-bold transition-none shrink-0 w-fit"
                                 >
-                                    <img
-                                        src={item.image}
-                                        alt={item.caption}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    {index === currentSlide && (
-                                        <div className="absolute inset-0 bg-accent/20" />
-                                    )}
-                                </button>
-                            ))}
+                                    [ VERIFY_POST ↗ ]
+                                </a>
+                            )}
                         </div>
                     </div>
                 </div>

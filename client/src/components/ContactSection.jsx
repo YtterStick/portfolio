@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaCopy, FaCheck } from 'react-icons/fa';
 
 const ContactSection = () => {
     const [formData, setFormData] = useState({
@@ -11,7 +9,7 @@ const ContactSection = () => {
         message: ''
     });
     const [status, setStatus] = useState('');
-    const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+    const [toast, setToast] = useState(null);
     const [copied, setCopied] = useState(false);
 
     const showToast = (type, message) => {
@@ -27,7 +25,7 @@ const ContactSection = () => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            showToast('error', 'Could not copy email automatically. Please copy andreidilag12@gmail.com.');
+            showToast('error', '[ERROR] CLIPBOARD_ACCESS_DENIED: COPY andreidilag12@gmail.com MANUALLY');
         }
     };
 
@@ -45,11 +43,11 @@ const ContactSection = () => {
         };
 
         if (!trimmed.name || !trimmed.email || !trimmed.subject || !trimmed.message) {
-            showToast('error', 'Please fill out all required fields before sending.');
+            showToast('error', '[ERROR] MISSING_ARGS: ALL_FIELDS_REQUIRED');
             return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) {
-            showToast('error', 'Please enter a valid email address.');
+            showToast('error', '[ERROR] SYNTAX_ERR: INVALID_EMAIL_FORMAT');
             return;
         }
 
@@ -59,7 +57,6 @@ const ContactSection = () => {
         const FORM_ENDPOINT = (import.meta.env.VITE_FORM_ENDPOINT || import.meta.env.NEXT_PUBLIC_FORM_ENDPOINT || '').trim();
         const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
-        // Tier 1: Configured static-site form endpoint (Web3Forms / Formspree)
         if (FORM_ENDPOINT) {
             try {
                 const res = await fetch(FORM_ENDPOINT, {
@@ -70,7 +67,7 @@ const ContactSection = () => {
                 if (res.ok) {
                     setStatus('success');
                     setFormData({ name: '', email: '', subject: '', message: '' });
-                    showToast('success', 'Message sent! I will get back to you within 24 hours.');
+                    showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
                     return;
                 }
             } catch (err) {
@@ -78,7 +75,6 @@ const ContactSection = () => {
             }
         }
 
-        // Tier 2: Optional backend API if VITE_API_URL is configured
         if (API_BASE) {
             try {
                 const res = await axios.post(`${API_BASE}/api/inquiries`, trimmed, {
@@ -88,7 +84,7 @@ const ContactSection = () => {
                 if (res.status >= 200 && res.status < 300) {
                     setStatus('success');
                     setFormData({ name: '', email: '', subject: '', message: '' });
-                    showToast('success', 'Message sent! I will get back to you within 24 hours.');
+                    showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
                     return;
                 }
             } catch (apiError) {
@@ -96,7 +92,6 @@ const ContactSection = () => {
             }
         }
 
-        // Tier 3: Direct FormSubmit AJAX delivery -> andreidilag12@gmail.com
         try {
             const fallbackRes = await fetch('https://formsubmit.co/ajax/andreidilag12@gmail.com', {
                 method: 'POST',
@@ -116,270 +111,212 @@ const ContactSection = () => {
             if (fallbackRes.ok && (data.success === true || data.success === 'true' || data.message)) {
                 setStatus('success');
                 setFormData({ name: '', email: '', subject: '', message: '' });
-                showToast('success', 'Message sent! I will get back to you within 24 hours.');
+                showToast('success', '[SUCCESS] MESSAGE TRANSMITTED // ACK_200');
                 return;
             }
         } catch (fallbackError) {
             console.error('Direct fallback delivery error:', fallbackError);
         }
 
-        // Tier 4: Clean mailto fallback
         setStatus('error');
-        showToast('error', 'Automated delivery was blocked on this connection. Use the direct email button below.');
+        showToast('error', '[WARN] AUTO_RELAY_BLOCKED // USE_DIRECT_MAILTO_BELOW');
     };
 
     return (
-        <section id="contact" className="py-16 sm:py-28 bg-secondary relative overflow-hidden">
-            {/* Background Decorations — GPU accelerated */}
-            <div className="absolute top-0 left-0 w-64 h-64 bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle,rgba(99,102,241,0.04)_0%,transparent_70%)] translate-x-1/2 translate-y-1/2 pointer-events-none" />
-
-            <div className="container mx-auto px-4 sm:px-6 relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-10 sm:mb-16"
-                >
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 sm:mb-6 text-balance">Get In Touch</h2>
-                    <p className="text-text-muted max-w-2xl mx-auto text-sm sm:text-lg font-light px-2 text-balance">
-                        Whether you need a full-stack developer for your team or a partner for your next project, I'd like to hear from you.
+        <section id="contact" className="py-16 sm:py-24 bg-primary font-mono">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-10 border border-border bg-secondary p-4 sm:p-6">
+                    <div className="text-xs text-accent font-bold mb-1">
+                        root@andrei-dev:/dev/tcp/contact# ./open_comms_channel.sh
+                    </div>
+                    <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase text-balance">
+                        05 // INITIATE_TRANSMISSION (CONTACT)
+                    </h2>
+                    <p className="text-text-muted text-xs sm:text-sm mt-1 text-balance">
+                        Available for full-time engineering roles, contract architecture, and custom software builds.
                     </p>
-                </motion.div>
+                </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 max-w-6xl mx-auto">
-                    {/* Contact Info */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -24 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                        className="lg:col-span-2 space-y-8"
-                    >
-                        <div className="bg-primary/60 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border border-border h-full">
-                            <h3 className="text-lg sm:text-xl font-semibold text-white mb-6">Contact Information</h3>
-
-                            <div className="space-y-6">
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                        <FaPhoneAlt size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-text-muted mb-1 tracking-widest uppercase">Phone</p>
-                                        <a href="tel:+639150475513" className="text-white hover:text-accent transition-colors duration-300 font-medium text-sm">
-                                            +63 915 047 5513
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                        <FaEnvelope size={18} />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-xs text-text-muted mb-1 tracking-widest uppercase">Email</p>
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <a href="mailto:andreidilag12@gmail.com" className="text-white hover:text-accent transition-colors duration-300 font-medium text-sm break-all">
-                                                andreidilag12@gmail.com
-                                            </a>
-                                            <div className="relative inline-flex items-center">
-                                                <button
-                                                    type="button"
-                                                    onClick={handleCopyEmail}
-                                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-secondary border border-border hover:border-accent text-[11px] text-text-muted hover:text-white transition-colors cursor-pointer"
-                                                    aria-label="Copy email address"
-                                                >
-                                                    {copied ? <FaCheck className="text-emerald-400" size={10} /> : <FaCopy size={10} />}
-                                                    <span>{copied ? 'Copied!' : 'Copy'}</span>
-                                                </button>
-                                                <AnimatePresence>
-                                                    {copied && (
-                                                        <motion.span
-                                                            initial={{ opacity: 0, y: 4 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            exit={{ opacity: 0, y: 4 }}
-                                                            className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-emerald-500 text-white text-[10px] font-semibold whitespace-nowrap shadow-md pointer-events-none"
-                                                        >
-                                                            Copied!
-                                                        </motion.span>
-                                                    )}
-                                                </AnimatePresence>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                        <FaMapMarkerAlt size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-text-muted mb-1 tracking-widest uppercase">Location</p>
-                                        <p className="text-white font-medium text-sm">
-                                            Quezon City, Philippines
-                                        </p>
-                                    </div>
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Left: Terminal Connection Coordinates */}
+                    <div className="lg:col-span-5 border border-border bg-secondary p-5 sm:p-6 flex flex-col justify-between">
+                        <div className="space-y-5">
+                            <div className="text-xs text-accent font-bold border-b border-border pb-2">
+                                ╔══[ CONNECTION_ENDPOINTS ]
                             </div>
 
-                            <div className="mt-10 pt-6 border-t border-border">
-                                <h4 className="text-white font-semibold mb-3 text-sm">Availability</h4>
-                                <p className="text-text-muted text-sm leading-relaxed font-light">
-                                    Currently available for full-time roles, contract work, and select freelance projects.
-                                </p>
+                            <div className="space-y-4 text-xs">
+                                <div className="p-3 bg-primary border border-border">
+                                    <div className="text-[10px] text-text-muted">VOICE_TEL_ENDPOINT:</div>
+                                    <a
+                                        href="tel:+639150475513"
+                                        className="text-sm font-bold text-accent hover:bg-accent hover:text-primary px-1 inline-block mt-1 transition-none"
+                                    >
+                                        +63 915 047 5513
+                                    </a>
+                                </div>
+
+                                <div className="p-3 bg-primary border border-border">
+                                    <div className="text-[10px] text-text-muted">SMTP_MAIL_ENDPOINT:</div>
+                                    <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
+                                        <a
+                                            href="mailto:andreidilag12@gmail.com"
+                                            className="text-xs sm:text-sm font-bold text-text-main hover:bg-accent hover:text-primary px-1 transition-none break-all"
+                                        >
+                                            andreidilag12@gmail.com
+                                        </a>
+                                        <button
+                                            type="button"
+                                            onClick={handleCopyEmail}
+                                            className="px-2 py-1 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-[10px] font-bold cursor-pointer transition-none"
+                                        >
+                                            {copied ? '[ COPIED! ]' : '[ COPY ]'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="p-3 bg-primary border border-border">
+                                    <div className="text-[10px] text-text-muted">PHYSICAL_NODE:</div>
+                                    <div className="text-sm font-bold text-text-main mt-1">
+                                        Quezon City, Metro Manila, PH
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </motion.div>
 
-                    {/* Contact Form */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 24 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.15 }}
-                        viewport={{ once: true }}
-                        className="lg:col-span-3"
-                    >
-                        <div className="bg-primary p-5 sm:p-8 md:p-10 rounded-2xl border border-border relative min-h-125 flex flex-col justify-center">
-                            {status === 'success' ? (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="text-center space-y-6"
+                        <div className="mt-6 pt-4 border-t border-border text-xs">
+                            <div className="text-accent font-bold mb-1">[STATUS: READY_FOR_DISPATCH]</div>
+                            <p className="text-text-muted leading-relaxed">
+                                Response SLA: &lt; 24 hours for project inquiries, technical interviews, and architecture consultations.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Right: Command-Line Contact Form */}
+                    <div className="lg:col-span-7 border border-accent bg-secondary p-5 sm:p-7">
+                        <div className="text-xs text-accent font-bold border-b border-border pb-2 mb-6 flex justify-between">
+                            <span>╔══[ /BIN/SEND_PACKET --INTERACTIVE ]</span>
+                            <span>[TTY_INPUT]</span>
+                        </div>
+
+                        {status === 'success' ? (
+                            <div className="p-6 bg-primary border border-accent text-center space-y-4">
+                                <div className="text-accent font-bold text-base sm:text-lg">
+                                    [SUCCESS] MESSAGE TRANSMITTED // ACK_200
+                                </div>
+                                <p className="text-text-muted text-xs max-w-md mx-auto">
+                                    Packet logged. I will review your transmission and reply within 24 hours.
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={() => setStatus('')}
+                                    className="px-4 py-2 bg-accent text-primary font-bold text-xs border border-accent hover:bg-primary hover:text-accent cursor-pointer transition-none"
                                 >
-                                    <div className="w-16 h-16 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-                                        <motion.div
-                                            initial={{ pathLength: 0 }}
-                                            animate={{ pathLength: 1 }}
-                                            transition={{ duration: 0.8, delay: 0.2 }}
-                                        >
-                                            <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </motion.div>
-                                    </div>
-                                    <h3 className="text-2xl font-semibold text-white">Message Sent</h3>
-                                    <p className="text-text-muted max-w-sm mx-auto font-light">
-                                        Thank you for reaching out. I'll review your message and respond within 24 hours.
-                                    </p>
-                                    <button
-                                        onClick={() => setStatus('')}
-                                        className="mt-6 text-accent font-semibold hover:underline text-sm"
-                                    >
-                                        Send another message
-                                    </button>
-                                </motion.div>
-                            ) : (
-                                <form onSubmit={handleSubmit}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-                                        <div>
-                                            <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Name</label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                value={formData.name}
-                                                onChange={handleChange}
-                                                required
-                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
-                                                placeholder="Your Full Name"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Email Address</label>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                required
-                                                className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
-                                                placeholder="email@example.com"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-4 sm:mb-6">
-                                        <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Subject</label>
+                                    [ + SEND_ANOTHER_PACKET ]
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-accent font-bold mb-1.5">
+                                            &gt; ENTER_NAME:_
+                                        </label>
                                         <input
                                             type="text"
-                                            name="subject"
-                                            value={formData.subject}
+                                            name="name"
+                                            value={formData.name}
                                             onChange={handleChange}
                                             required
-                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 placeholder:text-text-muted/40"
-                                            placeholder="What is this about?"
+                                            className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                            placeholder="JANE_DOE"
                                         />
                                     </div>
-
-                                    <div className="mb-6 sm:mb-8">
-                                        <label className="block text-text-muted text-xs font-medium mb-1.5 sm:mb-2 tracking-[0.15em] uppercase">Message</label>
-                                        <textarea
-                                            name="message"
-                                            value={formData.message}
+                                    <div>
+                                        <label className="block text-accent font-bold mb-1.5">
+                                            &gt; ENTER_EMAIL:_
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
                                             onChange={handleChange}
                                             required
-                                            rows="4"
-                                            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 sm:py-3.5 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300 resize-none placeholder:text-text-muted/40"
-                                            placeholder="Write your message here..."
-                                        ></textarea>
+                                            className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                            placeholder="founder@company.com"
+                                        />
                                     </div>
+                                </div>
 
-                                    <button
-                                        type="submit"
-                                        disabled={status === 'sending'}
-                                        className="w-full bg-accent text-white font-semibold py-4 rounded-lg hover:bg-accent-hover transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed group"
+                                <div>
+                                    <label className="block text-accent font-bold mb-1.5">
+                                        &gt; ENTER_SUBJECT:_
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="subject"
+                                        value={formData.subject}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent placeholder:text-text-muted/50"
+                                        placeholder="PROJECT_BUILD // HIRING_INQUIRY"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-accent font-bold mb-1.5">
+                                        &gt; ENTER_MESSAGE_PAYLOAD:_
+                                    </label>
+                                    <textarea
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        required
+                                        rows="4"
+                                        className="w-full bg-primary border border-border px-3 py-2.5 text-text-main text-xs focus:outline-none focus:border-accent resize-none placeholder:text-text-muted/50"
+                                        placeholder="Type project scope, timeline, or role details..."
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={status === 'sending'}
+                                    className="w-full bg-accent text-primary font-bold py-3 border border-accent hover:bg-primary hover:text-accent transition-none cursor-pointer disabled:opacity-50"
+                                >
+                                    {status === 'sending'
+                                        ? '[ TRANSMITTING_PACKET... PLEASE_WAIT ]'
+                                        : '[ TRANSMIT_MESSAGE --EXECUTE -> ]'}
+                                </button>
+
+                                {toast && (
+                                    <div
+                                        role="status"
+                                        className={`p-3 border text-xs font-bold text-center ${
+                                            toast.type === 'success'
+                                                ? 'bg-primary border-accent text-accent'
+                                                : 'bg-primary border-text-main text-text-main'
+                                        }`}
                                     >
-                                        {status === 'sending' ? (
-                                            <span className="flex items-center gap-2">
-                                                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                </svg>
-                                                Sending...
-                                            </span>
-                                        ) : (
-                                            <>
-                                                Send Message
-                                                <FaPaperPlane className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-300 text-sm" />
-                                            </>
-                                        )}
-                                    </button>
+                                        {toast.message}
+                                    </div>
+                                )}
 
-                                    <AnimatePresence>
-                                        {toast && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 8 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: 8 }}
-                                                role="status"
-                                                className={`mt-4 p-3.5 rounded-lg border text-sm font-medium text-center ${
-                                                    toast.type === 'success'
-                                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                                                        : 'bg-red-500/10 border-red-500/30 text-red-300'
-                                                }`}
-                                            >
-                                                {toast.message}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-
-                                    {status === 'error' && (
-                                        <div className="mt-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-center space-y-2">
-                                            <p className="text-red-300 text-sm font-medium">
-                                                Could not send message automatically over this connection.
-                                            </p>
-                                            <a
-                                                href={`mailto:andreidilag12@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Andrei,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`}
-                                                className="inline-flex items-center gap-2 text-accent hover:underline text-sm font-semibold"
-                                            >
-                                                <FaEnvelope size={14} /> Click to send directly via your email app
-                                            </a>
-                                        </div>
-                                    )}
-                                </form>
-                            )}
-                        </div>
-                    </motion.div>
+                                {status === 'error' && (
+                                    <div className="p-3 bg-primary border border-accent text-center space-y-2">
+                                        <p className="text-text-main text-xs">
+                                            [FALLBACK_READY] Automated relay blocked by network policy.
+                                        </p>
+                                        <a
+                                            href={`mailto:andreidilag12@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Andrei,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`}
+                                            className="inline-block px-3 py-1.5 bg-accent text-primary font-bold text-xs"
+                                        >
+                                            [ LAUNCH_DEFAULT_MAIL_CLIENT ↗ ]
+                                        </a>
+                                    </div>
+                                )}
+                            </form>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

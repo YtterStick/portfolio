@@ -1,25 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaTimes } from 'react-icons/fa';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 20) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     useEffect(() => {
         const sectionToNav = {
@@ -46,36 +30,12 @@ const Navbar = () => {
             setActiveSection(current);
         };
 
-        const elements = sectionIds
-            .map((id) => document.getElementById(id))
-            .filter(Boolean);
-
-        if (elements.length === 0) return;
-
-        const observer = new IntersectionObserver(
-            () => {
-                updateFromScroll();
-            },
-            {
-                rootMargin: '-20% 0px -60% 0px',
-                threshold: 0
-            }
-        );
-
-        elements.forEach((el) => observer.observe(el));
         window.addEventListener('scroll', updateFromScroll, { passive: true });
         updateFromScroll();
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('scroll', updateFromScroll);
-        };
+        return () => window.removeEventListener('scroll', updateFromScroll);
     }, []);
 
-    const toggleMenu = () => setIsOpen(!isOpen);
-
     const handleNavClick = (e, href) => {
-        // Only prevent default if it's an internal link
         if (href.startsWith('#')) {
             e.preventDefault();
             const targetId = href.slice(1);
@@ -89,115 +49,108 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { name: 'Home', href: '#hero' },
-        { name: 'Work', href: '#projects' },
-        { name: 'About', href: '#about' },
-        { name: 'Services', href: '#services' },
-        { name: 'Contact', href: '#contact' },
+        { code: '01', name: 'HOME', href: '#hero' },
+        { code: '02', name: 'WORK', href: '#projects' },
+        { code: '03', name: 'ABOUT', href: '#about' },
+        { code: '04', name: 'SERVICES', href: '#services' },
+        { code: '05', name: 'CONTACT', href: '#contact' },
     ];
 
     return (
-        <nav
-            className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-primary/95 backdrop-blur-md border-b border-border py-2' : 'bg-transparent py-4'
-                }`}
-        >
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-primary border-b border-border font-mono">
+            {/* Top ASCII status hairline */}
+            <div className="bg-secondary border-b border-border px-4 py-1 text-[10px] text-text-muted flex items-center justify-between">
+                <span>SYS://ANDREI_DILAG_OS [TTY1]</span>
+                <span className="hidden sm:inline text-accent">STATUS: ONLINE // MEM: 640K OK</span>
+                <span>LOC: MNL_PH [UTC+8]</span>
+            </div>
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <div className="shrink-0 cursor-pointer">
-                        <Link to="/" className="text-xl font-semibold text-white tracking-tight flex items-center gap-1.5 group">
-                            <span>Andrei</span>
-                            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-accent/15 text-accent border border-accent/30 group-hover:bg-accent group-hover:text-white transition-all duration-300">
-                                dev
-                            </span>
-                            <span className="text-accent">.</span>
-                        </Link>
-                    </div>
+                <div className="flex items-center justify-between h-12">
+                    {/* Terminal Prompt Brand */}
+                    <Link
+                        to="/"
+                        className="text-sm sm:text-base font-bold text-text-main hover:bg-accent hover:text-primary px-2 py-1 border border-transparent hover:border-accent transition-none flex items-center gap-1.5"
+                    >
+                        <span className="text-accent">&gt;</span>
+                        <span>ANDREI.DEV</span>
+                        <span className="text-accent animate-blink">█</span>
+                    </Link>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-center space-x-8">
-                            {navLinks.map((link) => {
-                                const isActive = activeSection === link.href.slice(1);
-                                return (
-                                    <a
-                                        key={link.name}
-                                        href={link.href}
-                                        onClick={(e) => handleNavClick(e, link.href)}
-                                        className={`font-medium text-sm transition-colors duration-300 relative group ${
-                                            isActive ? 'text-white' : 'text-text-muted hover:text-white'
-                                        }`}
-                                    >
-                                        {link.name}
-                                        <span
-                                            className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
-                                                isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                                            }`}
-                                        ></span>
-                                    </a>
-                                );
-                            })}
-                            <a
-                                href="#contact"
-                                onClick={(e) => handleNavClick(e, '#contact')}
-                                className="px-5 py-2 border border-accent/50 text-accent rounded-lg hover:bg-accent hover:text-white transition-all duration-300 font-medium text-sm"
-                            >
-                                Get in Touch
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="-mr-2 flex md:hidden">
-                        <button
-                            onClick={toggleMenu}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-text-muted hover:text-white hover:bg-surface focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
-                            aria-expanded="false"
+                    {/* Desktop RPG / Terminal Menu */}
+                    <div className="hidden lg:flex items-center gap-1.5">
+                        {navLinks.map((link) => {
+                            const isActive = activeSection === link.href.slice(1);
+                            return (
+                                <a
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
+                                    className={`px-2.5 py-1 text-xs font-bold tracking-wider border transition-none ${
+                                        isActive
+                                            ? 'bg-accent text-primary border-accent'
+                                            : 'bg-primary text-text-main border-transparent hover:bg-accent hover:text-primary hover:border-accent'
+                                    }`}
+                                >
+                                    [ {link.code}. {link.name} {isActive ? <span className="animate-blink">█</span> : null} ]
+                                </a>
+                            );
+                        })}
+                        <a
+                            href="#contact"
+                            onClick={(e) => handleNavClick(e, '#contact')}
+                            className="ml-2 px-3 py-1 text-xs font-bold bg-secondary text-accent border border-accent hover:bg-accent hover:text-primary transition-none"
                         >
-                            <span className="sr-only">Open main menu</span>
-                            {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+                            [ HIRE_ME -&gt; ]
+                        </a>
+                    </div>
+
+                    {/* Mobile Menu Trigger */}
+                    <div className="flex lg:hidden">
+                        <button
+                            type="button"
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="px-2.5 py-1 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-none cursor-pointer"
+                            aria-label="Toggle Menu"
+                        >
+                            {isOpen ? '[ X CLOSE ]' : '[ = MENU ]'}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-primary/95 backdrop-blur-md border-t border-border"
-                    >
-                        <div className="px-4 pt-3 pb-4 space-y-1">
-                            {navLinks.map((link) => {
-                                const isActive = activeSection === link.href.slice(1);
-                                return (
-                                    <a
-                                        key={link.name}
-                                        href={link.href}
-                                        onClick={(e) => handleNavClick(e, link.href)}
-                                        className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 ${
-                                            isActive
-                                                ? 'text-white bg-accent/15 border border-accent/30'
-                                                : 'text-text-muted hover:text-white hover:bg-surface'
-                                        }`}
-                                    >
-                                        {link.name}
-                                    </a>
-                                );
-                            })}
+            {/* Mobile Terminal Dropdown */}
+            {isOpen && (
+                <div className="lg:hidden bg-primary border-t border-border px-4 py-3 space-y-1.5">
+                    <div className="text-[10px] text-text-muted pb-1 border-b border-border">
+                        +--[ SELECT_DIRECTORY ]------------------+
+                    </div>
+                    {navLinks.map((link) => {
+                        const isActive = activeSection === link.href.slice(1);
+                        return (
                             <a
-                                href="#contact"
-                                onClick={(e) => handleNavClick(e, '#contact')}
-                                className="block w-full text-center mt-4 px-4 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent-hover transition-all duration-300 text-sm"
+                                key={link.name}
+                                href={link.href}
+                                onClick={(e) => handleNavClick(e, link.href)}
+                                className={`block px-3 py-2 text-xs font-bold border transition-none ${
+                                    isActive
+                                        ? 'bg-accent text-primary border-accent'
+                                        : 'bg-secondary text-text-main border-border hover:bg-accent hover:text-primary'
+                                }`}
                             >
-                                Get in Touch
+                                [ {link.code}. {link.name} {isActive ? '█' : ''} ]
                             </a>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        );
+                    })}
+                    <a
+                        href="#contact"
+                        onClick={(e) => handleNavClick(e, '#contact')}
+                        className="block w-full text-center mt-2 px-3 py-2 bg-accent text-primary font-bold text-xs border border-accent transition-none"
+                    >
+                        [ INITIATE_CONTACT -&gt; ]
+                    </a>
+                </div>
+            )}
         </nav>
     );
 };

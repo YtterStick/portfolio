@@ -1,83 +1,123 @@
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
-
 const LIVE_SITE_URL = import.meta.env.VITE_SITE_URL || 'https://portfolio-tnu.pages.dev';
 const LIVE_SITE_LABEL = LIVE_SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 const Footer = () => {
     return (
-        <footer className="relative z-10 bg-primary border-t border-border pt-16 pb-8">
+        <footer className="relative z-10 bg-primary border-t border-border pt-10 pb-8 font-mono text-xs">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-                    {/* Brand */}
-                    <div className="space-y-3">
-                        <h3 className="text-xl font-semibold text-white tracking-tight flex items-center gap-1.5">
-                            <span>Andrei</span>
-                            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-accent/15 text-accent border border-accent/30">
-                                dev
-                            </span>
-                            <span className="text-accent">.</span>
-                        </h3>
-                        <p className="text-text-muted text-sm font-light max-w-xs leading-relaxed">
-                            Full-stack developer &amp; IT educator — building scalable web applications, AI workflows, and enterprise software solutions.
+                {/* ASCII Top Divider */}
+                <div className="text-text-muted overflow-hidden whitespace-nowrap mb-8 select-none text-[11px]">
+                    ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                    {/* System Node */}
+                    <div className="border border-border bg-secondary p-4 space-y-2.5">
+                        <div className="text-accent font-bold">
+                            +--[ SYS_NODE // ANDREI.DEV ]--+
+                        </div>
+                        <p className="text-text-muted leading-relaxed">
+                            Full-stack software engineer &amp; IT educator building scalable web apps, AI workflows, and enterprise tools.
                         </p>
-                        <a
-                            href={LIVE_SITE_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-xs text-accent hover:text-accent-hover font-mono transition-colors"
-                        >
-                            {LIVE_SITE_LABEL}
-                        </a>
+                        <div>
+                            <a
+                                href={LIVE_SITE_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block px-2 py-1 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold transition-none"
+                            >
+                                [ HOST: {LIVE_SITE_LABEL} ↗ ]
+                            </a>
+                        </div>
                     </div>
 
-                    {/* Quick Links */}
-                    <div>
-                        <h4 className="text-sm font-semibold text-white mb-4 tracking-widest uppercase">Navigation</h4>
-                        <ul className="space-y-2">
-                            <li><a href="#hero" className="text-text-muted hover:text-accent transition-colors duration-300 text-sm">Home</a></li>
-                            <li><a href="#projects" className="text-text-muted hover:text-accent transition-colors duration-300 text-sm">Work</a></li>
-                            <li><a href="#about" className="text-text-muted hover:text-accent transition-colors duration-300 text-sm">About</a></li>
-                            <li><a href="#services" className="text-text-muted hover:text-accent transition-colors duration-300 text-sm">Services</a></li>
-                            <li><a href="#contact" className="text-text-muted hover:text-accent transition-colors duration-300 text-sm">Contact</a></li>
+                    {/* Directory Links */}
+                    <div className="border border-border bg-secondary p-4 space-y-2.5">
+                        <div className="text-accent font-bold">
+                            +--[ DIRECTORY_INDEX ]---------+
+                        </div>
+                        <ul className="space-y-1.5">
+                            <li>
+                                <a href="#hero" className="inline-block px-1.5 py-0.5 text-text-main hover:bg-accent hover:text-primary transition-none">
+                                    [ 01. /HOME ]
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#projects" className="inline-block px-1.5 py-0.5 text-text-main hover:bg-accent hover:text-primary transition-none">
+                                    [ 02. /WORK_CASE_STUDIES ]
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#about" className="inline-block px-1.5 py-0.5 text-text-main hover:bg-accent hover:text-primary transition-none">
+                                    [ 03. /ABOUT_GIT_LOG ]
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#services" className="inline-block px-1.5 py-0.5 text-text-main hover:bg-accent hover:text-primary transition-none">
+                                    [ 04. /SERVICES_MODULES ]
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#contact" className="inline-block px-1.5 py-0.5 text-text-main hover:bg-accent hover:text-primary transition-none">
+                                    [ 05. /CONTACT_TERMINAL ]
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
-                    {/* Contact */}
-                    <div>
-                        <h4 className="text-sm font-semibold text-white mb-4 tracking-widest uppercase">Contact</h4>
-                        <ul className="space-y-2 text-text-muted text-sm">
-                            <li className="font-light">Quezon City, Philippines</li>
-                            <li><a href="tel:+639150475513" className="hover:text-accent transition-colors duration-300">+63 915 047 5513</a></li>
-                            <li><a href="mailto:andreidilag12@gmail.com" className="hover:text-accent transition-colors duration-300">andreidilag12@gmail.com</a></li>
+                    {/* Comms Channel */}
+                    <div className="border border-border bg-secondary p-4 space-y-2.5">
+                        <div className="text-accent font-bold">
+                            +--[ COMMS_COORDINATES ]-------+
+                        </div>
+                        <ul className="space-y-1.5 text-text-main">
+                            <li>LOC : Quezon City, Philippines</li>
+                            <li>
+                                TEL :{' '}
+                                <a href="tel:+639150475513" className="text-accent hover:bg-accent hover:text-primary px-1 transition-none">
+                                    +63 915 047 5513
+                                </a>
+                            </li>
+                            <li>
+                                MAIL:{' '}
+                                <a href="mailto:andreidilag12@gmail.com" className="text-accent hover:bg-accent hover:text-primary px-1 transition-none break-all">
+                                    andreidilag12@gmail.com
+                                </a>
+                            </li>
                         </ul>
+                        <div className="pt-2 flex flex-wrap gap-2">
+                            <a
+                                href="https://github.com/YtterStick"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:bg-accent hover:text-primary hover:border-accent font-bold transition-none"
+                            >
+                                [ GITHUB ↗ ]
+                            </a>
+                            <a
+                                href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:bg-accent hover:text-primary hover:border-accent font-bold transition-none"
+                            >
+                                [ LINKEDIN ↗ ]
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-text-muted/60 text-xs mb-4 md:mb-0">
-                        &copy; {new Date().getFullYear()} Andrei Dilag. All rights reserved.
-                    </p>
-
-                    <div className="flex space-x-5">
-                        <SocialIcon href="https://github.com/YtterStick" icon={<FaGithub />} label="GitHub" />
-                        <SocialIcon href="https://www.linkedin.com/in/andrei-dilag-79b018268/" icon={<FaLinkedin />} label="LinkedIn" />
-                    </div>
+                {/* Bottom Status Bar */}
+                <div className="border-t border-border pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-text-muted text-[11px]">
+                    <span>
+                        // EOF &copy; {new Date().getFullYear()} ANDREI DILAG. ALL RIGHTS RESERVED.
+                    </span>
+                    <span className="text-accent">
+                        [ MODE: RETRO_ASCII_TERMINAL // UTF-8 ]
+                    </span>
                 </div>
             </div>
         </footer>
     );
 };
-
-const SocialIcon = ({ href, icon, label }) => (
-    <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-text-muted hover:text-accent transition-colors duration-300 text-lg"
-        aria-label={label}
-    >
-        {icon}
-    </a>
-);
 
 export default Footer;
