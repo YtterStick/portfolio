@@ -18,57 +18,59 @@ const AdminLogin = () => {
             await login(email, password);
             navigate('/admin/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid credentials. Access denied.');
+            setError(err.response?.data?.message || '[ERROR] ACCESS_DENIED: INVALID_CREDENTIALS');
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-primary flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse delay-1000"></div>
-
-            <div className="w-full max-w-md relative z-10">
-                <div className="text-center mb-10">
-                    <div className="inline-block p-3 rounded-2xl bg-secondary/50 backdrop-blur-xl border border-gray-800 mb-6">
-                        <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                    </div>
-                    <h1 className="text-4xl font-black text-white tracking-tighter mb-2">System Admin</h1>
-                    <p className="text-gray-500 font-medium">Authentication required to manage your portfolio</p>
+        <div className="min-h-screen bg-primary flex items-center justify-center p-6 font-mono text-xs">
+            <div className="w-full max-w-md border-2 border-accent bg-secondary">
+                <div className="bg-primary border-b border-accent px-4 py-2.5 flex justify-between items-center">
+                    <span className="text-accent font-bold">╔══[ ROOT_AUTH // /ADMIN/LOGIN ]</span>
+                    <span className="text-text-muted">[SSH_TTY]</span>
                 </div>
 
-                <div className="bg-secondary/30 backdrop-blur-2xl p-10 rounded-[2.5rem] border border-gray-800/50 shadow-2xl relative">
+                <div className="p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h1 className="text-xl font-bold text-text-main uppercase mb-1">
+                            SYSTEM_ADMIN_CONSOLE
+                        </h1>
+                        <p className="text-text-muted">
+                            Authentication required to access portfolio database.
+                        </p>
+                    </div>
+
                     {error && (
-                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm font-bold text-center animate-in fade-in duration-300">
+                        <div className="p-3 bg-primary border border-accent text-accent font-bold text-center">
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] ml-1">Admin Email</label>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-accent font-bold mb-1.5">
+                                &gt; ADMIN_EMAIL:_
+                            </label>
                             <input
                                 type="email"
                                 required
-                                className="w-full bg-primary/50 border border-gray-700/50 rounded-2xl px-5 py-4 text-white outline-none focus:border-accent transition-all placeholder:text-gray-700 font-medium"
-                                placeholder="name@example.com"
+                                className="w-full bg-primary border border-border px-3 py-2.5 text-text-main outline-none focus:border-accent"
+                                placeholder="admin@andrei.dev"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center ml-1">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Secret Key</label>
-                            </div>
+                        <div>
+                            <label className="block text-accent font-bold mb-1.5">
+                                &gt; SECRET_KEY:_
+                            </label>
                             <input
                                 type="password"
                                 required
-                                className="w-full bg-primary/50 border border-gray-700/50 rounded-2xl px-5 py-4 text-white outline-none focus:border-accent transition-all placeholder:text-gray-700 font-medium"
+                                className="w-full bg-primary border border-border px-3 py-2.5 text-text-main outline-none focus:border-accent"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -78,26 +80,21 @@ const AdminLogin = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-accent text-primary font-black py-4 rounded-2xl hover:bg-accent-hover transition-all shadow-lg shadow-accent/20 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-accent text-primary font-bold py-3 border border-accent hover:bg-primary hover:text-accent transition-none cursor-pointer disabled:opacity-50"
                         >
-                            {isLoading ? (
-                                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                                <>
-                                    Enter Dashboard
-                                    <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                </>
-                            )}
+                            {isLoading ? '[ AUTHENTICATING... ]' : '[ AUTHENTICATE --LOGIN -> ]'}
                         </button>
                     </form>
-                </div>
 
-                <div className="mt-8 text-center">
-                    <button onClick={() => navigate('/')} className="text-gray-500 hover:text-white text-sm font-bold transition-colors">
-                        ← Back to Portfolio
-                    </button>
+                    <div className="pt-4 border-t border-border text-center">
+                        <button
+                            type="button"
+                            onClick={() => navigate('/')}
+                            className="px-3 py-1.5 bg-primary border border-border text-text-muted hover:bg-accent hover:text-primary hover:border-accent font-bold cursor-pointer transition-none"
+                        >
+                            [ &lt;- RETURN_TO_PORTFOLIO ]
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
