@@ -9,12 +9,12 @@ const Navbar = () => {
         const sectionToNav = {
             hero: 'hero',
             projects: 'projects',
-            about: 'about',
             services: 'services',
+            about: 'about',
             skills: 'about',
             contact: 'contact'
         };
-        const sectionIds = Object.keys(sectionToNav);
+        const sectionIds = ['hero', 'projects', 'services', 'about', 'skills', 'contact'];
 
         const updateFromScroll = () => {
             const scrollMarker = window.innerHeight * 0.35;
@@ -51,8 +51,8 @@ const Navbar = () => {
     const navLinks = [
         { code: '01', name: 'HOME', href: '#hero' },
         { code: '02', name: 'WORK', href: '#projects' },
-        { code: '03', name: 'ABOUT', href: '#about' },
-        { code: '04', name: 'SERVICES', href: '#services' },
+        { code: '03', name: 'SERVICES', href: '#services' },
+        { code: '04', name: 'ABOUT', href: '#about' },
         { code: '05', name: 'CONTACT', href: '#contact' },
     ];
 

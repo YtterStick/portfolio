@@ -44,13 +44,13 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#about" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
-                                    [ 03. /ABOUT_EXPERIENCE ]
+                                <a href="#services" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                    [ 03. /SERVICES_MODULES ]
                                 </a>
                             </li>
                             <li>
-                                <a href="#services" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
-                                    [ 04. /SERVICES_MODULES ]
+                                <a href="#about" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                    [ 04. /ABOUT_EXPERIENCE ]
                                 </a>
                             </li>
                             <li>

@@ -352,14 +352,59 @@ const AboutSection = () => {
     const activeSkillGroup = skillGroups[skillTab];
 
     return (
-        <section id="about" className="py-24 sm:py-32 bg-primary border-b border-border font-mono">
+        <section className="py-24 sm:py-32 bg-primary border-b border-border font-mono">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
-                {/* 1. Profile ID Card + Git Log Career Timeline */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* 1. Services / What I Can Build Section (03) */}
+                <div id="services">
+                    <div className="mb-8 term-card p-6 sm:p-7">
+                        <div className="text-xs text-accent font-bold mb-1.5">
+                            root@andrei-dev:/usr/bin/services# ./list_capabilities --business-outcomes
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
+                            03 // WHAT_I_CAN_BUILD_FOR_YOU (SERVICES)
+                        </h2>
+                        <p className="text-text-muted text-xs sm:text-sm mt-1.5 text-balance">
+                            Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+                        {services.map((service, sIdx) => (
+                            <div key={sIdx} className="term-card p-6 flex flex-col">
+                                <div className="flex-1 flex flex-col">
+                                    <div className="min-h-[30px] mb-3.5 flex items-center justify-between gap-2 border-b border-border pb-2">
+                                        <span className="text-[11px] font-mono text-accent font-bold truncate">
+                                            {service.stack}
+                                        </span>
+                                        <span className="text-[10px] text-text-muted">MOD_0{sIdx + 1}</span>
+                                    </div>
+                                    <ServiceInteractivePreview index={sIdx} />
+                                    <h3 className="text-base sm:text-lg font-bold text-text-main mb-2 uppercase text-balance">
+                                        {service.title}
+                                    </h3>
+                                    <p className="text-text-muted text-xs leading-relaxed mb-5">
+                                        {service.outcome}
+                                    </p>
+                                </div>
+                                <ul className="space-y-1.5 pt-3.5 border-t border-border mt-auto text-xs">
+                                    {service.deliverables.map((item, dIdx) => (
+                                        <li key={dIdx} className="text-text-main flex items-center gap-2">
+                                            <span className="text-accent font-bold">+</span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 2. Profile ID Card + Git Log Career Timeline (04) */}
+                <div id="about" className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-5 term-card p-6 sm:p-7 flex flex-col justify-between">
                         <div>
                             <div className="text-xs text-text-main font-bold border-b border-border pb-2.5 mb-5 flex items-center justify-between">
-                                <span>03 // PROFILE_SPEC.TXT</span>
+                                <span>04 // PROFILE_SPEC.TXT</span>
                                 <span className="text-accent text-[10px]">[ VERIFIED ]</span>
                             </div>
 
@@ -446,51 +491,6 @@ const AboutSection = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </div>
-
-                {/* 2. Services / What I Can Build Section */}
-                <div id="services">
-                    <div className="mb-8 term-card p-6 sm:p-7">
-                        <div className="text-xs text-accent font-bold mb-1.5">
-                            root@andrei-dev:/usr/bin/services# ./list_capabilities --business-outcomes
-                        </div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-text-main uppercase text-balance">
-                            04 // WHAT_I_CAN_BUILD_FOR_YOU (SERVICES)
-                        </h2>
-                        <p className="text-text-muted text-xs sm:text-sm mt-1.5 text-balance">
-                            Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                        {services.map((service, sIdx) => (
-                            <div key={sIdx} className="term-card p-6 flex flex-col">
-                                <div className="flex-1 flex flex-col">
-                                    <div className="min-h-[30px] mb-3.5 flex items-center justify-between gap-2 border-b border-border pb-2">
-                                        <span className="text-[11px] font-mono text-accent font-bold truncate">
-                                            {service.stack}
-                                        </span>
-                                        <span className="text-[10px] text-text-muted">MOD_0{sIdx + 1}</span>
-                                    </div>
-                                    <ServiceInteractivePreview index={sIdx} />
-                                    <h3 className="text-base sm:text-lg font-bold text-text-main mb-2 uppercase text-balance">
-                                        {service.title}
-                                    </h3>
-                                    <p className="text-text-muted text-xs leading-relaxed mb-5">
-                                        {service.outcome}
-                                    </p>
-                                </div>
-                                <ul className="space-y-1.5 pt-3.5 border-t border-border mt-auto text-xs">
-                                    {service.deliverables.map((item, dIdx) => (
-                                        <li key={dIdx} className="text-text-main flex items-center gap-2">
-                                            <span className="text-accent font-bold">+</span>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
                     </div>
                 </div>
 
