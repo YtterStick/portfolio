@@ -20,7 +20,7 @@ const Footer = () => {
                                 href={LIVE_SITE_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block px-3 py-1.5 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold transition-colors duration-150"
+                                className="inline-block px-3 py-1.5 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold transition-colors duration-75"
                             >
                                 [ {LIVE_SITE_LABEL} ↗ ]
                             </a>
@@ -34,27 +34,27 @@ const Footer = () => {
                         </div>
                         <ul className="space-y-1.5">
                             <li>
-                                <a href="#hero" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                <a href="#hero" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-75">
                                     [ 01. /HOME ]
                                 </a>
                             </li>
                             <li>
-                                <a href="#projects" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                <a href="#projects" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-75">
                                     [ 02. /WORK_CASE_STUDIES ]
                                 </a>
                             </li>
                             <li>
-                                <a href="#services" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                <a href="#services" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-75">
                                     [ 03. /SERVICES_MODULES ]
                                 </a>
                             </li>
                             <li>
-                                <a href="#about" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                <a href="#about" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-75">
                                     [ 04. /ABOUT_EXPERIENCE ]
                                 </a>
                             </li>
                             <li>
-                                <a href="#contact" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-150">
+                                <a href="#contact" className="inline-block px-2 py-0.5 text-text-muted hover:text-accent transition-colors duration-75">
                                     [ 05. /CONTACT_TERMINAL ]
                                 </a>
                             </li>
@@ -72,7 +72,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <span className="text-text-main font-semibold">MAIL:</span>{' '}
-                                <a href="mailto:andreidilag12@gmail.com" className="text-text-main hover:text-accent transition-colors duration-150 break-all">
+                                <a href="mailto:andreidilag12@gmail.com" className="text-text-main hover:text-accent transition-colors duration-75 break-all">
                                     andreidilag12@gmail.com
                                 </a>
                             </li>
@@ -82,7 +82,7 @@ const Footer = () => {
                                 href="https://github.com/YtterStick"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                className="px-3 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-75"
                             >
                                 [ GITHUB ↗ ]
                             </a>
@@ -90,7 +90,7 @@ const Footer = () => {
                                 href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                className="px-3 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-75"
                             >
                                 [ LINKEDIN ↗ ]
                             </a>

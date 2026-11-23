@@ -58,7 +58,7 @@ const HeroTerminalSandbox = () => {
                         key={tab.id}
                         type="button"
                         onClick={() => setMode(tab.id)}
-                        className={`py-2.5 px-2 text-[11px] font-bold border-r last:border-r-0 border-border cursor-pointer transition-colors duration-150 ${
+                        className={`py-2.5 px-2 text-[11px] font-bold border-r last:border-r-0 border-border cursor-pointer transition-colors duration-75 ${
                             mode === tab.id
                                 ? 'bg-secondary text-accent border-b-2 border-b-accent'
                                 : 'bg-primary text-text-muted hover:text-text-main'
@@ -80,7 +80,7 @@ const HeroTerminalSandbox = () => {
                                         key={ws}
                                         type="button"
                                         onClick={() => setWorkspace(ws)}
-                                        className={`px-2.5 py-1 text-[10px] font-bold border cursor-pointer transition-colors duration-150 ${
+                                        className={`px-2.5 py-1 text-[10px] font-bold border cursor-pointer transition-colors duration-75 ${
                                             workspace === ws
                                                 ? 'bg-primary text-accent border-accent'
                                                 : 'bg-primary text-text-muted border-border hover:text-text-main'
@@ -93,7 +93,7 @@ const HeroTerminalSandbox = () => {
                             <button
                                 type="button"
                                 onClick={triggerTx}
-                                className="px-2.5 py-1 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-[11px] cursor-pointer transition-colors duration-150"
+                                className="px-2.5 py-1 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-[11px] cursor-pointer transition-colors duration-75"
                             >
                                 [ + EXEC_TX ]
                             </button>
@@ -141,14 +141,14 @@ const HeroTerminalSandbox = () => {
                                 <button
                                     type="button"
                                     onClick={triggerScan}
-                                    className="px-2.5 py-1 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-[10px] cursor-pointer transition-colors duration-150"
+                                    className="px-2.5 py-1 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-[10px] cursor-pointer transition-colors duration-75"
                                 >
                                     {scanning ? '[ SCANNING... ]' : '[ SCAN_SHEET ]'}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setStrikes((s) => (s + 1) % 4)}
-                                    className="px-2.5 py-1 bg-primary border border-border text-text-main hover:border-accent hover:text-accent font-bold text-[10px] cursor-pointer transition-colors duration-150"
+                                    className="px-2.5 py-1 bg-primary border border-border text-text-main hover:border-accent hover:text-accent font-bold text-[10px] cursor-pointer transition-colors duration-75"
                                 >
                                     [ ALT+TAB ({strikes}/3) ]
                                 </button>
@@ -210,7 +210,7 @@ const HeroTerminalSandbox = () => {
                             <button
                                 type="button"
                                 onClick={() => setIndexed((v) => !v)}
-                                className="px-2.5 py-1 border border-accent bg-primary text-accent hover:bg-accent hover:text-primary font-bold text-[10px] cursor-pointer transition-colors duration-150"
+                                className="px-2.5 py-1 border border-accent bg-primary text-accent hover:bg-accent hover:text-primary font-bold text-[10px] cursor-pointer transition-colors duration-75"
                             >
                                 {indexed ? '[ B-TREE_INDEX: ON ]' : '[ B-TREE_INDEX: OFF ]'}
                             </button>
@@ -324,19 +324,19 @@ const HeroSection = () => {
                             <div className="flex flex-wrap gap-3 pt-1">
                                 <a
                                     href="#projects"
-                                    className="px-5 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
+                                    className="px-5 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-75"
                                 >
                                     [ 01. VIEW_SELECTED_WORK -&gt; ]
                                 </a>
                                 <a
                                     href="#contact"
-                                    className="px-5 py-2.5 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent transition-colors duration-150"
+                                    className="px-5 py-2.5 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent transition-colors duration-75"
                                 >
                                     [ 02. HIRE_ME / BOOK_CALL -&gt; ]
                                 </a>
                                 <a
                                     href="#services"
-                                    className="px-4 py-2.5 bg-primary text-text-muted font-bold text-xs border border-border hover:border-accent hover:text-text-main transition-colors duration-150"
+                                    className="px-4 py-2.5 bg-primary text-text-muted font-bold text-xs border border-border hover:border-accent hover:text-text-main transition-colors duration-75"
                                 >
                                     [ 03. SERVICES ]
                                 </a>
@@ -350,7 +350,7 @@ const HeroSection = () => {
                                 href="https://github.com/YtterStick"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-150"
+                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-75"
                             >
                                 [ GITHUB ↗ ]
                             </a>
@@ -358,13 +358,13 @@ const HeroSection = () => {
                                 href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-150"
+                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-75"
                             >
                                 [ LINKEDIN ↗ ]
                             </a>
                             <a
                                 href="mailto:andreidilag12@gmail.com"
-                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-150"
+                                className="px-2.5 py-1 border border-border bg-primary text-text-main hover:border-accent hover:text-accent transition-colors duration-75"
                             >
                                 [ EMAIL_DIRECT ]
                             </a>

@@ -152,14 +152,14 @@ const ContactSection = () => {
                                     <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
                                         <a
                                             href="mailto:andreidilag12@gmail.com"
-                                            className="text-xs sm:text-sm font-bold text-text-main hover:text-accent transition-colors duration-150 break-all"
+                                            className="text-xs sm:text-sm font-bold text-text-main hover:text-accent transition-colors duration-75 break-all"
                                         >
                                             andreidilag12@gmail.com
                                         </a>
                                         <button
                                             type="button"
                                             onClick={handleCopyEmail}
-                                            className="px-2.5 py-1 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-[10px] font-bold cursor-pointer transition-colors duration-150"
+                                            className="px-2.5 py-1 bg-secondary border border-accent text-accent hover:bg-accent hover:text-primary text-[10px] font-bold cursor-pointer transition-colors duration-75"
                                         >
                                             {copied ? '[ COPIED! ]' : '[ COPY ]'}
                                         </button>
@@ -173,7 +173,7 @@ const ContactSection = () => {
                                             href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-75"
                                         >
                                             [ LINKEDIN ↗ ]
                                         </a>
@@ -181,7 +181,7 @@ const ContactSection = () => {
                                             href="https://github.com/YtterStick"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-150"
+                                            className="px-3 py-1 bg-secondary border border-border text-text-main hover:border-accent hover:text-accent font-bold transition-colors duration-75"
                                         >
                                             [ GITHUB ↗ ]
                                         </a>
@@ -223,7 +223,7 @@ const ContactSection = () => {
                                 <button
                                     type="button"
                                     onClick={() => setStatus('')}
-                                    className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary cursor-pointer transition-colors duration-150"
+                                    className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary cursor-pointer transition-colors duration-75"
                                 >
                                     [ + SEND_ANOTHER_PACKET ]
                                 </button>
@@ -294,7 +294,7 @@ const ContactSection = () => {
                                 <button
                                     type="submit"
                                     disabled={status === 'sending'}
-                                    className="w-full bg-primary text-accent font-bold py-3.5 border border-accent hover:bg-accent hover:text-primary transition-colors duration-150 cursor-pointer disabled:opacity-50"
+                                    className="w-full bg-primary text-accent font-bold py-3.5 border border-accent hover:bg-accent hover:text-primary transition-colors duration-75 cursor-pointer disabled:opacity-50"
                                 >
                                     {status === 'sending'
                                         ? '[ TRANSMITTING_PACKET... PLEASE_WAIT ]'
@@ -321,7 +321,7 @@ const ContactSection = () => {
                                         </p>
                                         <a
                                             href={`mailto:andreidilag12@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Andrei,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`}
-                                            className="inline-block px-4 py-2 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-xs transition-colors duration-150"
+                                            className="inline-block px-4 py-2 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary font-bold text-xs transition-colors duration-75"
                                         >
                                             [ LAUNCH_DEFAULT_MAIL_CLIENT ↗ ]
                                         </a>

@@ -74,7 +74,7 @@ const Navbar = () => {
                     {/* Workstation Brand */}
                     <Link
                         to="/"
-                        className="text-sm sm:text-base font-bold text-text-main hover:text-accent px-2 py-1 transition-colors duration-150 flex items-center gap-1.5"
+                        className="text-sm sm:text-base font-bold text-text-main hover:text-accent px-2 py-1 transition-colors duration-75 flex items-center gap-1.5"
                     >
                         <span className="text-accent">&gt;</span>
                         <span>ANDREI.DEV</span>
@@ -90,7 +90,7 @@ const Navbar = () => {
                                     key={link.name}
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
-                                    className={`px-3 py-1.5 text-xs font-medium tracking-wider border transition-colors duration-150 ${
+                                    className={`px-3 py-1.5 text-xs font-medium tracking-wider border transition-colors duration-75 ${
                                         isActive
                                             ? 'bg-secondary text-accent border-accent font-bold'
                                             : 'bg-transparent text-text-muted border-transparent hover:text-text-main hover:border-border'
@@ -103,7 +103,7 @@ const Navbar = () => {
                         <a
                             href="#contact"
                             onClick={(e) => handleNavClick(e, '#contact')}
-                            className="ml-2 px-3.5 py-1.5 text-xs font-bold bg-primary text-accent border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
+                            className="ml-2 px-3.5 py-1.5 text-xs font-bold bg-primary text-accent border border-accent hover:bg-accent hover:text-primary transition-colors duration-75"
                         >
                             [ HIRE_ME -&gt; ]
                         </a>
@@ -114,7 +114,7 @@ const Navbar = () => {
                         <button
                             type="button"
                             onClick={() => setIsOpen(!isOpen)}
-                            className="px-3 py-1.5 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-colors duration-150 cursor-pointer"
+                            className="px-3 py-1.5 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-colors duration-75 cursor-pointer"
                             aria-label="Toggle Menu"
                         >
                             {isOpen ? '[ X CLOSE ]' : '[ = MENU ]'}
@@ -136,7 +136,7 @@ const Navbar = () => {
                                 key={link.name}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className={`block px-3 py-2 text-xs font-medium border transition-colors duration-150 ${
+                                className={`block px-3 py-2 text-xs font-medium border transition-colors duration-75 ${
                                     isActive
                                         ? 'bg-primary text-accent border-accent font-bold'
                                         : 'bg-primary/60 text-text-main border-border hover:border-accent'
@@ -149,7 +149,7 @@ const Navbar = () => {
                     <a
                         href="#contact"
                         onClick={(e) => handleNavClick(e, '#contact')}
-                        className="block w-full text-center mt-2 px-3 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
+                        className="block w-full text-center mt-2 px-3 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-75"
                     >
                         [ INITIATE_CONTACT -&gt; ]
                     </a>

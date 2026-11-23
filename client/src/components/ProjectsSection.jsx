@@ -62,18 +62,22 @@ const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full
 };
 
 const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
-    <div
-        onClick={() => setSelectedProject(project)}
-        className="term-card grid grid-cols-1 lg:grid-cols-12 group cursor-pointer font-mono"
-    >
+    <article className="term-card grid grid-cols-1 lg:grid-cols-12 group font-mono">
         {/* Left: Large Dithered 16:9 Screenshot */}
         <div className="lg:col-span-7 flex flex-col bg-primary border-b lg:border-b-0 lg:border-r border-border">
             <WindowHeader index={index} project={project} />
-            <ProjectThumbnail
-                src={project.image}
-                alt={project.title}
-                category={project.category}
-            />
+            <button
+                type="button"
+                onClick={() => setSelectedProject(project)}
+                aria-label={`Open ${project.title} case study`}
+                className="block w-full text-left cursor-pointer"
+            >
+                <ProjectThumbnail
+                    src={project.image}
+                    alt={project.title}
+                    category={project.category}
+                />
+            </button>
         </div>
 
         {/* Right: Flagship Case Study Pitch */}
@@ -83,7 +87,7 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
                     <span className="w-1.5 h-1.5 bg-accent inline-block" />
                     <span>FLAGSHIP_0{index + 1} // PRODUCTION</span>
                 </div>
-                <h3 className="text-2xl font-bold text-text-main mb-2.5 uppercase group-hover:text-accent transition-colors duration-150">
+                <h3 className="text-2xl font-bold text-text-main mb-2.5 uppercase group-hover:text-accent transition-colors duration-75">
                     {project.title}
                 </h3>
                 <p className="text-text-muted text-xs sm:text-sm leading-relaxed mb-5">
@@ -116,16 +120,20 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
             </div>
 
             <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-border mt-auto">
-                <span className="px-3.5 py-1.5 bg-primary border border-accent text-accent group-hover:bg-accent group-hover:text-primary text-xs font-bold transition-colors duration-150">
+                <button
+                    type="button"
+                    onClick={() => setSelectedProject(project)}
+                    className="px-3.5 py-1.5 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75 cursor-pointer"
+                >
                     [ VIEW_README.MD -&gt; ]
-                </span>
-                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                </button>
+                <div className="flex items-center gap-2">
                     {project.githubLink && project.githubLink !== '#' && (
                         <a
                             href={project.githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
+                            className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75"
                         >
                             [ SRC ]
                         </a>
@@ -135,7 +143,7 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
                             href={project.liveLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3.5 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
+                            className="px-3.5 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75"
                         >
                             [ LAUNCH_LIVE ↗ ]
                         </a>
@@ -143,27 +151,31 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
                 </div>
             </div>
         </div>
-    </div>
+    </article>
 );
 
 const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
     return (
-        <div
-            onClick={() => setSelectedProject(project)}
-            className="term-card flex flex-col group cursor-pointer h-full font-mono"
-        >
+        <article className="term-card flex flex-col group h-full font-mono">
             <WindowHeader index={index} project={project} />
             <div className="border-b border-border shrink-0">
-                <ProjectThumbnail
-                    src={project.image}
-                    alt={project.title}
-                    category={project.category}
-                />
+                <button
+                    type="button"
+                    onClick={() => setSelectedProject(project)}
+                    aria-label={`Open ${project.title} case study`}
+                    className="block w-full text-left cursor-pointer"
+                >
+                    <ProjectThumbnail
+                        src={project.image}
+                        alt={project.title}
+                        category={project.category}
+                    />
+                </button>
             </div>
 
             <div className="p-5 sm:p-6 flex flex-col grow">
                 <div className="flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-text-main mb-2 uppercase group-hover:text-accent transition-colors duration-150">
+                    <h3 className="text-lg sm:text-xl font-bold text-text-main mb-2 uppercase group-hover:text-accent transition-colors duration-75">
                         {project.title}
                     </h3>
                     <p className="text-text-muted text-xs leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]">
@@ -191,16 +203,20 @@ const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
                 </div>
 
                 <div className="flex flex-wrap justify-between items-center gap-2 pt-3.5 border-t border-border mt-auto">
-                    <span className="px-3 py-1.5 bg-primary border border-border text-text-main group-hover:border-accent group-hover:text-accent text-xs font-bold transition-colors duration-150">
+                    <button
+                        type="button"
+                        onClick={() => setSelectedProject(project)}
+                        className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75 cursor-pointer"
+                    >
                         [ VIEW_README.MD -&gt; ]
-                    </span>
-                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    </button>
+                    <div className="flex items-center gap-1.5">
                         {project.githubLink && project.githubLink !== '#' && (
                             <a
                                 href={project.githubLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-150"
+                                className="px-2.5 py-1.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75"
                             >
                                 [ SRC ]
                             </a>
@@ -215,7 +231,7 @@ const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
                                     href={project.liveLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-3 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-150"
+                                    className="px-3 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75"
                                 >
                                     [ LIVE ↗ ]
                                 </a>
@@ -224,7 +240,7 @@ const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
     );
 };
 
@@ -327,6 +343,9 @@ const ProjectsSection = () => {
                     onClick={() => setSelectedProject(null)}
                 >
                     <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={`${selectedProject.title} Case Study`}
                         className="term-card w-full max-w-4xl max-h-[92vh] flex flex-col my-auto"
                         onClick={(e) => e.stopPropagation()}
                         data-lenis-prevent
@@ -341,8 +360,9 @@ const ProjectsSection = () => {
                             </div>
                             <button
                                 type="button"
+                                autoFocus
                                 onClick={() => setSelectedProject(null)}
-                                className="px-3 py-1 bg-primary text-accent font-bold hover:bg-accent hover:text-primary border border-accent cursor-pointer transition-colors duration-150"
+                                className="px-3 py-1 bg-primary text-accent font-bold hover:bg-accent hover:text-primary border border-accent cursor-pointer transition-colors duration-75"
                             >
                                 [ X ESC ]
                             </button>

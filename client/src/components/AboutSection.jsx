@@ -72,7 +72,7 @@ const ServiceInteractivePreview = ({ index }) => {
                             key={t}
                             type="button"
                             onClick={() => setTenant(t)}
-                            className={`flex-1 py-1 px-1.5 text-[10px] font-bold border cursor-pointer transition-colors duration-150 truncate ${
+                            className={`flex-1 py-1 px-1.5 text-[10px] font-bold border cursor-pointer transition-colors duration-75 truncate ${
                                 tenant === t
                                     ? 'bg-secondary text-accent border-accent'
                                     : 'bg-secondary text-text-muted border-border hover:text-text-main'
@@ -104,7 +104,7 @@ const ServiceInteractivePreview = ({ index }) => {
                     <button
                         type="button"
                         onClick={() => setStep((s) => (s + 1) % 3)}
-                        className="text-[10px] px-2 py-0.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-colors duration-150"
+                        className="text-[10px] px-2 py-0.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-colors duration-75"
                     >
                         [ + STEP_NODE ]
                     </button>
@@ -115,7 +115,7 @@ const ServiceInteractivePreview = ({ index }) => {
                             key={node}
                             type="button"
                             onClick={() => setStep(i)}
-                            className={`p-1.5 border text-center cursor-pointer transition-colors duration-150 ${
+                            className={`p-1.5 border text-center cursor-pointer transition-colors duration-75 ${
                                 step === i
                                     ? 'bg-secondary text-accent border-accent font-bold'
                                     : 'bg-secondary border-border text-text-muted hover:text-text-main'
@@ -136,7 +136,7 @@ const ServiceInteractivePreview = ({ index }) => {
                 <button
                     type="button"
                     onClick={() => setOptimized((o) => !o)}
-                    className="text-[10px] px-2 py-0.5 border border-accent bg-primary text-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-colors duration-150"
+                    className="text-[10px] px-2 py-0.5 border border-accent bg-primary text-accent hover:bg-accent hover:text-primary font-bold cursor-pointer transition-colors duration-75"
                 >
                     {optimized ? '[ ACID_AUTO: ON ]' : '[ MANUAL_CSV: OFF ]'}
                 </button>
@@ -431,7 +431,7 @@ const AboutSection = () => {
                             <a
                                 href="/andrei_dilag_resume.pdf"
                                 download="andrei_dilag_resume.pdf"
-                                className="px-4 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary text-center transition-colors duration-150"
+                                className="px-4 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary text-center transition-colors duration-75"
                             >
                                 [ DOWNLOAD_RESUME.PDF ↓ ]
                             </a>
@@ -439,7 +439,7 @@ const AboutSection = () => {
                                 href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-4 py-2.5 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent text-center transition-colors duration-150"
+                                className="px-4 py-2.5 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent text-center transition-colors duration-75"
                             >
                                 [ CONNECT_LINKEDIN ↗ ]
                             </a>
@@ -515,7 +515,7 @@ const AboutSection = () => {
                                         key={key}
                                         type="button"
                                         onClick={() => setSkillTab(key)}
-                                        className={`px-3 py-1.5 text-[11px] font-bold border cursor-pointer transition-colors duration-150 ${
+                                        className={`px-3 py-1.5 text-[11px] font-bold border cursor-pointer transition-colors duration-75 ${
                                             skillTab === key
                                                 ? 'bg-primary text-accent border-accent'
                                                 : 'bg-primary text-text-muted border-border hover:text-text-main'
@@ -596,14 +596,14 @@ const AboutSection = () => {
                                     <button
                                         type="button"
                                         onClick={prevSlide}
-                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
+                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-75"
                                     >
                                         [ &lt; ]
                                     </button>
                                     <button
                                         type="button"
                                         onClick={nextSlide}
-                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-150"
+                                        className="px-2 py-0.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent cursor-pointer transition-colors duration-75"
                                     >
                                         [ &gt; ]
                                     </button>
