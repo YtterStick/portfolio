@@ -300,7 +300,7 @@ const ProjectsSection = () => {
                                 ADDITIONAL SYSTEMS — ENTERPRISE &amp; INTERNAL TOOLS
                             </span>
                             <span className="tech-label text-text-muted">
-                                0{additionalProjects.length}ARCHIVES
+                                0{additionalProjects.length} ARCHIVES
                             </span>
                         </div>
 

@@ -119,7 +119,7 @@ export const projectsData = [
                 desc: 'Hosted globally on Cloudflare Pages for low-latency asset delivery and responsive mobile playback.'
             }
         ],
-        techStack: ['React', 'Vite', 'Tailwind CSS', 'Cloudflare Pages', 'REST APIs'],
+        techStack: ['React Vite', 'Tailwind CSS', 'Cloudflare Pages', 'REST APIs'],
         image: '/images/aniverse.png',
         githubLink: '#',
         liveLink: 'https://anime-verse-ytter.pages.dev/'

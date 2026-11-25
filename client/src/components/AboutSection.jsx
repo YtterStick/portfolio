@@ -93,7 +93,7 @@ const ServiceInteractivePreview = ({ index }) => {
     }
 
     if (index === 1) {
-        const nodes = ['01 WEBHOOK', '02 LLM / CV', '03 DB COMMIT'];
+        const nodes = ['[01 WEBHOOK]', '[02 LLM / CV]', '[03 DB COMMIT]'];
         return (
             <div className="mb-6 p-4 bg-primary border border-white/[0.08]">
                 <div className="flex items-center justify-between mb-3">
@@ -135,14 +135,14 @@ const ServiceInteractivePreview = ({ index }) => {
                     onClick={() => setOptimized((o) => !o)}
                     className="tech-label px-2.5 py-0.5 border border-white/25 text-text-main hover:bg-white hover:text-primary cursor-pointer transition-colors"
                 >
-                    {optimized ? 'ACID AUTO: ON' : 'MANUAL CSV: OFF'}
+                    {optimized ? '[ACID AUTO: ON]' : '[MANUAL CSV: OFF]'}
                 </button>
             </div>
             <div className="space-y-2">
                 <div className="flex justify-between tech-label">
                     <span className="text-text-muted">RECONCILIATION</span>
                     <span className="text-text-main">
-                        {optimized ? '0.4s (Zero Errors)' : '4.5h (Manual)'}
+                        {optimized ? '0.4S (ZERO ERRORS)' : '4.5H (MANUAL)'}
                     </span>
                 </div>
                 <div className="w-full h-1.5 bg-white/[0.06] overflow-hidden">

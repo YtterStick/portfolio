@@ -14,7 +14,7 @@ const AsciiSparkleCanvas = () => {
         if (!ctx) return;
 
         const GRID = 48;
-        const CHARS = ['+', '.', '0', '1', ':'];
+        const CHARS = ['+', '·', '.', '0', '1', ':'];
         let animationFrameId;
         let nodes = [];
 
