@@ -1,9 +1,50 @@
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform, useVelocity, useReducedMotion } from 'framer-motion';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
+
+const ScrollVelocityRibbon = () => {
+    const reduceMotion = useReducedMotion();
+    const { scrollY } = useScroll();
+    const scrollVelocity = useVelocity(scrollY);
+    const smoothVelocity = useSpring(scrollVelocity, { stiffness: 220, damping: 32 });
+
+    const ribbonX = useTransform(scrollY, (v) => (reduceMotion ? 0 : -((v * 0.35) % 900)));
+    const ribbonSkewX = useTransform(smoothVelocity, [-2500, 0, 2500], reduceMotion ? [0, 0, 0] : [8, 0, -8]);
+
+    const items = [
+        'NEXT.JS 14',
+        'PYTHON FASTAPI',
+        'OPENCV OMR',
+        'JAVA SPRING BOOT',
+        'POSTGRESQL & ACID',
+        'MULTI-TENANT SAAS',
+        'GENERATIVE AI / LLMS',
+        'CLOUDFLARE EDGE',
+        'N8N & COPILOT STUDIO'
+    ];
+
+    return (
+        <div
+            aria-hidden="true"
+            className="relative z-10 border-b border-white/[0.08] bg-secondary/70 py-3 overflow-hidden select-none"
+        >
+            <motion.div
+                style={{ x: ribbonX, skewX: ribbonSkewX }}
+                className="flex items-center gap-8 whitespace-nowrap w-max will-change-transform"
+            >
+                {[...items, ...items, ...items].map((label, idx) => (
+                    <span key={idx} className="tech-label text-text-muted inline-flex items-center gap-8">
+                        <span>{label}</span>
+                        <span className="text-[#34d399]">+</span>
+                    </span>
+                ))}
+            </motion.div>
+        </div>
+    );
+};
 
 const AsciiSparkleCanvas = () => {
     const canvasRef = useRef(null);
@@ -115,6 +156,7 @@ const Home = () => {
             <div className="relative z-10">
                 <HeroSection />
             </div>
+            <ScrollVelocityRibbon />
             <div className="relative z-10">
                 <ProjectsSection />
             </div>

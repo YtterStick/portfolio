@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useVelocity, useSpring, useReducedMotion } from 'framer-motion';
 import { useScroll as useLenisScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
 
@@ -48,20 +48,24 @@ const ProjectThumbnail = ({ src, alt, category, imgY, className = 'aspect-video 
 const FlagshipProjectCard = ({ project, index, setSelectedProject }) => {
     const cardRef = useRef(null);
     const reduceMotion = useReducedMotion();
-    const { scrollYProgress } = useScroll({
+    const { scrollY, scrollYProgress } = useScroll({
         target: cardRef,
-        offset: ['start 0.96', 'end 0.04']
+        offset: ['start end', 'end start']
     });
+    const scrollVelocity = useVelocity(scrollY);
+    const rawSkewY = useTransform(scrollVelocity, [-2400, 0, 2400], reduceMotion ? [0, 0, 0] : [-1.8, 0, 1.8]);
+    const skewY = useSpring(rawSkewY, { stiffness: 240, damping: 30 });
 
-    const y = useTransform(scrollYProgress, [0, 0.28, 0.72, 1], reduceMotion ? [0, 0, 0, 0] : [56, 0, 0, -40]);
+    const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], reduceMotion ? [0, 0, 0, 0] : [60, 0, 0, -44]);
     const scale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], reduceMotion ? [1, 1, 1, 1] : [0.96, 1, 1, 0.97]);
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.82, 1], [0.3, 1, 1, 0.45]);
-    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-6%', '6%']);
+    const opacity = useTransform(scrollYProgress, [0, 0.18, 0.84, 1], [0.28, 1, 1, 0.42]);
+    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-7%', '7%']);
+    const tagX = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [18, -18]);
 
     return (
         <motion.article
             ref={cardRef}
-            style={{ y, scale, opacity }}
+            style={{ y, scale, opacity, skewY }}
             className="editorial-card grid grid-cols-1 lg:grid-cols-12 group will-change-transform"
         >
             {/* Left: 16:9 Scroll-Parallax Preview */}
@@ -107,9 +111,9 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => {
                         </div>
                     )}
 
-                    <div className="mb-6">
+                    <div className="mb-6 overflow-hidden">
                         <div className="tech-label text-text-muted mb-2">ARCHITECTURE &amp; STACK</div>
-                        <div className="flex flex-wrap gap-1.5">
+                        <motion.div style={{ x: tagX }} className="flex flex-wrap gap-1.5 will-change-transform">
                             {project.techStack.slice(0, 5).map((tech, i) => (
                                 <span
                                     key={i}
@@ -118,7 +122,7 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => {
                                     {tech}
                                 </span>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
 
@@ -161,24 +165,28 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => {
 const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
     const cardRef = useRef(null);
     const reduceMotion = useReducedMotion();
-    const { scrollYProgress } = useScroll({
+    const { scrollY, scrollYProgress } = useScroll({
         target: cardRef,
-        offset: ['start 0.96', 'end 0.04']
+        offset: ['start end', 'end start']
     });
+    const scrollVelocity = useVelocity(scrollY);
+    const rawSkewY = useTransform(scrollVelocity, [-2400, 0, 2400], reduceMotion ? [0, 0, 0] : [-1.5, 0, 1.5]);
+    const skewY = useSpring(rawSkewY, { stiffness: 240, damping: 30 });
 
     const y = useTransform(
         scrollYProgress,
         [0, 0.3, 0.72, 1],
-        reduceMotion ? [0, 0, 0, 0] : [index % 2 === 0 ? 42 : 64, 0, 0, -28]
+        reduceMotion ? [0, 0, 0, 0] : [index % 2 === 0 ? 44 : 68, 0, 0, -30]
     );
     const scale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], reduceMotion ? [1, 1, 1, 1] : [0.965, 1, 1, 0.975]);
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0.35, 1, 1, 0.5]);
-    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-5%', '5%']);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0.32, 1, 1, 0.48]);
+    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-6%', '6%']);
+    const tagX = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [14, -14]);
 
     return (
         <motion.article
             ref={cardRef}
-            style={{ y, scale, opacity }}
+            style={{ y, scale, opacity, skewY }}
             className="editorial-card flex flex-col group h-full will-change-transform"
         >
             <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
@@ -219,7 +227,7 @@ const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
                         </div>
                     )}
 
-                    <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
+                    <motion.div style={{ x: tagX }} className="flex flex-wrap gap-1.5 mb-6 mt-auto will-change-transform">
                         {project.techStack.slice(0, 4).map((tech, i) => (
                             <span
                                 key={i}
@@ -228,7 +236,7 @@ const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
                                 {tech}
                             </span>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
 
                 <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-white/[0.08] mt-auto">

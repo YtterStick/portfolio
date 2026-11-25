@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useVelocity, useSpring, useReducedMotion } from 'framer-motion';
 
 const ScrollScrubBlock = ({ children, className = '', yOffset = 44, xOffset = 0 }) => {
     const ref = useRef(null);
     const reduceMotion = useReducedMotion();
-    const { scrollYProgress } = useScroll({
+    const { scrollY, scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start 0.96', 'end 0.04']
+        offset: ['start end', 'end start']
     });
+    const scrollVelocity = useVelocity(scrollY);
+    const rawSkewY = useTransform(scrollVelocity, [-2400, 0, 2400], reduceMotion ? [0, 0, 0] : [-1.4, 0, 1.4]);
+    const skewY = useSpring(rawSkewY, { stiffness: 250, damping: 32 });
 
     const y = useTransform(
         scrollYProgress,
@@ -24,12 +27,12 @@ const ScrollScrubBlock = ({ children, className = '', yOffset = 44, xOffset = 0 
         [0, 0.25, 0.75, 1],
         reduceMotion ? [1, 1, 1, 1] : [0.965, 1, 1, 0.975]
     );
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.84, 1], [0.3, 1, 1, 0.45]);
+    const opacity = useTransform(scrollYProgress, [0, 0.18, 0.84, 1], [0.3, 1, 1, 0.45]);
 
     return (
         <motion.div
             ref={ref}
-            style={{ y, x, scale, opacity }}
+            style={{ y, x, scale, opacity, skewY }}
             className={`${className} will-change-transform`}
         >
             {children}
