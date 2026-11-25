@@ -35,7 +35,7 @@ const Navbar = () => {
             projects: 'projects',
             services: 'services',
             about: 'about',
-            skills: 'about',
+            skills: 'skills',
             contact: 'contact'
         };
         const sectionIds = ['hero', 'projects', 'services', 'about', 'skills', 'contact'];
@@ -74,8 +74,9 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Work', href: '#projects' },
-        { name: 'Design', href: '#services' },
+        { name: 'Architecture', href: '#services' },
         { name: 'About', href: '#about' },
+        { name: 'Awards', href: '#skills' },
         { name: 'Contact', href: '#contact' },
     ];
 

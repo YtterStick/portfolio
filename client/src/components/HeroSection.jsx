@@ -1,4 +1,264 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+const LiveAsciiHeroCanvas = () => {
+    const containerRef = useRef(null);
+    const canvasRef = useRef(null);
+    const pointerRef = useRef({
+        x: -9999,
+        y: -9999,
+        targetX: -9999,
+        targetY: -9999
+    });
+
+    useEffect(() => {
+        const container = containerRef.current;
+        const canvas = canvasRef.current;
+        if (!container || !canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const GLYPHS = ['·', '-', '=', '+', '%', 'A', 'D', '#', '@'];
+        const BG_GLYPHS = ['·', '+', '0', '1'];
+
+        let width = 0;
+        let height = 0;
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let cellSize = 9;
+        let cells = [];
+        let bgCells = [];
+        let animId = 0;
+        let isVisible = true;
+        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+
+        const sampleTextMatrix = () => {
+            const rect = container.getBoundingClientRect();
+            width = Math.max(300, Math.floor(rect.width));
+            height = width < 640 ? 160 : width < 1024 ? 210 : 250;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+
+            cellSize = width < 640 ? 6 : width < 1024 ? 8 : 9;
+            const cols = Math.floor(width / cellSize);
+            const rows = Math.floor(height / cellSize);
+
+            const off = document.createElement('canvas');
+            off.width = cols;
+            off.height = rows;
+            const octx = off.getContext('2d');
+            if (!octx) return;
+
+            octx.clearRect(0, 0, cols, rows);
+            octx.fillStyle = '#ffffff';
+            octx.textAlign = 'center';
+            octx.textBaseline = 'middle';
+
+            let fontSize = Math.floor(rows * 0.56);
+            octx.font = `900 ${fontSize}px "Inter", system-ui, sans-serif`;
+            const title = 'ANDREI DILAG';
+            const measured = octx.measureText(title).width;
+            if (measured > cols * 0.92) {
+                fontSize = Math.max(8, Math.floor(fontSize * ((cols * 0.92) / measured)));
+                octx.font = `900 ${fontSize}px "Inter", system-ui, sans-serif`;
+            }
+            octx.fillText(title, Math.floor(cols / 2), Math.floor(rows * 0.43));
+
+            const subSize = Math.max(5, Math.floor(rows * 0.14));
+            octx.font = `700 ${subSize}px "JetBrains Mono", monospace`;
+            octx.fillStyle = 'rgba(255, 255, 255, 0.58)';
+            octx.fillText('SYSTEMS & AI ARCHITECTURE', Math.floor(cols / 2), Math.floor(rows * 0.82));
+
+            const imgData = octx.getImageData(0, 0, cols, rows).data;
+            cells = [];
+            bgCells = [];
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const idx = (r * cols + c) * 4;
+                    const alpha = imgData[idx + 3] / 255;
+                    const x = c * cellSize + cellSize * 0.5;
+                    const y = r * cellSize + cellSize * 0.5;
+
+                    if (alpha > 0.14) {
+                        cells.push({
+                            c,
+                            r,
+                            x,
+                            y,
+                            alpha,
+                            phase: c * 0.16 + r * 0.22
+                        });
+                    } else if ((c % 4 === 0 && r % 3 === 0) || Math.random() < 0.015) {
+                        bgCells.push({
+                            x,
+                            y,
+                            glyph: BG_GLYPHS[(c + r) % BG_GLYPHS.length],
+                            phase: Math.random() * Math.PI * 2
+                        });
+                    }
+                }
+            }
+        };
+
+        sampleTextMatrix();
+
+        const renderFrame = (timeMs) => {
+            if (!isVisible) {
+                animId = window.requestAnimationFrame(renderFrame);
+                return;
+            }
+
+            const t = timeMs * 0.0024;
+            const p = pointerRef.current;
+            p.x += (p.targetX - p.x) * 0.2;
+            p.y += (p.targetY - p.y) * 0.2;
+
+            ctx.save();
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+
+            const radius = width < 640 ? 90 : 140;
+            const radiusSq = radius * radius;
+
+            // Ambient background grid nodes
+            ctx.font = `${Math.max(7, cellSize - 1)}px "JetBrains Mono", monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            for (let i = 0; i < bgCells.length; i++) {
+                const b = bgCells[i];
+                const dx = b.x - p.x;
+                const dy = b.y - p.y;
+                const distSq = dx * dx + dy * dy;
+                const boost = distSq < radiusSq ? (1 - distSq / radiusSq) * 0.4 : 0;
+                const flicker = 0.05 + 0.05 * Math.sin(t * 0.9 + b.phase) + boost;
+                ctx.fillStyle = boost > 0.08
+                    ? `rgba(52, 211, 153, ${Math.min(0.6, flicker).toFixed(3)})`
+                    : `rgba(245, 245, 245, ${flicker.toFixed(3)})`;
+                ctx.fillText(b.glyph, b.x, b.y);
+            }
+
+            // Sampled ASCII Hero Title Matrix
+            ctx.font = `600 ${cellSize}px "JetBrains Mono", monospace`;
+            for (let i = 0; i < cells.length; i++) {
+                const cell = cells[i];
+                const wave = reduceMotion
+                    ? 0
+                    : Math.sin(t * 1.4 + cell.c * 0.13 - cell.r * 0.2) * 0.18;
+
+                const dx = cell.x - p.x;
+                const dy = cell.y - p.y;
+                const distSq = dx * dx + dy * dy;
+
+                let ripple = 0;
+                let offsetX = 0;
+                let offsetY = 0;
+
+                if (distSq < radiusSq && distSq > 0.01) {
+                    const dist = Math.sqrt(distSq);
+                    const falloff = 1 - dist / radius;
+                    ripple = falloff * falloff;
+                    offsetX = (dx / dist) * ripple * 4.2;
+                    offsetY = (dy / dist) * ripple * 4.2;
+                }
+
+                const lum = Math.min(1, Math.max(0.18, cell.alpha + wave + ripple * 0.55));
+                const glyphIdx = Math.min(
+                    GLYPHS.length - 1,
+                    Math.max(0, Math.floor(lum * (GLYPHS.length - 1)))
+                );
+                const glyph = GLYPHS[glyphIdx];
+
+                if (ripple > 0.16) {
+                    const greenMix = Math.min(1, ripple * 1.35);
+                    const rCol = Math.round(245 - greenMix * 175);
+                    const gCol = Math.round(245 - greenMix * 20);
+                    const bCol = Math.round(245 - greenMix * 85);
+                    ctx.fillStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${Math.min(1, lum + 0.25).toFixed(3)})`;
+                } else {
+                    const baseAlpha = Math.min(0.96, Math.max(0.24, lum * 0.94));
+                    ctx.fillStyle = `rgba(245, 245, 245, ${baseAlpha.toFixed(3)})`;
+                }
+
+                ctx.fillText(glyph, cell.x + offsetX, cell.y + offsetY);
+            }
+
+            ctx.restore();
+
+            if (!reduceMotion) {
+                animId = window.requestAnimationFrame(renderFrame);
+            }
+        };
+
+        animId = window.requestAnimationFrame(renderFrame);
+
+        const handleResize = () => {
+            sampleTextMatrix();
+            if (reduceMotion) {
+                renderFrame(0);
+            }
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+            },
+            { threshold: 0.05 }
+        );
+        observer.observe(container);
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', handleResize);
+            window.cancelAnimationFrame(animId);
+        };
+    }, []);
+
+    const updatePointer = (clientX, clientY) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        pointerRef.current.targetX = clientX - rect.left;
+        pointerRef.current.targetY = clientY - rect.top;
+    };
+
+    const resetPointer = () => {
+        pointerRef.current.targetX = -9999;
+        pointerRef.current.targetY = -9999;
+    };
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseMove={(e) => updatePointer(e.clientX, e.clientY)}
+            onMouseLeave={resetPointer}
+            onTouchMove={(e) => {
+                const touch = e.touches[0];
+                if (touch) updatePointer(touch.clientX, touch.clientY);
+            }}
+            onTouchEnd={resetPointer}
+            className="relative w-full mb-14 editorial-card overflow-hidden select-none"
+        >
+            <div className="px-4 sm:px-6 py-2.5 border-b border-white/[0.08] flex items-center justify-between tech-label text-text-muted">
+                <span className="flex items-center gap-2 text-text-main">
+                    <span className="w-1.5 h-1.5 bg-[#34d399] inline-block" />
+                    <span>LIVE ASCII // PIXEL-MATRIX STAGE</span>
+                </span>
+                <span className="hidden sm:inline">SWEEP CURSOR ACROSS MATRIX TO INTERACT</span>
+                <span className="text-text-main">60 FPS • HIGH-DPI</span>
+            </div>
+
+            <canvas
+                ref={canvasRef}
+                aria-label="Andrei Dilag — Interactive ASCII Pixel Matrix Banner"
+                className="block w-full cursor-crosshair"
+            />
+        </div>
+    );
+};
 
 const HeroArchitecturePreview = () => {
     const [mode, setMode] = useState('saas');
@@ -26,7 +286,6 @@ const HeroArchitecturePreview = () => {
 
     return (
         <div className="editorial-card">
-            {/* Top Bar */}
             <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
                 <span className="tech-label text-text-main flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-[#34d399] inline-block" />
@@ -35,7 +294,6 @@ const HeroArchitecturePreview = () => {
                 <span className="tech-label text-text-muted">INTERACTIVE</span>
             </div>
 
-            {/* Mode Tabs */}
             <div className="grid grid-cols-3 border-b border-white/[0.08]">
                 {[
                     { id: 'saas', label: '(01) SAAS OS' },
@@ -57,7 +315,6 @@ const HeroArchitecturePreview = () => {
                 ))}
             </div>
 
-            {/* Sandbox Stage */}
             <div className="p-6 min-h-[280px] flex flex-col justify-between">
                 {mode === 'saas' && (
                     <div className="space-y-5">
@@ -225,8 +482,11 @@ const HeroSection = () => {
     };
 
     return (
-        <section id="hero" className="py-28 sm:py-40 border-b border-white/[0.08]">
+        <section id="hero" className="py-20 sm:py-32 border-b border-white/[0.08]">
             <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+                {/* Prominent Full-Bleed Live ASCII / Pixel-Matrix Hero Stage */}
+                <LiveAsciiHeroCanvas />
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
                     {/* Left: Editorial Display Typography & Intro */}
                     <div className="lg:col-span-7">
@@ -290,7 +550,7 @@ const HeroSection = () => {
                     </div>
 
                     {/* Right: Interactive Architecture Sandbox */}
-                    <div className="lg:col-span-5 lg:mt-8">
+                    <div className="lg:col-span-5">
                         <HeroArchitecturePreview />
                     </div>
                 </div>
