@@ -1,4 +1,9 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ScrollContext = createContext({
     lenis: null,
@@ -7,31 +12,34 @@ const ScrollContext = createContext({
 export const useScroll = () => useContext(ScrollContext);
 
 export const ScrollProvider = ({ children }) => {
-    // High-performance controller: preserves full API compatibility for start/stop/scrollTo
-    // while allowing the browser's native hardware compositor to handle 120Hz/144Hz scroll with 0 input lag.
-    const lenis = useMemo(() => ({
-        start: () => {
-            if (typeof document !== 'undefined') {
-                document.body.style.overflow = '';
-                document.documentElement.style.overflow = '';
-            }
-        },
-        stop: () => {
-            if (typeof document !== 'undefined') {
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
-            }
-        },
-        scrollTo: (target) => {
-            if (typeof window === 'undefined') return;
-            if (typeof target === 'string') {
-                const el = document.querySelector(target);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-            } else if (typeof target === 'number') {
-                window.scrollTo({ top: target, behavior: 'smooth' });
-            }
-        }
-    }), []);
+    const [lenis, setLenis] = useState(null);
+
+    useEffect(() => {
+        const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+        if (reduced) return;
+
+        const instance = new Lenis({
+            duration: 1.25,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+        });
+
+        instance.on('scroll', ScrollTrigger.update);
+        const tickerCallback = (time) => {
+            instance.raf(time * 1000);
+        };
+        gsap.ticker.add(tickerCallback);
+        gsap.ticker.lagSmoothing(0);
+
+        setLenis(instance);
+        window.__lenis = instance;
+
+        return () => {
+            gsap.ticker.remove(tickerCallback);
+            instance.destroy();
+            window.__lenis = null;
+        };
+    }, []);
 
     return (
         <ScrollContext.Provider value={{ lenis }}>

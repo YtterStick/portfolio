@@ -13,9 +13,10 @@ const AppContent = () => {
   const isAdminPath = location.pathname.startsWith('/admin');
 
   return (
-    <div className="flex flex-col min-h-screen bg-primary text-white">
+    <div className="min-h-screen flex flex-col">
+      <a className="sr-only" href="#main">Skip to content</a>
       {!isAdminPath && <Navbar />}
-      <main className="grow">
+      <main id="main" className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<AdminLogin />} />
