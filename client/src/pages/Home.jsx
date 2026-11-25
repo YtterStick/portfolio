@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
@@ -17,21 +18,24 @@ const AsciiSparkleCanvas = () => {
         const CHARS = ['+', '·', '.', '0', '1', ':'];
         let animationFrameId;
         let nodes = [];
+        let lastScrollY = window.scrollY;
+        let scrollVel = 0;
 
         const initNodes = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             const cols = Math.ceil(canvas.width / GRID);
-            const rows = Math.ceil(canvas.height / GRID);
+            const rows = Math.ceil(canvas.height / GRID) + 2;
             const totalIntersections = cols * rows;
-            const count = Math.min(48, Math.max(18, Math.floor(totalIntersections * 0.06)));
+            const count = Math.min(64, Math.max(24, Math.floor(totalIntersections * 0.08)));
 
-            nodes = Array.from({ length: count }, () => ({
-                x: Math.floor(Math.random() * cols) * GRID,
-                y: Math.floor(Math.random() * rows) * GRID,
+            nodes = Array.from({ length: count }, (_, idx) => ({
+                baseX: Math.floor(Math.random() * cols) * GRID,
+                baseY: Math.floor(Math.random() * rows) * GRID,
+                depth: 0.15 + (idx % 4) * 0.12, // distinct parallax speeds per glyph
                 char: CHARS[Math.floor(Math.random() * CHARS.length)],
-                alpha: 0.15 + Math.random() * 0.2,
-                targetAlpha: 0.15 + Math.random() * 0.2,
+                alpha: 0.14 + Math.random() * 0.2,
+                targetAlpha: 0.14 + Math.random() * 0.2,
                 speed: 0.002 + Math.random() * 0.004
             }));
         };
@@ -40,27 +44,36 @@ const AsciiSparkleCanvas = () => {
         window.addEventListener('resize', initNodes);
 
         const render = () => {
+            const currentScrollY = window.scrollY;
+            const delta = currentScrollY - lastScrollY;
+            lastScrollY = currentScrollY;
+            scrollVel = scrollVel * 0.88 + delta * 0.12;
+            const velBoost = Math.min(0.35, Math.abs(scrollVel) * 0.008);
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.font = '10px "JetBrains Mono", monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
+            const wrapH = Math.ceil(canvas.height / GRID + 2) * GRID;
+
             for (const node of nodes) {
-                if (Math.abs(node.alpha - node.targetAlpha) < 0.01) {
-                    node.targetAlpha = 0.12 + Math.random() * 0.23; // 0.12 to 0.35
-                    if (Math.random() < 0.18) {
+                if (Math.abs(node.alpha - node.targetAlpha) < 0.01 || velBoost > 0.08) {
+                    node.targetAlpha = 0.12 + Math.random() * 0.23;
+                    if (Math.random() < 0.15 + velBoost) {
                         node.char = CHARS[Math.floor(Math.random() * CHARS.length)];
-                    }
-                    if (Math.random() < 0.06) {
-                        const cols = Math.max(1, Math.ceil(canvas.width / GRID));
-                        const rows = Math.max(1, Math.ceil(canvas.height / GRID));
-                        node.x = Math.floor(Math.random() * cols) * GRID;
-                        node.y = Math.floor(Math.random() * rows) * GRID;
                     }
                 }
                 node.alpha += (node.targetAlpha - node.alpha) * (node.speed * 15);
-                ctx.fillStyle = `rgba(245, 245, 245, ${node.alpha.toFixed(3)})`;
-                ctx.fillText(node.char, node.x, node.y);
+
+                // Continuous scroll-linked vertical parallax per depth layer
+                const parallaxY = ((node.baseY - currentScrollY * node.depth) % wrapH + wrapH) % wrapH;
+                const finalAlpha = Math.min(0.65, node.alpha + velBoost);
+
+                ctx.fillStyle = velBoost > 0.12
+                    ? `rgba(52, 211, 153, ${finalAlpha.toFixed(3)})`
+                    : `rgba(245, 245, 245, ${finalAlpha.toFixed(3)})`;
+                ctx.fillText(node.char, node.baseX, parallaxY);
             }
 
             animationFrameId = window.requestAnimationFrame(render);
@@ -83,15 +96,20 @@ const AsciiSparkleCanvas = () => {
 };
 
 const Home = () => {
+    const { scrollY } = useScroll();
+    // Parallax background grid shift tied directly to window scrollY
+    const gridY = useTransform(scrollY, (v) => -(v * 0.22) % 48);
+
     return (
-        <div className="relative isolate overflow-hidden bg-primary text-text-main">
-            {/* Full-viewport 48px x 48px architectural 1px grid in rgba(255, 255, 255, 0.04) */}
-            <div
+        <div className="relative isolate overflow-x-clip bg-primary text-text-main">
+            {/* Scroll-driven parallax 48px x 48px architectural 1px grid */}
+            <motion.div
                 aria-hidden="true"
+                style={{ backgroundPositionY: gridY }}
                 className="pointer-events-none fixed inset-0 -z-20 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-size-[48px_48px]"
             />
 
-            {/* Ambient ASCII / Pixel Sparkle Layer at random 48px grid intersections */}
+            {/* Scroll-velocity & parallax-reactive ASCII Sparkle Layer */}
             <AsciiSparkleCanvas />
 
             <div className="relative z-10">

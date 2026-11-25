@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 const formatManilaTime = () => {
     try {
@@ -21,6 +22,14 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
     const [clock, setClock] = useState(formatManilaTime);
+    const [scrollPct, setScrollPct] = useState(0);
+
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+        stiffness: 180,
+        damping: 28,
+        restDelta: 0.001
+    });
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -52,6 +61,9 @@ const Navbar = () => {
                 }
             }
             setActiveSection(current);
+
+            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            setScrollPct(Math.min(100, Math.max(0, Math.round((window.scrollY / maxScroll) * 100))));
         };
 
         window.addEventListener('scroll', updateFromScroll, { passive: true });
@@ -82,6 +94,14 @@ const Navbar = () => {
 
     return (
         <header className="sticky top-0 left-0 right-0 z-50 bg-primary/85 backdrop-blur-md border-b border-white/[0.08]">
+            {/* Slim Scroll-Linked Progress Bar */}
+            <div className="relative h-[2px] w-full bg-white/[0.04] overflow-hidden">
+                <motion.div
+                    style={{ scaleX }}
+                    className="h-full w-full bg-linear-to-r from-[#34d399] via-white to-[#34d399] origin-left"
+                />
+            </div>
+
             <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
                 <div className="grid grid-cols-2 md:grid-cols-3 items-center h-16">
                     {/* Left: Uppercase Name */}
@@ -117,8 +137,12 @@ const Navbar = () => {
                         })}
                     </nav>
 
-                    {/* Right: Live Ticking Timezone Clock + Mobile Menu Toggle */}
-                    <div className="flex items-center justify-end gap-4">
+                    {/* Right: Live Scroll % Readout + Manila Clock + Mobile Menu Toggle */}
+                    <div className="flex items-center justify-end gap-3 sm:gap-4">
+                        <span className="hidden sm:inline tech-label text-text-muted tabular-nums">
+                            SCR {String(scrollPct).padStart(3, '0')}%
+                        </span>
+                        <span className="hidden sm:inline text-white/15">|</span>
                         <span className="tech-label text-text-muted tabular-nums">
                             {clock}
                         </span>

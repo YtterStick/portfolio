@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import axios from 'axios';
 
 const ContactSection = () => {
@@ -11,6 +12,19 @@ const ContactSection = () => {
     const [status, setStatus] = useState('');
     const [toast, setToast] = useState(null);
     const [copied, setCopied] = useState(false);
+
+    const sectionRef = useRef(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ['start end', 'end start']
+    });
+
+    const indexY = useTransform(scrollYProgress, [0, 1], [24, reduceMotion ? 0 : -24]);
+    const titleY = useTransform(scrollYProgress, [0, 1], [42, reduceMotion ? 0 : -36]);
+    const watermarkY = useTransform(scrollYProgress, [0, 1], [90, reduceMotion ? 0 : -90]);
+    const leftY = useTransform(scrollYProgress, [0, 0.45, 1], reduceMotion ? [0, 0, 0] : [48, 0, -24]);
+    const rightY = useTransform(scrollYProgress, [0, 0.45, 1], reduceMotion ? [0, 0, 0] : [72, 0, -32]);
 
     const showToast = (type, message) => {
         setToast({ type, message });
@@ -123,15 +137,30 @@ const ContactSection = () => {
     };
 
     return (
-        <section id="contact" className="py-28 sm:py-40">
-            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <section ref={sectionRef} id="contact" className="py-28 sm:py-40 relative overflow-hidden">
+            {/* Scroll-Parallax Background Section Index Watermark */}
+            <motion.div
+                aria-hidden="true"
+                style={{ y: watermarkY }}
+                className="pointer-events-none select-none absolute right-6 top-16 font-serif italic text-[8rem] sm:text-[13rem] leading-none text-white/[0.025] will-change-transform"
+            >
+                (06)
+            </motion.div>
+
+            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
                 <div className="mb-16 max-w-3xl">
-                    <div className="tech-label text-text-muted mb-3">
+                    <motion.div
+                        style={{ y: indexY }}
+                        className="tech-label text-text-muted mb-3 will-change-transform"
+                    >
                         (06) CONTACT
-                    </div>
-                    <h2 className="display-serif text-text-main mb-5 text-balance">
+                    </motion.div>
+                    <motion.h2
+                        style={{ y: titleY }}
+                        className="display-serif text-text-main mb-5 text-balance will-change-transform"
+                    >
                         Have an idea? <em>Let’s build it.</em>
-                    </h2>
+                    </motion.h2>
                     <p className="text-text-muted text-base sm:text-lg leading-relaxed">
                         Available for full-time engineering roles, contract architecture, and custom software builds.
                     </p>
@@ -139,7 +168,10 @@ const ContactSection = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     {/* Left: Editorial Coordinates & Copy Email */}
-                    <div className="lg:col-span-5 editorial-card p-6 sm:p-8 flex flex-col justify-between">
+                    <motion.div
+                        style={{ y: leftY }}
+                        className="lg:col-span-5 editorial-card p-6 sm:p-8 flex flex-col justify-between will-change-transform"
+                    >
                         <div className="space-y-6">
                             <div className="tech-label text-text-main border-b border-white/[0.08] pb-3 flex items-center justify-between">
                                 <span>DIRECT CHANNELS</span>
@@ -210,10 +242,13 @@ const ContactSection = () => {
                                 Replies within 24 hours for project inquiries, technical interviews, and architecture consultations.
                             </p>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Right: Minimalist Editorial Form */}
-                    <div className="lg:col-span-7 editorial-card p-6 sm:p-8">
+                    <motion.div
+                        style={{ y: rightY }}
+                        className="lg:col-span-7 editorial-card p-6 sm:p-8 will-change-transform"
+                    >
                         <div className="tech-label text-text-main border-b border-white/[0.08] pb-3 mb-6 flex justify-between">
                             <span>SEND AN INQUIRY</span>
                             <span className="text-text-muted">DIRECT DISPATCH</span>
@@ -332,7 +367,7 @@ const ContactSection = () => {
                                 )}
                             </form>
                         )}
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

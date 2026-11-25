@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useScroll } from '../context/ScrollContext';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useScroll as useLenisScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
 
 const getDomainLabel = (project) => {
@@ -15,17 +16,18 @@ const getDomainLabel = (project) => {
     }
 };
 
-const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full' }) => {
+const ProjectThumbnail = ({ src, alt, category, imgY, className = 'aspect-video w-full' }) => {
     const [imgError, setImgError] = useState(false);
 
     return (
         <div className={`relative ${className} bg-[#090909] overflow-hidden`}>
             {!imgError && src ? (
-                <img
+                <motion.img
                     src={src}
                     alt={alt}
+                    style={imgY ? { y: imgY, scale: 1.08 } : undefined}
                     onError={() => setImgError(true)}
-                    className="w-full h-full object-cover object-top editorial-img group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover object-top editorial-img will-change-transform"
                     loading="lazy"
                 />
             ) : (
@@ -43,54 +45,182 @@ const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full
     );
 };
 
-const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
-    <article className="editorial-card grid grid-cols-1 lg:grid-cols-12 group">
-        {/* Left: 16:9 Preview */}
-        <div className="lg:col-span-7 flex flex-col border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+const FlagshipProjectCard = ({ project, index, setSelectedProject }) => {
+    const cardRef = useRef(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: cardRef,
+        offset: ['start 0.96', 'end 0.04']
+    });
+
+    const y = useTransform(scrollYProgress, [0, 0.28, 0.72, 1], reduceMotion ? [0, 0, 0, 0] : [56, 0, 0, -40]);
+    const scale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], reduceMotion ? [1, 1, 1, 1] : [0.96, 1, 1, 0.97]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.82, 1], [0.3, 1, 1, 0.45]);
+    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-6%', '6%']);
+
+    return (
+        <motion.article
+            ref={cardRef}
+            style={{ y, scale, opacity }}
+            className="editorial-card grid grid-cols-1 lg:grid-cols-12 group will-change-transform"
+        >
+            {/* Left: 16:9 Scroll-Parallax Preview */}
+            <div className="lg:col-span-7 flex flex-col border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
+                    <span className="text-text-main">
+                        (0{index + 1}) {project.title}
+                    </span>
+                    <span className="text-text-muted">{getDomainLabel(project)}</span>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setSelectedProject(project)}
+                    aria-label={`Open ${project.title} case study`}
+                    className="block w-full text-left cursor-pointer"
+                >
+                    <ProjectThumbnail
+                        src={project.image}
+                        alt={project.title}
+                        category={project.category}
+                        imgY={imgY}
+                    />
+                </button>
+            </div>
+
+            {/* Right: Editorial Case Study Summary */}
+            <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                    <div className="tech-label text-text-muted mb-2">
+                        FLAGSHIP 0{index + 1} — {project.category}
+                    </div>
+                    <h3 className="font-serif text-3xl sm:text-4xl text-text-main mb-3 tracking-tight">
+                        {project.title}
+                    </h3>
+                    <p className="text-text-muted text-sm leading-relaxed mb-6">
+                        {project.valueProp || project.description}
+                    </p>
+
+                    {project.highlight && (
+                        <div className="border-l-2 border-white/40 pl-3.5 py-1 mb-6">
+                            <div className="tech-label text-text-muted mb-0.5">MEASURABLE OUTCOME</div>
+                            <div className="text-sm text-text-main font-medium">{project.highlight}</div>
+                        </div>
+                    )}
+
+                    <div className="mb-6">
+                        <div className="tech-label text-text-muted mb-2">ARCHITECTURE &amp; STACK</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {project.techStack.slice(0, 5).map((tech, i) => (
+                                <span
+                                    key={i}
+                                    className="px-2.5 py-1 border border-white/10 bg-primary/60 tech-label text-text-muted"
+                                >
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t border-white/[0.08] mt-auto">
+                    <button
+                        type="button"
+                        onClick={() => setSelectedProject(project)}
+                        className="tech-label text-text-main hover:underline cursor-pointer"
+                    >
+                        READ CASE STUDY ↗
+                    </button>
+                    <div className="flex items-center gap-3">
+                        {project.githubLink && project.githubLink !== '#' && (
+                            <a
+                                href={project.githubLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="tech-label text-text-muted hover:text-text-main transition-colors"
+                            >
+                                SOURCE ↗
+                            </a>
+                        )}
+                        {project.liveLink && project.liveLink !== '#' && !project.isPrivate && (
+                            <a
+                                href={project.liveLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3.5 py-1.5 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
+                            >
+                                LIVE DEMO ↗
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </motion.article>
+    );
+};
+
+const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
+    const cardRef = useRef(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: cardRef,
+        offset: ['start 0.96', 'end 0.04']
+    });
+
+    const y = useTransform(
+        scrollYProgress,
+        [0, 0.3, 0.72, 1],
+        reduceMotion ? [0, 0, 0, 0] : [index % 2 === 0 ? 42 : 64, 0, 0, -28]
+    );
+    const scale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], reduceMotion ? [1, 1, 1, 1] : [0.965, 1, 1, 0.975]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0.35, 1, 1, 0.5]);
+    const imgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['-5%', '5%']);
+
+    return (
+        <motion.article
+            ref={cardRef}
+            style={{ y, scale, opacity }}
+            className="editorial-card flex flex-col group h-full will-change-transform"
+        >
             <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
                 <span className="text-text-main">
                     (0{index + 1}) {project.title}
                 </span>
                 <span className="text-text-muted">{getDomainLabel(project)}</span>
             </div>
-            <button
-                type="button"
-                onClick={() => setSelectedProject(project)}
-                aria-label={`Open ${project.title} case study`}
-                className="block w-full text-left cursor-pointer"
-            >
-                <ProjectThumbnail
-                    src={project.image}
-                    alt={project.title}
-                    category={project.category}
-                />
-            </button>
-        </div>
 
-        {/* Right: Editorial Case Study Summary */}
-        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
-            <div>
-                <div className="tech-label text-text-muted mb-2">
-                    FLAGSHIP 0{index + 1} — {project.category}
-                </div>
-                <h3 className="font-serif text-3xl sm:text-4xl text-text-main mb-3 tracking-tight">
-                    {project.title}
-                </h3>
-                <p className="text-text-muted text-sm leading-relaxed mb-6">
-                    {project.valueProp || project.description}
-                </p>
+            <div className="border-b border-white/[0.08] shrink-0">
+                <button
+                    type="button"
+                    onClick={() => setSelectedProject(project)}
+                    aria-label={`Open ${project.title} case study`}
+                    className="block w-full text-left cursor-pointer"
+                >
+                    <ProjectThumbnail
+                        src={project.image}
+                        alt={project.title}
+                        category={project.category}
+                        imgY={imgY}
+                    />
+                </button>
+            </div>
 
-                {project.highlight && (
-                    <div className="border-l-2 border-white/40 pl-3.5 py-1 mb-6">
-                        <div className="tech-label text-text-muted mb-0.5">MEASURABLE OUTCOME</div>
-                        <div className="text-sm text-text-main font-medium">{project.highlight}</div>
-                    </div>
-                )}
+            <div className="p-6 flex flex-col grow">
+                <div className="flex-1 flex flex-col">
+                    <h3 className="font-serif text-2xl sm:text-3xl text-text-main mb-2">
+                        {project.title}
+                    </h3>
+                    <p className="text-text-muted text-sm leading-relaxed mb-5 line-clamp-2">
+                        {project.valueProp || project.description}
+                    </p>
 
-                <div className="mb-6">
-                    <div className="tech-label text-text-muted mb-2">ARCHITECTURE &amp; STACK</div>
-                    <div className="flex flex-wrap gap-1.5">
-                        {project.techStack.slice(0, 5).map((tech, i) => (
+                    {project.highlight && (
+                        <div className="border-l-2 border-white/30 pl-3 py-0.5 mb-5 text-xs text-text-main">
+                            {project.highlight}
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
+                        {project.techStack.slice(0, 4).map((tech, i) => (
                             <span
                                 key={i}
                                 className="px-2.5 py-1 border border-white/10 bg-primary/60 tech-label text-text-muted"
@@ -100,139 +230,64 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
                         ))}
                     </div>
                 </div>
-            </div>
 
-            <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t border-white/[0.08] mt-auto">
-                <button
-                    type="button"
-                    onClick={() => setSelectedProject(project)}
-                    className="tech-label text-text-main hover:underline cursor-pointer"
-                >
-                    READ CASE STUDY ↗
-                </button>
-                <div className="flex items-center gap-3">
-                    {project.githubLink && project.githubLink !== '#' && (
-                        <a
-                            href={project.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="tech-label text-text-muted hover:text-text-main transition-colors"
-                        >
-                            SOURCE ↗
-                        </a>
-                    )}
-                    {project.liveLink && project.liveLink !== '#' && !project.isPrivate && (
-                        <a
-                            href={project.liveLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-3.5 py-1.5 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
-                        >
-                            LIVE DEMO ↗
-                        </a>
-                    )}
-                </div>
-            </div>
-        </div>
-    </article>
-);
-
-const AdditionalProjectCard = ({ project, index, setSelectedProject }) => (
-    <article className="editorial-card flex flex-col group h-full">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
-            <span className="text-text-main">
-                (0{index + 1}) {project.title}
-            </span>
-            <span className="text-text-muted">{getDomainLabel(project)}</span>
-        </div>
-
-        <div className="border-b border-white/[0.08] shrink-0">
-            <button
-                type="button"
-                onClick={() => setSelectedProject(project)}
-                aria-label={`Open ${project.title} case study`}
-                className="block w-full text-left cursor-pointer"
-            >
-                <ProjectThumbnail
-                    src={project.image}
-                    alt={project.title}
-                    category={project.category}
-                />
-            </button>
-        </div>
-
-        <div className="p-6 flex flex-col grow">
-            <div className="flex-1 flex flex-col">
-                <h3 className="font-serif text-2xl sm:text-3xl text-text-main mb-2">
-                    {project.title}
-                </h3>
-                <p className="text-text-muted text-sm leading-relaxed mb-5 line-clamp-2">
-                    {project.valueProp || project.description}
-                </p>
-
-                {project.highlight && (
-                    <div className="border-l-2 border-white/30 pl-3 py-0.5 mb-5 text-xs text-text-main">
-                        {project.highlight}
-                    </div>
-                )}
-
-                <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
-                    {project.techStack.slice(0, 4).map((tech, i) => (
-                        <span
-                            key={i}
-                            className="px-2.5 py-1 border border-white/10 bg-primary/60 tech-label text-text-muted"
-                        >
-                            {tech}
-                        </span>
-                    ))}
-                </div>
-            </div>
-
-            <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-white/[0.08] mt-auto">
-                <button
-                    type="button"
-                    onClick={() => setSelectedProject(project)}
-                    className="tech-label text-text-main hover:underline cursor-pointer"
-                >
-                    CASE STUDY ↗
-                </button>
-                <div className="flex items-center gap-3">
-                    {project.githubLink && project.githubLink !== '#' && (
-                        <a
-                            href={project.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="tech-label text-text-muted hover:text-text-main transition-colors"
-                        >
-                            SOURCE ↗
-                        </a>
-                    )}
-                    {project.isPrivate ? (
-                        <span className="px-2.5 py-1 border border-white/15 tech-label text-text-muted">
-                            PRIVATE ENTERPRISE
-                        </span>
-                    ) : (
-                        project.liveLink && project.liveLink !== '#' && (
+                <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-white/[0.08] mt-auto">
+                    <button
+                        type="button"
+                        onClick={() => setSelectedProject(project)}
+                        className="tech-label text-text-main hover:underline cursor-pointer"
+                    >
+                        CASE STUDY ↗
+                    </button>
+                    <div className="flex items-center gap-3">
+                        {project.githubLink && project.githubLink !== '#' && (
                             <a
-                                href={project.liveLink}
+                                href={project.githubLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-1 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
+                                className="tech-label text-text-muted hover:text-text-main transition-colors"
                             >
-                                LIVE ↗
+                                SOURCE ↗
                             </a>
-                        )
-                    )}
+                        )}
+                        {project.isPrivate ? (
+                            <span className="px-2.5 py-1 border border-white/15 tech-label text-text-muted">
+                                PRIVATE ENTERPRISE
+                            </span>
+                        ) : (
+                            project.liveLink && project.liveLink !== '#' && (
+                                <a
+                                    href={project.liveLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
+                                >
+                                    LIVE ↗
+                                </a>
+                            )
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
-);
+        </motion.article>
+    );
+};
 
 const ProjectsSection = () => {
     const [projects] = useState(projectsData);
     const [selectedProject, setSelectedProject] = useState(null);
-    const { lenis } = useScroll();
+    const { lenis } = useLenisScroll();
+    const sectionRef = useRef(null);
+    const reduceMotion = useReducedMotion();
+
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ['start end', 'end start']
+    });
+
+    const indexY = useTransform(scrollYProgress, [0, 1], [24, reduceMotion ? 0 : -28]);
+    const titleY = useTransform(scrollYProgress, [0, 1], [40, reduceMotion ? 0 : -44]);
+    const watermarkY = useTransform(scrollYProgress, [0, 1], [90, reduceMotion ? 0 : -110]);
 
     const flagshipProjects = projects.slice(0, 3);
     const additionalProjects = projects.slice(3);
@@ -265,23 +320,38 @@ const ProjectsSection = () => {
     }, []);
 
     return (
-        <section id="projects" className="py-28 sm:py-40 border-b border-white/[0.08]">
-            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-                {/* Editorial Section Header */}
+        <section ref={sectionRef} id="projects" className="py-28 sm:py-40 border-b border-white/[0.08] relative overflow-hidden">
+            {/* Scroll-Parallax Background Section Index Watermark */}
+            <motion.div
+                aria-hidden="true"
+                style={{ y: watermarkY }}
+                className="pointer-events-none select-none absolute right-6 top-16 font-serif italic text-[8rem] sm:text-[13rem] leading-none text-white/[0.025] will-change-transform"
+            >
+                (02)
+            </motion.div>
+
+            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
+                {/* Parallax Editorial Section Header */}
                 <div className="mb-16 max-w-3xl">
-                    <div className="tech-label text-text-muted mb-3">
+                    <motion.div
+                        style={{ y: indexY }}
+                        className="tech-label text-text-muted mb-3 will-change-transform"
+                    >
                         (02) SELECTED WORK
-                    </div>
-                    <h2 className="display-serif text-text-main mb-5 text-balance">
+                    </motion.div>
+                    <motion.h2
+                        style={{ y: titleY }}
+                        className="display-serif text-text-main mb-5 text-balance will-change-transform"
+                    >
                         Flagship platforms &amp; <em>production systems.</em>
-                    </h2>
+                    </motion.h2>
                     <p className="text-text-muted text-base sm:text-lg leading-relaxed">
                         Top 3 flagship deployments across AI EdTech, multi-tenant SaaS, and edge streaming—followed by enterprise logistics and payroll tooling.
                     </p>
                 </div>
 
                 {/* Top 3 Flagships */}
-                <div className="space-y-10 mb-20">
+                <div className="space-y-12 mb-20">
                     {flagshipProjects.map((project, index) => (
                         <FlagshipProjectCard
                             key={project._id || index}

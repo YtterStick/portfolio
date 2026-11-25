@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 
 const LiveAsciiHeroCanvas = () => {
     const containerRef = useRef(null);
@@ -9,6 +10,15 @@ const LiveAsciiHeroCanvas = () => {
         targetX: -9999,
         targetY: -9999
     });
+
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ['start start', 'end start']
+    });
+    const stageY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 48]);
+    const stageScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.965]);
+    const stageOpacity = useTransform(scrollYProgress, [0, 0.9, 1], [1, 0.72, 0.45]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -28,7 +38,9 @@ const LiveAsciiHeroCanvas = () => {
         let bgCells = [];
         let animId = 0;
         let isVisible = true;
-        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+        let lastScroll = window.scrollY;
+        let scrollVelocity = 0;
+        const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
 
         const sampleTextMatrix = () => {
             const rect = container.getBoundingClientRect();
@@ -111,6 +123,13 @@ const LiveAsciiHeroCanvas = () => {
                 return;
             }
 
+            const curScroll = window.scrollY;
+            const dScroll = curScroll - lastScroll;
+            lastScroll = curScroll;
+            scrollVelocity = scrollVelocity * 0.86 + dScroll * 0.14;
+            const scrollPhase = curScroll * 0.018;
+            const velTurbulence = Math.min(0.45, Math.abs(scrollVelocity) * 0.012);
+
             const t = timeMs * 0.0024;
             const p = pointerRef.current;
             p.x += (p.targetX - p.x) * 0.2;
@@ -123,7 +142,6 @@ const LiveAsciiHeroCanvas = () => {
             const radius = width < 640 ? 90 : 140;
             const radiusSq = radius * radius;
 
-            // Ambient background grid nodes
             ctx.font = `${Math.max(7, cellSize - 1)}px "JetBrains Mono", monospace`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -134,20 +152,19 @@ const LiveAsciiHeroCanvas = () => {
                 const dy = b.y - p.y;
                 const distSq = dx * dx + dy * dy;
                 const boost = distSq < radiusSq ? (1 - distSq / radiusSq) * 0.4 : 0;
-                const flicker = 0.05 + 0.05 * Math.sin(t * 0.9 + b.phase) + boost;
-                ctx.fillStyle = boost > 0.08
+                const flicker = 0.05 + 0.05 * Math.sin(t * 0.9 + b.phase + scrollPhase) + boost + velTurbulence * 0.25;
+                ctx.fillStyle = boost > 0.08 || velTurbulence > 0.15
                     ? `rgba(52, 211, 153, ${Math.min(0.6, flicker).toFixed(3)})`
                     : `rgba(245, 245, 245, ${flicker.toFixed(3)})`;
                 ctx.fillText(b.glyph, b.x, b.y);
             }
 
-            // Sampled ASCII Hero Title Matrix
             ctx.font = `600 ${cellSize}px "JetBrains Mono", monospace`;
             for (let i = 0; i < cells.length; i++) {
                 const cell = cells[i];
-                const wave = reduceMotion
+                const wave = prefersReduced
                     ? 0
-                    : Math.sin(t * 1.4 + cell.c * 0.13 - cell.r * 0.2) * 0.18;
+                    : Math.sin(t * 1.4 + scrollPhase + cell.c * 0.13 - cell.r * 0.2) * (0.18 + velTurbulence * 0.35);
 
                 const dx = cell.x - p.x;
                 const dy = cell.y - p.y;
@@ -155,14 +172,14 @@ const LiveAsciiHeroCanvas = () => {
 
                 let ripple = 0;
                 let offsetX = 0;
-                let offsetY = 0;
+                let offsetY = prefersReduced ? 0 : Math.sin(scrollPhase + cell.c * 0.08) * (velTurbulence * 6);
 
                 if (distSq < radiusSq && distSq > 0.01) {
                     const dist = Math.sqrt(distSq);
                     const falloff = 1 - dist / radius;
                     ripple = falloff * falloff;
                     offsetX = (dx / dist) * ripple * 4.2;
-                    offsetY = (dy / dist) * ripple * 4.2;
+                    offsetY += (dy / dist) * ripple * 4.2;
                 }
 
                 const lum = Math.min(1, Math.max(0.18, cell.alpha + wave + ripple * 0.55));
@@ -172,8 +189,8 @@ const LiveAsciiHeroCanvas = () => {
                 );
                 const glyph = GLYPHS[glyphIdx];
 
-                if (ripple > 0.16) {
-                    const greenMix = Math.min(1, ripple * 1.35);
+                if (ripple > 0.16 || velTurbulence > 0.22) {
+                    const greenMix = Math.min(1, Math.max(ripple * 1.35, velTurbulence));
                     const rCol = Math.round(245 - greenMix * 175);
                     const gCol = Math.round(245 - greenMix * 20);
                     const bCol = Math.round(245 - greenMix * 85);
@@ -188,7 +205,7 @@ const LiveAsciiHeroCanvas = () => {
 
             ctx.restore();
 
-            if (!reduceMotion) {
+            if (!prefersReduced) {
                 animId = window.requestAnimationFrame(renderFrame);
             }
         };
@@ -197,7 +214,7 @@ const LiveAsciiHeroCanvas = () => {
 
         const handleResize = () => {
             sampleTextMatrix();
-            if (reduceMotion) {
+            if (prefersReduced) {
                 renderFrame(0);
             }
         };
@@ -231,8 +248,9 @@ const LiveAsciiHeroCanvas = () => {
     };
 
     return (
-        <div
+        <motion.div
             ref={containerRef}
+            style={{ y: stageY, scale: stageScale, opacity: stageOpacity }}
             onMouseMove={(e) => updatePointer(e.clientX, e.clientY)}
             onMouseLeave={resetPointer}
             onTouchMove={(e) => {
@@ -240,14 +258,14 @@ const LiveAsciiHeroCanvas = () => {
                 if (touch) updatePointer(touch.clientX, touch.clientY);
             }}
             onTouchEnd={resetPointer}
-            className="relative w-full mb-14 editorial-card overflow-hidden select-none"
+            className="relative w-full mb-14 editorial-card overflow-hidden select-none will-change-transform"
         >
             <div className="px-4 sm:px-6 py-2.5 border-b border-white/[0.08] flex items-center justify-between tech-label text-text-muted">
                 <span className="flex items-center gap-2 text-text-main">
                     <span className="w-1.5 h-1.5 bg-[#34d399] inline-block" />
                     <span>LIVE ASCII // PIXEL-MATRIX STAGE</span>
                 </span>
-                <span className="hidden sm:inline">SWEEP CURSOR ACROSS MATRIX TO INTERACT</span>
+                <span className="hidden sm:inline">SWEEP CURSOR OR SCROLL TO MODULATE MATRIX</span>
                 <span className="text-text-main">60 FPS • HIGH-DPI</span>
             </div>
 
@@ -256,7 +274,7 @@ const LiveAsciiHeroCanvas = () => {
                 aria-label="Andrei Dilag — Interactive ASCII Pixel Matrix Banner"
                 className="block w-full cursor-crosshair"
             />
-        </div>
+        </motion.div>
     );
 };
 
@@ -470,6 +488,17 @@ const HeroArchitecturePreview = () => {
 
 const HeroSection = () => {
     const [copied, setCopied] = useState(false);
+    const sectionRef = useRef(null);
+    const reduceMotion = useReducedMotion();
+
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ['start start', 'end start']
+    });
+
+    const indexY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -28]);
+    const headlineY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -52]);
+    const sandboxY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 36]);
 
     const handleCopyEmail = async () => {
         try {
@@ -482,21 +511,27 @@ const HeroSection = () => {
     };
 
     return (
-        <section id="hero" className="py-20 sm:py-32 border-b border-white/[0.08]">
+        <section ref={sectionRef} id="hero" className="py-20 sm:py-32 border-b border-white/[0.08] relative">
             <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-                {/* Prominent Full-Bleed Live ASCII / Pixel-Matrix Hero Stage */}
+                {/* Scroll-Linked Live ASCII / Pixel-Matrix Hero Stage */}
                 <LiveAsciiHeroCanvas />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
-                    {/* Left: Editorial Display Typography & Intro */}
+                    {/* Left: Parallax Editorial Display Typography & Intro */}
                     <div className="lg:col-span-7">
-                        <div className="tech-label text-text-muted mb-4">
+                        <motion.div
+                            style={{ y: indexY }}
+                            className="tech-label text-text-muted mb-4 will-change-transform"
+                        >
                             (01) HELLO — IT FACULTY TEACHER &amp; FULL-STACK ENGINEER
-                        </div>
+                        </motion.div>
 
-                        <h1 className="display-serif text-text-main mb-8 text-balance">
+                        <motion.h1
+                            style={{ y: headlineY }}
+                            className="display-serif text-text-main mb-8 text-balance will-change-transform"
+                        >
                             Engineering systems with <em>editorial clarity.</em>
-                        </h1>
+                        </motion.h1>
 
                         <p className="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl mb-10 font-normal">
                             I’m <span className="text-text-main font-medium">Andrei Dilag</span>—an{' '}
@@ -549,10 +584,13 @@ const HeroSection = () => {
                         </div>
                     </div>
 
-                    {/* Right: Interactive Architecture Sandbox */}
-                    <div className="lg:col-span-5">
+                    {/* Right: Scroll-Linked & Desktop-Sticky Interactive Architecture Sandbox */}
+                    <motion.div
+                        style={{ y: sandboxY }}
+                        className="lg:col-span-5 lg:sticky lg:top-24 will-change-transform"
+                    >
                         <HeroArchitecturePreview />
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

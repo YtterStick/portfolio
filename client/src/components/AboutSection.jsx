@@ -1,4 +1,83 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+
+const ScrollScrubBlock = ({ children, className = '', yOffset = 44, xOffset = 0 }) => {
+    const ref = useRef(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start 0.96', 'end 0.04']
+    });
+
+    const y = useTransform(
+        scrollYProgress,
+        [0, 0.28, 0.72, 1],
+        reduceMotion ? [0, 0, 0, 0] : [yOffset, 0, 0, -Math.round(yOffset * 0.65)]
+    );
+    const x = useTransform(
+        scrollYProgress,
+        [0, 0.3, 0.7, 1],
+        reduceMotion ? [0, 0, 0, 0] : [xOffset, 0, 0, 0]
+    );
+    const scale = useTransform(
+        scrollYProgress,
+        [0, 0.25, 0.75, 1],
+        reduceMotion ? [1, 1, 1, 1] : [0.965, 1, 1, 0.975]
+    );
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.84, 1], [0.3, 1, 1, 0.45]);
+
+    return (
+        <motion.div
+            ref={ref}
+            style={{ y, x, scale, opacity }}
+            className={`${className} will-change-transform`}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
+const ScrollParallaxHeader = ({ indexLabel, watermark, title, description, displayClass = 'display-serif' }) => {
+    const ref = useRef(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start end', 'end start']
+    });
+
+    const indexY = useTransform(scrollYProgress, [0, 1], [20, reduceMotion ? 0 : -24]);
+    const titleY = useTransform(scrollYProgress, [0, 1], [36, reduceMotion ? 0 : -40]);
+    const watermarkY = useTransform(scrollYProgress, [0, 1], [80, reduceMotion ? 0 : -100]);
+
+    return (
+        <div ref={ref} className="relative mb-16 max-w-3xl">
+            <motion.div
+                aria-hidden="true"
+                style={{ y: watermarkY }}
+                className="pointer-events-none select-none absolute -top-10 right-0 lg:-right-64 font-serif italic text-[7rem] sm:text-[12rem] leading-none text-white/[0.025] will-change-transform"
+            >
+                {watermark}
+            </motion.div>
+            <motion.div
+                style={{ y: indexY }}
+                className="tech-label text-text-muted mb-3 will-change-transform"
+            >
+                {indexLabel}
+            </motion.div>
+            <motion.h2
+                style={{ y: titleY }}
+                className={`${displayClass} text-text-main mb-5 text-balance will-change-transform`}
+            >
+                {title}
+            </motion.h2>
+            {description && (
+                <p className="text-text-muted text-base sm:text-lg leading-relaxed">
+                    {description}
+                </p>
+            )}
+        </div>
+    );
+};
 
 const EditorialIdCard = () => {
     const [imgError, setImgError] = useState(false);
@@ -345,106 +424,107 @@ const AboutSection = () => {
     return (
         <div className="divide-y divide-white/[0.08]">
             {/* (03) DESIGN & ARCHITECTURE / SERVICES */}
-            <section id="services" className="py-28 sm:py-40">
+            <section id="services" className="py-28 sm:py-40 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-                    <div className="mb-16 max-w-3xl">
-                        <div className="tech-label text-text-muted mb-3">
-                            (03) DESIGN &amp; ARCHITECTURE
-                        </div>
-                        <h2 className="display-serif text-text-main mb-5 text-balance">
-                            Interactive capabilities &amp; <em>system modules.</em>
-                        </h2>
-                        <p className="text-text-muted text-base sm:text-lg leading-relaxed">
-                            Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business.
-                        </p>
-                    </div>
+                    <ScrollParallaxHeader
+                        indexLabel="(03) DESIGN & ARCHITECTURE"
+                        watermark="(03)"
+                        title={<>Interactive capabilities &amp; <em>system modules.</em></>}
+                        description="Translating modern full-stack engineering and AI into reliable systems that save time, reduce errors, and scale with your business."
+                    />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
                         {services.map((service, sIdx) => (
-                            <div key={sIdx} className="editorial-card p-6 sm:p-7 flex flex-col">
-                                <div className="flex-1 flex flex-col">
-                                    <div className="mb-4 flex items-center justify-between gap-2 border-b border-white/[0.08] pb-3">
-                                        <span className="tech-label text-text-muted truncate">
-                                            {service.stack}
-                                        </span>
-                                        <span className="tech-label text-text-main">(0{sIdx + 1})</span>
+                            <ScrollScrubBlock
+                                key={sIdx}
+                                yOffset={36 + sIdx * 18}
+                                className="h-full"
+                            >
+                                <div className="editorial-card p-6 sm:p-7 flex flex-col h-full">
+                                    <div className="flex-1 flex flex-col">
+                                        <div className="mb-4 flex items-center justify-between gap-2 border-b border-white/[0.08] pb-3">
+                                            <span className="tech-label text-text-muted truncate">
+                                                {service.stack}
+                                            </span>
+                                            <span className="tech-label text-text-main">(0{sIdx + 1})</span>
+                                        </div>
+                                        <ServiceInteractivePreview index={sIdx} />
+                                        <h3 className="font-serif text-2xl sm:text-3xl text-text-main mb-3">
+                                            {service.title}
+                                        </h3>
+                                        <p className="text-text-muted text-sm leading-relaxed mb-6">
+                                            {service.outcome}
+                                        </p>
                                     </div>
-                                    <ServiceInteractivePreview index={sIdx} />
-                                    <h3 className="font-serif text-2xl sm:text-3xl text-text-main mb-3">
-                                        {service.title}
-                                    </h3>
-                                    <p className="text-text-muted text-sm leading-relaxed mb-6">
-                                        {service.outcome}
-                                    </p>
+                                    <ul className="space-y-2 pt-4 border-t border-white/[0.08] mt-auto text-xs">
+                                        {service.deliverables.map((item, dIdx) => (
+                                            <li key={dIdx} className="text-text-main flex items-center gap-2.5">
+                                                <span className="tech-label text-text-muted">+</span>
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <ul className="space-y-2 pt-4 border-t border-white/[0.08] mt-auto text-xs">
-                                    {service.deliverables.map((item, dIdx) => (
-                                        <li key={dIdx} className="text-text-main flex items-center gap-2.5">
-                                            <span className="tech-label text-text-muted">+</span>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            </ScrollScrubBlock>
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* (04) ABOUT & EXPERIENCE */}
-            <section id="about" className="py-28 sm:py-40">
+            <section id="about" className="py-28 sm:py-40 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-                    <div className="mb-16 max-w-3xl">
-                        <div className="tech-label text-text-muted mb-3">
-                            (04) ABOUT &amp; EXPERIENCE
-                        </div>
-                        <h2 className="display-serif text-text-main mb-5 text-balance">
-                            Educator rigor meets <em>production speed.</em>
-                        </h2>
-                    </div>
+                    <ScrollParallaxHeader
+                        indexLabel="(04) ABOUT & EXPERIENCE"
+                        watermark="(04)"
+                        title={<>Educator rigor meets <em>production speed.</em></>}
+                    />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                        <div className="lg:col-span-5 editorial-card p-6 sm:p-8 flex flex-col justify-between">
-                            <div>
-                                <EditorialIdCard />
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                        {/* Sticky Desktop Bio Card */}
+                        <ScrollScrubBlock yOffset={36} className="lg:col-span-5 lg:sticky lg:top-24">
+                            <div className="editorial-card p-6 sm:p-8 flex flex-col justify-between">
+                                <div>
+                                    <EditorialIdCard />
 
-                                <div className="text-text-muted text-sm sm:text-base leading-relaxed space-y-4">
-                                    <p>
-                                        I serve as an{' '}
-                                        <span className="text-text-main font-medium">
-                                            IT Faculty Teacher at STI College Fairview
-                                        </span>{' '}
-                                        (Aug 2025 – Present), instructing college IT students in Advanced Database &amp; Network Technology 2 while engineering production software for businesses and startups.
-                                    </p>
-                                    <p>
-                                        Teaching relational modeling, query indexing, ACID transactions, and enterprise networking keeps my architectural fundamentals razor-sharp when shipping full-stack platforms with{' '}
-                                        <span className="text-text-main font-medium">
-                                            Next.js, React, Python FastAPI, Java Spring Boot, and AI workflows
-                                        </span>.
-                                    </p>
+                                    <div className="text-text-muted text-sm sm:text-base leading-relaxed space-y-4">
+                                        <p>
+                                            I serve as an{' '}
+                                            <span className="text-text-main font-medium">
+                                                IT Faculty Teacher at STI College Fairview
+                                            </span>{' '}
+                                            (Aug 2025 – Present), instructing college IT students in Advanced Database &amp; Network Technology 2 while engineering production software for businesses and startups.
+                                        </p>
+                                        <p>
+                                            Teaching relational modeling, query indexing, ACID transactions, and enterprise networking keeps my architectural fundamentals razor-sharp when shipping full-stack platforms with{' '}
+                                            <span className="text-text-main font-medium">
+                                                Next.js, React, Python FastAPI, Java Spring Boot, and AI workflows
+                                            </span>.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap gap-3 mt-8 pt-6 border-t border-white/[0.08]">
+                                    <a
+                                        href="/andrei_dilag_resume.pdf"
+                                        download="andrei_dilag_resume.pdf"
+                                        className="px-5 py-2.5 bg-text-main text-primary tech-label font-semibold hover:bg-white transition-colors"
+                                    >
+                                        DOWNLOAD RESUME ↗
+                                    </a>
+                                    <a
+                                        href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-5 py-2.5 border border-white/20 text-text-main tech-label hover:border-white transition-colors"
+                                    >
+                                        LINKEDIN ↗
+                                    </a>
                                 </div>
                             </div>
+                        </ScrollScrubBlock>
 
-                            <div className="flex flex-wrap gap-3 mt-8 pt-6 border-t border-white/[0.08]">
-                                <a
-                                    href="/andrei_dilag_resume.pdf"
-                                    download="andrei_dilag_resume.pdf"
-                                    className="px-5 py-2.5 bg-text-main text-primary tech-label font-semibold hover:bg-white transition-colors"
-                                >
-                                    DOWNLOAD RESUME ↗
-                                </a>
-                                <a
-                                    href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-5 py-2.5 border border-white/20 text-text-main tech-label hover:border-white transition-colors"
-                                >
-                                    LINKEDIN ↗
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Career Log */}
+                        {/* Scroll-Scrubbed Career Log */}
                         <div className="lg:col-span-7 editorial-card p-6 sm:p-8">
                             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-6 tech-label">
                                 <span className="text-text-main">CHRONOLOGICAL CAREER LOG</span>
@@ -453,37 +533,42 @@ const AboutSection = () => {
 
                             <div className="space-y-6">
                                 {experience.map((item, index) => (
-                                    <div
+                                    <ScrollScrubBlock
                                         key={index}
-                                        className={`p-5 bg-primary border ${
-                                            index === 0 ? 'border-white/30' : 'border-white/[0.08]'
-                                        }`}
+                                        yOffset={34 + index * 12}
+                                        xOffset={16}
                                     >
-                                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-white/[0.06]">
-                                            <span className="tech-label text-text-main">
-                                                (0{index + 1}) {item.company}
-                                            </span>
-                                            <span className="tech-label text-text-muted">
-                                                {item.year}
-                                            </span>
-                                        </div>
+                                        <div
+                                            className={`p-5 bg-primary border ${
+                                                index === 0 ? 'border-white/30' : 'border-white/[0.08]'
+                                            }`}
+                                        >
+                                            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-white/[0.06]">
+                                                <span className="tech-label text-text-main">
+                                                    (0{index + 1}) {item.company}
+                                                </span>
+                                                <span className="tech-label text-text-muted">
+                                                    {item.year}
+                                                </span>
+                                            </div>
 
-                                        <h4 className="font-serif text-xl sm:text-2xl text-text-main mb-1">
-                                            {item.role}
-                                        </h4>
-                                        <div className="tech-label text-text-muted mb-3">
-                                            {item.highlight}
-                                        </div>
+                                            <h4 className="font-serif text-xl sm:text-2xl text-text-main mb-1">
+                                                {item.role}
+                                            </h4>
+                                            <div className="tech-label text-text-muted mb-3">
+                                                {item.highlight}
+                                            </div>
 
-                                        <ul className="space-y-1.5 text-xs sm:text-sm text-text-muted">
-                                            {item.details.map((detail, dIndex) => (
-                                                <li key={dIndex} className="flex items-start gap-2.5 leading-relaxed">
-                                                    <span className="tech-label text-text-main mt-0.5">+</span>
-                                                    <span>{detail}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                            <ul className="space-y-1.5 text-xs sm:text-sm text-text-muted">
+                                                {item.details.map((detail, dIndex) => (
+                                                    <li key={dIndex} className="flex items-start gap-2.5 leading-relaxed">
+                                                        <span className="tech-label text-text-main mt-0.5">+</span>
+                                                        <span>{detail}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </ScrollScrubBlock>
                                 ))}
                             </div>
                         </div>
@@ -492,140 +577,144 @@ const AboutSection = () => {
             </section>
 
             {/* (05) COMPETENCIES & ACCOLADES */}
-            <section id="skills" className="py-28 sm:py-40">
+            <section id="skills" className="py-28 sm:py-40 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
-                    <div className="max-w-3xl">
-                        <div className="tech-label text-text-muted mb-3">
-                            (05) COMPETENCIES &amp; ACCOLADES
-                        </div>
-                        <h2 className="display-serif-md text-text-main text-balance">
-                            Technical index &amp; <em>verified honors.</em>
-                        </h2>
-                    </div>
+                    <ScrollParallaxHeader
+                        indexLabel="(05) COMPETENCIES & ACCOLADES"
+                        watermark="(05)"
+                        displayClass="display-serif-md"
+                        title={<>Technical index &amp; <em>verified honors.</em></>}
+                    />
 
                     {/* Interactive 3-Tab Skills Matrix */}
-                    <div className="editorial-card p-6 sm:p-8">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/[0.08] pb-4 mb-6">
-                            <span className="tech-label text-text-main">
-                                CORE COMPETENCIES &amp; STACK
-                            </span>
+                    <ScrollScrubBlock yOffset={40}>
+                        <div className="editorial-card p-6 sm:p-8">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/[0.08] pb-4 mb-6">
+                                <span className="tech-label text-text-main">
+                                    CORE COMPETENCIES &amp; STACK
+                                </span>
 
-                            <div className="flex flex-wrap gap-2">
-                                {Object.entries(skillGroups).map(([key, group]) => (
-                                    <button
-                                        key={key}
-                                        type="button"
-                                        onClick={() => setSkillTab(key)}
-                                        className={`px-3.5 py-1.5 tech-label border cursor-pointer transition-colors ${
-                                            skillTab === key
-                                                ? 'bg-text-main text-primary border-text-main font-semibold'
-                                                : 'bg-primary text-text-muted border-white/15 hover:text-text-main'
-                                        }`}
-                                    >
-                                        {group.label}
-                                    </button>
+                                <div className="flex flex-wrap gap-2">
+                                    {Object.entries(skillGroups).map(([key, group]) => (
+                                        <button
+                                            key={key}
+                                            type="button"
+                                            onClick={() => setSkillTab(key)}
+                                            className={`px-3.5 py-1.5 tech-label border cursor-pointer transition-colors ${
+                                                skillTab === key
+                                                    ? 'bg-text-main text-primary border-text-main font-semibold'
+                                                    : 'bg-primary text-text-muted border-white/15 hover:text-text-main'
+                                            }`}
+                                        >
+                                            {group.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="divide-y divide-white/[0.08] border border-white/[0.08] bg-primary">
+                                {activeSkillGroup.rows.map((row, idx) => (
+                                    <div key={`${skillTab}-${idx}`} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                                        <div className="sm:w-48 shrink-0 tech-label text-text-main">
+                                            {row.group}
+                                        </div>
+                                        <div className="flex flex-wrap gap-2 flex-1">
+                                            {row.items.map((item, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="px-2.5 py-1 bg-secondary border border-white/10 tech-label text-text-muted"
+                                                >
+                                                    {item}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
                         </div>
-
-                        <div className="divide-y divide-white/[0.08] border border-white/[0.08] bg-primary">
-                            {activeSkillGroup.rows.map((row, idx) => (
-                                <div key={`${skillTab}-${idx}`} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-                                    <div className="sm:w-48 shrink-0 tech-label text-text-main">
-                                        {row.group}
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 flex-1">
-                                        {row.items.map((item, i) => (
-                                            <span
-                                                key={i}
-                                                className="px-2.5 py-1 bg-secondary border border-white/10 tech-label text-text-muted"
-                                            >
-                                                {item}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    </ScrollScrubBlock>
 
                     {/* Compact 2-Column Certifications & Archive Row */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                        <div className="lg:col-span-8 editorial-card p-6 sm:p-8">
-                            <div className="border-b border-white/[0.08] pb-3 mb-5 flex items-center justify-between tech-label">
-                                <span className="text-text-main">CERTIFICATIONS &amp; AWARDS</span>
-                                <span className="text-text-muted">06 RECORDS</span>
-                            </div>
+                        <ScrollScrubBlock yOffset={42} className="lg:col-span-8">
+                            <div className="editorial-card p-6 sm:p-8 h-full">
+                                <div className="border-b border-white/[0.08] pb-3 mb-5 flex items-center justify-between tech-label">
+                                    <span className="text-text-main">CERTIFICATIONS &amp; AWARDS</span>
+                                    <span className="text-text-muted">06 RECORDS</span>
+                                </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                                {certificates.map((cert, index) => (
-                                    <div key={index} className="p-4 bg-primary border border-white/[0.08] space-y-1">
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span className="font-serif text-lg text-text-main truncate">
-                                                {cert.title}
-                                            </span>
-                                            <span className="tech-label text-text-muted shrink-0">
-                                                {cert.year}
-                                            </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                    {certificates.map((cert, index) => (
+                                        <div key={index} className="p-4 bg-primary border border-white/[0.08] space-y-1">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <span className="font-serif text-lg text-text-main truncate">
+                                                    {cert.title}
+                                                </span>
+                                                <span className="tech-label text-text-muted shrink-0">
+                                                    {cert.year}
+                                                </span>
+                                            </div>
+                                            <div className="text-xs text-text-muted">
+                                                {cert.org} — {cert.description}
+                                            </div>
                                         </div>
-                                        <div className="text-xs text-text-muted">
-                                            {cert.org} — {cert.description}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div
-                            className="lg:col-span-4 editorial-card p-6 flex flex-col justify-between"
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                        >
-                            <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-white/[0.08] tech-label">
-                                <span className="text-text-main">
-                                    ARCHIVE 0{currentSlide + 1}/0{totalSlides}
-                                </span>
-                                <div className="flex gap-1.5">
-                                    <button
-                                        type="button"
-                                        onClick={prevSlide}
-                                        className="px-2.5 py-0.5 border border-white/15 text-text-muted hover:text-text-main cursor-pointer transition-colors"
-                                    >
-                                        ←
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={nextSlide}
-                                        className="px-2.5 py-0.5 border border-white/15 text-text-muted hover:text-text-main cursor-pointer transition-colors"
-                                    >
-                                        →
-                                    </button>
+                                    ))}
                                 </div>
                             </div>
-                            <div className="h-48 overflow-hidden border border-white/[0.08] mb-3 bg-primary">
-                                <img
-                                    src={spotlights[currentSlide].image}
-                                    alt={spotlights[currentSlide].caption}
-                                    className="w-full h-full object-cover object-center editorial-img"
-                                    loading="lazy"
-                                />
+                        </ScrollScrubBlock>
+
+                        <ScrollScrubBlock yOffset={58} className="lg:col-span-4">
+                            <div
+                                className="editorial-card p-6 flex flex-col justify-between h-full"
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                            >
+                                <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-white/[0.08] tech-label">
+                                    <span className="text-text-main">
+                                        ARCHIVE 0{currentSlide + 1}/0{totalSlides}
+                                    </span>
+                                    <div className="flex gap-1.5">
+                                        <button
+                                            type="button"
+                                            onClick={prevSlide}
+                                            className="px-2.5 py-0.5 border border-white/15 text-text-muted hover:text-text-main cursor-pointer transition-colors"
+                                        >
+                                            ←
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={nextSlide}
+                                            className="px-2.5 py-0.5 border border-white/15 text-text-muted hover:text-text-main cursor-pointer transition-colors"
+                                        >
+                                            →
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="h-48 overflow-hidden border border-white/[0.08] mb-3 bg-primary">
+                                    <img
+                                        src={spotlights[currentSlide].image}
+                                        alt={spotlights[currentSlide].caption}
+                                        className="w-full h-full object-cover object-center editorial-img"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-xs text-text-muted truncate">
+                                        {spotlights[currentSlide].caption}
+                                    </span>
+                                    {spotlights[currentSlide].link && (
+                                        <a
+                                            href={spotlights[currentSlide].link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="tech-label text-text-main hover:underline shrink-0"
+                                        >
+                                            VERIFY ↗
+                                        </a>
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between gap-2">
-                                <span className="text-xs text-text-muted truncate">
-                                    {spotlights[currentSlide].caption}
-                                </span>
-                                {spotlights[currentSlide].link && (
-                                    <a
-                                        href={spotlights[currentSlide].link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="tech-label text-text-main hover:underline shrink-0"
-                                    >
-                                        VERIFY ↗
-                                    </a>
-                                )}
-                            </div>
-                        </div>
+                        </ScrollScrubBlock>
                     </div>
                 </div>
             </section>
