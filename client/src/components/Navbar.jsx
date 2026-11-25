@@ -1,9 +1,33 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+const formatManilaTime = () => {
+    try {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Manila',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        return `MNL ${formatter.format(now)}`;
+    } catch {
+        return 'MNL 00:00:00';
+    }
+};
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('hero');
+    const [clock, setClock] = useState(formatManilaTime);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setClock(formatManilaTime());
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     useEffect(() => {
         const sectionToNav = {
@@ -49,40 +73,30 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { code: '01', name: 'HOME', href: '#hero' },
-        { code: '02', name: 'WORK', href: '#projects' },
-        { code: '03', name: 'SERVICES', href: '#services' },
-        { code: '04', name: 'ABOUT', href: '#about' },
-        { code: '05', name: 'CONTACT', href: '#contact' },
+        { name: 'Work', href: '#projects' },
+        { name: 'Design', href: '#services' },
+        { name: 'About', href: '#about' },
+        { name: 'Contact', href: '#contact' },
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border font-mono">
-            {/* Top workstation status bar */}
-            <div className="bg-secondary border-b border-border px-4 sm:px-6 lg:px-8 py-1 text-[10px] text-text-muted flex items-center justify-between max-w-7xl mx-auto">
-                <span>SYS://ANDREI_DILAG_OS // TTY1</span>
-                <span className="hidden sm:inline items-center gap-1.5">
-                    <span className="inline-block w-1.5 h-1.5 bg-accent mr-1.5 align-middle" />
-                    <span className="text-text-main">ONLINE</span>
-                    <span className="text-text-muted"> // REGION: ASIA-MNL</span>
-                </span>
-                <span>UTC+8</span>
-            </div>
+        <header className="sticky top-0 left-0 right-0 z-50 bg-primary/85 backdrop-blur-md border-b border-white/[0.08]">
+            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+                <div className="grid grid-cols-2 md:grid-cols-3 items-center h-16">
+                    {/* Left: Uppercase Name */}
+                    <div className="flex items-center">
+                        <Link
+                            to="/"
+                            onClick={(e) => handleNavClick(e, '#hero')}
+                            className="tech-label text-text-main font-medium hover:opacity-75 transition-opacity inline-flex items-center gap-2"
+                        >
+                            <span className="w-1.5 h-1.5 bg-[#34d399] inline-block" />
+                            <span>ANDREI DILAG</span>
+                        </Link>
+                    </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-14">
-                    {/* Workstation Brand */}
-                    <Link
-                        to="/"
-                        className="text-sm sm:text-base font-bold text-text-main hover:text-accent px-2 py-1 transition-colors duration-75 flex items-center gap-1.5"
-                    >
-                        <span className="text-accent">&gt;</span>
-                        <span>ANDREI.DEV</span>
-                        <span className="text-accent animate-blink">█</span>
-                    </Link>
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-1.5">
+                    {/* Center: Compact Nav Links */}
+                    <nav aria-label="Primary" className="hidden md:flex items-center justify-center gap-7">
                         {navLinks.map((link) => {
                             const isActive = activeSection === link.href.slice(1);
                             return (
@@ -90,45 +104,39 @@ const Navbar = () => {
                                     key={link.name}
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
-                                    className={`px-3 py-1.5 text-xs font-medium tracking-wider border transition-colors duration-75 ${
+                                    className={`tech-label py-1 transition-colors duration-150 ${
                                         isActive
-                                            ? 'bg-secondary text-accent border-accent font-bold'
-                                            : 'bg-transparent text-text-muted border-transparent hover:text-text-main hover:border-border'
+                                            ? 'text-text-main border-b border-text-main'
+                                            : 'text-text-muted hover:text-text-main'
                                     }`}
                                 >
-                                    [ {link.code}. {link.name} {isActive ? <span className="animate-blink">█</span> : null} ]
+                                    {link.name}
                                 </a>
                             );
                         })}
-                        <a
-                            href="#contact"
-                            onClick={(e) => handleNavClick(e, '#contact')}
-                            className="ml-2 px-3.5 py-1.5 text-xs font-bold bg-primary text-accent border border-accent hover:bg-accent hover:text-primary transition-colors duration-75"
-                        >
-                            [ HIRE_ME -&gt; ]
-                        </a>
-                    </div>
+                    </nav>
 
-                    {/* Mobile Menu Trigger */}
-                    <div className="flex lg:hidden">
+                    {/* Right: Live Ticking Timezone Clock + Mobile Menu Toggle */}
+                    <div className="flex items-center justify-end gap-4">
+                        <span className="tech-label text-text-muted tabular-nums">
+                            {clock}
+                        </span>
+
                         <button
                             type="button"
                             onClick={() => setIsOpen(!isOpen)}
-                            className="px-3 py-1.5 text-xs font-bold border border-accent text-accent hover:bg-accent hover:text-primary transition-colors duration-75 cursor-pointer"
+                            className="md:hidden tech-label px-2.5 py-1 border border-white/15 text-text-main hover:bg-white hover:text-primary transition-colors cursor-pointer"
                             aria-label="Toggle Menu"
                         >
-                            {isOpen ? '[ X CLOSE ]' : '[ = MENU ]'}
+                            {isOpen ? 'CLOSE' : 'MENU'}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Terminal Dropdown */}
+            {/* Mobile Dropdown */}
             {isOpen && (
-                <div className="lg:hidden bg-secondary border-t border-border px-4 py-4 space-y-1.5">
-                    <div className="text-[10px] text-text-muted pb-1.5 mb-1 border-b border-border uppercase tracking-wider">
-                        SELECT_DIRECTORY
-                    </div>
+                <div className="md:hidden bg-primary border-t border-white/[0.08] px-5 py-4 space-y-2">
                     {navLinks.map((link) => {
                         const isActive = activeSection === link.href.slice(1);
                         return (
@@ -136,26 +144,17 @@ const Navbar = () => {
                                 key={link.name}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className={`block px-3 py-2 text-xs font-medium border transition-colors duration-75 ${
-                                    isActive
-                                        ? 'bg-primary text-accent border-accent font-bold'
-                                        : 'bg-primary/60 text-text-main border-border hover:border-accent'
+                                className={`block py-2 tech-label border-b border-white/[0.06] ${
+                                    isActive ? 'text-text-main font-semibold' : 'text-text-muted'
                                 }`}
                             >
-                                [ {link.code}. {link.name} {isActive ? '█' : ''} ]
+                                {link.name} ↗
                             </a>
                         );
                     })}
-                    <a
-                        href="#contact"
-                        onClick={(e) => handleNavClick(e, '#contact')}
-                        className="block w-full text-center mt-2 px-3 py-2.5 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-75"
-                    >
-                        [ INITIATE_CONTACT -&gt; ]
-                    </a>
                 </div>
             )}
-        </nav>
+        </header>
     );
 };
 

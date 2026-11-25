@@ -4,57 +4,39 @@ import { useScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
 
 const getDomainLabel = (project) => {
-    if (project.isPrivate) return 'PRIVATE_ENTERPRISE';
+    if (project.isPrivate) return 'PRIVATE ENTERPRISE';
     if (!project.liveLink || project.liveLink === '#') {
-        return `${project.title.toLowerCase().replace(/\s+/g, '_')}.app`;
+        return `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`;
     }
     try {
         return new URL(project.liveLink).hostname.replace(/^www\./, '');
     } catch {
-        return `${project.title.toLowerCase().replace(/\s+/g, '_')}.app`;
+        return `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`;
     }
 };
-
-const WindowHeader = ({ index, project }) => (
-    <div className="flex items-center justify-between px-4 py-2.5 bg-primary border-b border-border text-[11px] font-mono">
-        <div className="flex items-center gap-2 truncate">
-            <span className="w-1.5 h-1.5 bg-accent shrink-0" />
-            <span className="text-text-main font-bold truncate">
-                0{index + 1} // {project.title.toUpperCase()}
-            </span>
-        </div>
-        <span className="text-text-muted truncate max-w-[45%] text-[10px]">
-            {getDomainLabel(project)}
-        </span>
-    </div>
-);
 
 const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full' }) => {
     const [imgError, setImgError] = useState(false);
 
     return (
-        <div className={`relative ${className} dither-wrap bg-primary overflow-hidden`}>
+        <div className={`relative ${className} bg-[#090909] overflow-hidden`}>
             {!imgError && src ? (
                 <img
                     src={src}
                     alt={alt}
                     onError={() => setImgError(true)}
-                    className="w-full h-full object-cover object-top dither-img group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover object-top editorial-img group-hover:scale-[1.02]"
                     loading="lazy"
                 />
             ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-primary text-center border border-border/50">
-                    <span className="text-xs font-bold text-text-main uppercase tracking-wider mb-1">
-                        {alt} // PREVIEW_FRAME
-                    </span>
-                    <span className="text-[10px] text-text-muted font-mono">
-                        SYS_ASSET: {category}
-                    </span>
+                <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-primary text-center">
+                    <span className="tech-label text-text-main mb-1">{alt}</span>
+                    <span className="tech-label text-text-muted">{category}</span>
                 </div>
             )}
-            <div className="absolute bottom-2.5 left-3 z-10">
-                <span className="px-2.5 py-0.5 bg-primary/95 border border-border text-accent text-[10px] font-bold uppercase tracking-wider">
-                    [ {category} ]
+            <div className="absolute bottom-3 left-3 z-10">
+                <span className="px-2.5 py-1 bg-primary/90 backdrop-blur-xs border border-white/15 tech-label text-text-main">
+                    {category}
                 </span>
             </div>
         </div>
@@ -62,10 +44,15 @@ const ProjectThumbnail = ({ src, alt, category, className = 'aspect-video w-full
 };
 
 const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
-    <article className="term-card grid grid-cols-1 lg:grid-cols-12 group font-mono">
-        {/* Left: Large Dithered 16:9 Screenshot */}
-        <div className="lg:col-span-7 flex flex-col bg-primary border-b lg:border-b-0 lg:border-r border-border">
-            <WindowHeader index={index} project={project} />
+    <article className="editorial-card grid grid-cols-1 lg:grid-cols-12 group">
+        {/* Left: 16:9 Preview */}
+        <div className="lg:col-span-7 flex flex-col border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
+                <span className="text-text-main">
+                    (0{index + 1}) {project.title}
+                </span>
+                <span className="text-text-muted">{getDomainLabel(project)}</span>
+            </div>
             <button
                 type="button"
                 onClick={() => setSelectedProject(project)}
@@ -80,62 +67,58 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
             </button>
         </div>
 
-        {/* Right: Flagship Case Study Pitch */}
-        <div className="lg:col-span-5 p-6 sm:p-7 flex flex-col justify-between">
+        {/* Right: Editorial Case Study Summary */}
+        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
             <div>
-                <div className="flex items-center gap-2 text-[11px] text-accent font-bold mb-2">
-                    <span className="w-1.5 h-1.5 bg-accent inline-block" />
-                    <span>FLAGSHIP_0{index + 1} // PRODUCTION</span>
+                <div className="tech-label text-text-muted mb-2">
+                    FLAGSHIP 0{index + 1} — {project.category}
                 </div>
-                <h3 className="text-2xl font-bold text-text-main mb-2.5 uppercase group-hover:text-accent transition-colors duration-75">
+                <h3 className="font-serif text-3xl sm:text-4xl text-text-main mb-3 tracking-tight">
                     {project.title}
                 </h3>
-                <p className="text-text-muted text-xs sm:text-sm leading-relaxed mb-5">
+                <p className="text-text-muted text-sm leading-relaxed mb-6">
                     {project.valueProp || project.description}
                 </p>
 
                 {project.highlight && (
-                    <div className="bg-primary border border-border px-3.5 py-2.5 mb-5 text-xs">
-                        <span className="text-accent font-bold">OUTCOME: </span>
-                        <span className="text-text-main">{project.highlight}</span>
+                    <div className="border-l-2 border-white/40 pl-3.5 py-1 mb-6">
+                        <div className="tech-label text-text-muted mb-0.5">MEASURABLE OUTCOME</div>
+                        <div className="text-sm text-text-main font-medium">{project.highlight}</div>
                     </div>
                 )}
 
-                {/* Clean Monochrome Tech Tags */}
                 <div className="mb-6">
-                    <div className="text-[10px] text-text-muted uppercase tracking-wider mb-2">
-                        TECH_STACK
-                    </div>
+                    <div className="tech-label text-text-muted mb-2">ARCHITECTURE &amp; STACK</div>
                     <div className="flex flex-wrap gap-1.5">
                         {project.techStack.slice(0, 5).map((tech, i) => (
                             <span
                                 key={i}
-                                className="px-2.5 py-1 bg-primary border border-border text-text-main text-[11px]"
+                                className="px-2.5 py-1 border border-white/10 bg-primary/60 tech-label text-text-muted"
                             >
-                                [ {tech} ]
+                                {tech}
                             </span>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-border mt-auto">
+            <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t border-white/[0.08] mt-auto">
                 <button
                     type="button"
                     onClick={() => setSelectedProject(project)}
-                    className="px-3.5 py-1.5 bg-primary border border-accent text-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75 cursor-pointer"
+                    className="tech-label text-text-main hover:underline cursor-pointer"
                 >
-                    [ VIEW_README.MD -&gt; ]
+                    READ CASE STUDY ↗
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                     {project.githubLink && project.githubLink !== '#' && (
                         <a
                             href={project.githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75"
+                            className="tech-label text-text-muted hover:text-text-main transition-colors"
                         >
-                            [ SRC ]
+                            SOURCE ↗
                         </a>
                     )}
                     {project.liveLink && project.liveLink !== '#' && !project.isPrivate && (
@@ -143,9 +126,9 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
                             href={project.liveLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3.5 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75"
+                            className="px-3.5 py-1.5 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
                         >
-                            [ LAUNCH_LIVE ↗ ]
+                            LIVE DEMO ↗
                         </a>
                     )}
                 </div>
@@ -154,95 +137,97 @@ const FlagshipProjectCard = ({ project, index, setSelectedProject }) => (
     </article>
 );
 
-const AdditionalProjectCard = ({ project, index, setSelectedProject }) => {
-    return (
-        <article className="term-card flex flex-col group h-full font-mono">
-            <WindowHeader index={index} project={project} />
-            <div className="border-b border-border shrink-0">
+const AdditionalProjectCard = ({ project, index, setSelectedProject }) => (
+    <article className="editorial-card flex flex-col group h-full">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] tech-label">
+            <span className="text-text-main">
+                (0{index + 1}) {project.title}
+            </span>
+            <span className="text-text-muted">{getDomainLabel(project)}</span>
+        </div>
+
+        <div className="border-b border-white/[0.08] shrink-0">
+            <button
+                type="button"
+                onClick={() => setSelectedProject(project)}
+                aria-label={`Open ${project.title} case study`}
+                className="block w-full text-left cursor-pointer"
+            >
+                <ProjectThumbnail
+                    src={project.image}
+                    alt={project.title}
+                    category={project.category}
+                />
+            </button>
+        </div>
+
+        <div className="p-6 flex flex-col grow">
+            <div className="flex-1 flex flex-col">
+                <h3 className="font-serif text-2xl sm:text-3xl text-text-main mb-2">
+                    {project.title}
+                </h3>
+                <p className="text-text-muted text-sm leading-relaxed mb-5 line-clamp-2">
+                    {project.valueProp || project.description}
+                </p>
+
+                {project.highlight && (
+                    <div className="border-l-2 border-white/30 pl-3 py-0.5 mb-5 text-xs text-text-main">
+                        {project.highlight}
+                    </div>
+                )}
+
+                <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
+                    {project.techStack.slice(0, 4).map((tech, i) => (
+                        <span
+                            key={i}
+                            className="px-2.5 py-1 border border-white/10 bg-primary/60 tech-label text-text-muted"
+                        >
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between items-center gap-2 pt-4 border-t border-white/[0.08] mt-auto">
                 <button
                     type="button"
                     onClick={() => setSelectedProject(project)}
-                    aria-label={`Open ${project.title} case study`}
-                    className="block w-full text-left cursor-pointer"
+                    className="tech-label text-text-main hover:underline cursor-pointer"
                 >
-                    <ProjectThumbnail
-                        src={project.image}
-                        alt={project.title}
-                        category={project.category}
-                    />
+                    CASE STUDY ↗
                 </button>
-            </div>
-
-            <div className="p-5 sm:p-6 flex flex-col grow">
-                <div className="flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-text-main mb-2 uppercase group-hover:text-accent transition-colors duration-75">
-                        {project.title}
-                    </h3>
-                    <p className="text-text-muted text-xs leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]">
-                        {project.valueProp || project.description}
-                    </p>
-
-                    {project.highlight && (
-                        <div className="bg-primary border border-border px-3 py-2 mb-4 text-xs truncate">
-                            <span className="text-accent font-bold">IMPACT: </span>
-                            <span className="text-text-main">{project.highlight}</span>
-                        </div>
+                <div className="flex items-center gap-3">
+                    {project.githubLink && project.githubLink !== '#' && (
+                        <a
+                            href={project.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="tech-label text-text-muted hover:text-text-main transition-colors"
+                        >
+                            SOURCE ↗
+                        </a>
                     )}
-
-                    {/* Clean Monochrome Tech Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-5 mt-auto">
-                        {project.techStack.slice(0, 4).map((tech, i) => (
-                            <span
-                                key={i}
-                                className="px-2.5 py-1 bg-primary border border-border text-text-muted text-[11px]"
-                            >
-                                [ {tech} ]
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap justify-between items-center gap-2 pt-3.5 border-t border-border mt-auto">
-                    <button
-                        type="button"
-                        onClick={() => setSelectedProject(project)}
-                        className="px-3 py-1.5 bg-primary border border-border text-text-main hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75 cursor-pointer"
-                    >
-                        [ VIEW_README.MD -&gt; ]
-                    </button>
-                    <div className="flex items-center gap-1.5">
-                        {project.githubLink && project.githubLink !== '#' && (
+                    {project.isPrivate ? (
+                        <span className="px-2.5 py-1 border border-white/15 tech-label text-text-muted">
+                            PRIVATE ENTERPRISE
+                        </span>
+                    ) : (
+                        project.liveLink && project.liveLink !== '#' && (
                             <a
-                                href={project.githubLink}
+                                href={project.liveLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-2.5 py-1.5 bg-primary border border-border text-text-muted hover:border-accent hover:text-accent text-xs font-bold transition-colors duration-75"
+                                className="px-3 py-1 border border-white/25 text-text-main hover:bg-white hover:text-primary tech-label transition-colors"
                             >
-                                [ SRC ]
+                                LIVE ↗
                             </a>
-                        )}
-                        {project.isPrivate ? (
-                            <span className="px-2.5 py-1.5 bg-primary border border-border text-text-muted text-[11px] font-bold">
-                                [ PRIVATE_ENTERPRISE ]
-                            </span>
-                        ) : (
-                            project.liveLink && project.liveLink !== '#' && (
-                                <a
-                                    href={project.liveLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-3 py-1.5 bg-primary text-accent border border-accent hover:bg-accent hover:text-primary text-xs font-bold transition-colors duration-75"
-                                >
-                                    [ LIVE ↗ ]
-                                </a>
-                            )
-                        )}
-                    </div>
+                        )
+                    )}
                 </div>
             </div>
-        </article>
-    );
-};
+        </div>
+    </article>
+);
 
 const ProjectsSection = () => {
     const [projects] = useState(projectsData);
@@ -280,23 +265,23 @@ const ProjectsSection = () => {
     }, []);
 
     return (
-        <section id="projects" className="py-24 sm:py-32 bg-primary border-b border-border font-mono">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Directory Listing Header */}
-                <div className="mb-12 term-card p-6 sm:p-8">
-                    <div className="text-xs text-accent font-bold mb-2">
-                        root@andrei-dev:/srv/production/work# ls -la --flagship
+        <section id="projects" className="py-28 sm:py-40 border-b border-white/[0.08]">
+            <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+                {/* Editorial Section Header */}
+                <div className="mb-16 max-w-3xl">
+                    <div className="tech-label text-text-muted mb-3">
+                        (02) SELECTED WORK
                     </div>
-                    <h2 className="text-2xl sm:text-4xl font-bold text-text-main uppercase tracking-tight mb-2.5 text-balance">
-                        02 // SELECTED_WORK &amp; FLAGSHIP_SYSTEMS
+                    <h2 className="display-serif text-text-main mb-5 text-balance">
+                        Flagship platforms &amp; <em>production systems.</em>
                     </h2>
-                    <p className="text-text-muted text-xs sm:text-sm max-w-3xl leading-relaxed">
-                        Top 3 flagship platforms engineered with Generative AI, computer vision proctoring, multi-tenant Next.js SaaS architecture, and Cloudflare Edge delivery—followed by additional enterprise deployments.
+                    <p className="text-text-muted text-base sm:text-lg leading-relaxed">
+                        Top 3 flagship deployments across AI EdTech, multi-tenant SaaS, and edge streaming—followed by enterprise logistics and payroll tooling.
                     </p>
                 </div>
 
-                {/* Top 3 Flagship Projects: Evalo, Tactiq, AniVerse */}
-                <div className="space-y-8 mb-16">
+                {/* Top 3 Flagships */}
+                <div className="space-y-10 mb-20">
                     {flagshipProjects.map((project, index) => (
                         <FlagshipProjectCard
                             key={project._id || index}
@@ -307,22 +292,19 @@ const ProjectsSection = () => {
                     ))}
                 </div>
 
-                {/* Additional Systems Sub-Header + 2-Column Row */}
+                {/* Additional Systems */}
                 {additionalProjects.length > 0 && (
                     <div>
-                        <div className="flex items-center justify-between border-b border-border pb-3 mb-6">
-                            <div className="flex items-center gap-2.5">
-                                <span className="w-2 h-2 bg-accent inline-block" />
-                                <h3 className="text-sm sm:text-base font-bold text-text-main uppercase tracking-wider">
-                                    ADDITIONAL_SYSTEMS // ENTERPRISE &amp; INTERNAL TOOLS
-                                </h3>
-                            </div>
-                            <span className="text-[11px] text-text-muted">
-                                {additionalProjects.length} MODULES
+                        <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-8">
+                            <span className="tech-label text-text-main">
+                                ADDITIONAL SYSTEMS — ENTERPRISE &amp; INTERNAL TOOLS
+                            </span>
+                            <span className="tech-label text-text-muted">
+                                0{additionalProjects.length}ARCHIVES
                             </span>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
                             {additionalProjects.map((project, idx) => (
                                 <AdditionalProjectCard
                                     key={project._id || idx}
@@ -336,66 +318,60 @@ const ProjectsSection = () => {
                 )}
             </div>
 
-            {/* Technical README / Case Study Modal */}
+            {/* Editorial Case Study Modal */}
             {typeof document !== 'undefined' && selectedProject && createPortal(
                 <div
-                    className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xs overflow-y-auto font-mono"
+                    className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-sm overflow-y-auto"
                     onClick={() => setSelectedProject(null)}
                 >
                     <div
                         role="dialog"
                         aria-modal="true"
                         aria-label={`${selectedProject.title} Case Study`}
-                        className="term-card w-full max-w-4xl max-h-[92vh] flex flex-col my-auto"
+                        className="editorial-card w-full max-w-4xl max-h-[92vh] flex flex-col my-auto bg-secondary"
                         onClick={(e) => e.stopPropagation()}
                         data-lenis-prevent
                     >
-                        {/* Modal Top Bar */}
-                        <div className="flex items-center justify-between px-5 py-3 bg-primary border-b border-border text-xs">
-                            <div className="flex items-center gap-2 truncate">
-                                <span className="w-2 h-2 bg-accent shrink-0" />
-                                <span className="text-text-main font-bold truncate">
-                                    MAN(1) // {selectedProject.title.toUpperCase()}_CASE_STUDY.MD
-                                </span>
-                            </div>
+                        <div className="flex items-center justify-between px-6 py-4 bg-primary border-b border-white/[0.08]">
+                            <span className="tech-label text-text-main truncate">
+                                CASE STUDY // {selectedProject.title}
+                            </span>
                             <button
                                 type="button"
                                 autoFocus
                                 onClick={() => setSelectedProject(null)}
-                                className="px-3 py-1 bg-primary text-accent font-bold hover:bg-accent hover:text-primary border border-accent cursor-pointer transition-colors duration-75"
+                                className="px-3 py-1 border border-white/20 tech-label text-text-main hover:bg-white hover:text-primary cursor-pointer transition-colors"
                             >
-                                [ X ESC ]
+                                CLOSE [ESC]
                             </button>
                         </div>
 
-                        {/* Scrollable Manual Body */}
-                        <div className="p-5 sm:p-8 overflow-y-auto space-y-6 text-xs sm:text-sm">
-                            {/* Dithered Banner */}
-                            <div className="border border-border bg-primary">
+                        <div className="p-6 sm:p-10 overflow-y-auto space-y-8">
+                            <div className="border border-white/[0.08] bg-primary">
                                 <ProjectThumbnail
                                     src={selectedProject.image}
                                     alt={selectedProject.title}
                                     category={selectedProject.category}
-                                    className="h-52 sm:h-68 w-full border-b border-border"
+                                    className="h-56 sm:h-72 w-full border-b border-white/[0.08]"
                                 />
-                                <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
-                                        <span className="text-accent text-xs font-bold uppercase block">
-                                            CATEGORY // {selectedProject.category}
+                                        <span className="tech-label text-text-muted block mb-1">
+                                            {selectedProject.category}
                                         </span>
-                                        <h3 className="text-xl sm:text-3xl font-bold text-text-main uppercase mt-1">
+                                        <h3 className="font-serif text-3xl sm:text-4xl text-text-main">
                                             {selectedProject.title}
                                         </h3>
                                         {selectedProject.subtitle && (
-                                            <p className="text-text-muted text-xs mt-1">
+                                            <p className="text-text-muted text-sm mt-1">
                                                 {selectedProject.subtitle}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="flex flex-wrap gap-2.5 shrink-0">
+                                    <div className="flex flex-wrap gap-3 shrink-0">
                                         {selectedProject.isPrivate ? (
-                                            <span className="px-4 py-2 bg-secondary text-text-muted font-bold text-xs border border-border">
-                                                [ PRIVATE_ENTERPRISE ]
+                                            <span className="px-4 py-2 border border-white/15 tech-label text-text-muted">
+                                                PRIVATE ENTERPRISE
                                             </span>
                                         ) : (
                                             selectedProject.liveLink && selectedProject.liveLink !== '#' && (
@@ -403,9 +379,9 @@ const ProjectsSection = () => {
                                                     href={selectedProject.liveLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="px-4 py-2 bg-primary text-accent font-bold text-xs border border-accent hover:bg-accent hover:text-primary transition-colors duration-150"
+                                                    className="px-5 py-2.5 bg-text-main text-primary tech-label font-semibold hover:bg-white transition-colors"
                                                 >
-                                                    [ LAUNCH_APPLICATION ↗ ]
+                                                    LAUNCH APPLICATION ↗
                                                 </a>
                                             )
                                         )}
@@ -414,58 +390,56 @@ const ProjectsSection = () => {
                                                 href={selectedProject.githubLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="px-4 py-2 bg-primary text-text-main font-bold text-xs border border-border hover:border-accent hover:text-accent transition-colors duration-150"
+                                                className="px-5 py-2.5 border border-white/20 text-text-main tech-label hover:border-white transition-colors"
                                             >
-                                                [ VIEW_SOURCE_REPO ]
+                                                VIEW SOURCE ↗
                                             </a>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Case Study Problem / Solution / Impact */}
                             {selectedProject.caseStudy && (
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-border">
-                                    <div className="p-4 bg-primary border border-border">
-                                        <div className="text-text-main font-bold text-xs mb-2 border-b border-border pb-1.5">
-                                            01 // THE_BUSINESS_PROBLEM
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                    <div className="p-5 bg-primary border border-white/[0.08]">
+                                        <div className="tech-label text-text-muted mb-2">
+                                            (01) THE BUSINESS PROBLEM
                                         </div>
-                                        <p className="text-text-muted text-xs leading-relaxed">
+                                        <p className="text-text-muted text-sm leading-relaxed">
                                             {selectedProject.caseStudy.problem}
                                         </p>
                                     </div>
-                                    <div className="p-4 bg-primary border border-border">
-                                        <div className="text-text-main font-bold text-xs mb-2 border-b border-border pb-1.5">
-                                            02 // ARCHITECTURAL_SOLUTION
+                                    <div className="p-5 bg-primary border border-white/[0.08]">
+                                        <div className="tech-label text-text-muted mb-2">
+                                            (02) ARCHITECTURAL SOLUTION
                                         </div>
-                                        <p className="text-text-muted text-xs leading-relaxed">
+                                        <p className="text-text-muted text-sm leading-relaxed">
                                             {selectedProject.caseStudy.solution}
                                         </p>
                                     </div>
-                                    <div className="p-4 bg-primary border border-accent">
-                                        <div className="text-accent font-bold text-xs mb-2 border-b border-border pb-1.5">
-                                            03 // MEASURABLE_IMPACT
+                                    <div className="p-5 bg-primary border border-white/25">
+                                        <div className="tech-label text-text-main mb-2">
+                                            (03) MEASURABLE IMPACT
                                         </div>
-                                        <p className="text-text-main text-xs leading-relaxed font-semibold">
+                                        <p className="text-text-main text-sm leading-relaxed font-medium">
                                             {selectedProject.caseStudy.impact}
                                         </p>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Telemetry Metrics */}
                             {selectedProject.metrics && selectedProject.metrics.length > 0 && (
-                                <div className="pt-2 border-t border-border">
-                                    <div className="text-text-main font-bold text-xs mb-3 uppercase">
-                                        &gt; SYSTEM_SPECIFICATIONS &amp; TELEMETRY
+                                <div>
+                                    <div className="tech-label text-text-muted mb-3">
+                                        KEY TELEMETRY &amp; SPECIFICATIONS
                                     </div>
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                         {selectedProject.metrics.map((metric, idx) => (
-                                            <div key={idx} className="p-3.5 bg-primary border border-border">
-                                                <div className="text-[10px] text-text-muted uppercase">
+                                            <div key={idx} className="p-4 bg-primary border border-white/[0.08]">
+                                                <div className="tech-label text-text-muted">
                                                     {metric.label}
                                                 </div>
-                                                <div className="text-xs sm:text-sm font-bold text-accent mt-1">
+                                                <div className="text-base font-serif italic text-text-main mt-1">
                                                     {metric.value}
                                                 </div>
                                             </div>
@@ -474,17 +448,16 @@ const ProjectsSection = () => {
                                 </div>
                             )}
 
-                            {/* Key Features */}
                             {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
-                                <div className="pt-2 border-t border-border">
-                                    <div className="text-text-main font-bold text-xs mb-3 uppercase">
-                                        &gt; CORE_MODULES_IMPLEMENTED
+                                <div>
+                                    <div className="tech-label text-text-muted mb-3">
+                                        CORE MODULES IMPLEMENTED
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {selectedProject.keyFeatures.map((feat, fIdx) => (
-                                            <div key={fIdx} className="p-4 bg-primary border border-border">
-                                                <div className="font-bold text-text-main text-xs mb-1">
-                                                    + {feat.title}
+                                            <div key={fIdx} className="p-4 bg-primary border border-white/[0.08]">
+                                                <div className="font-medium text-text-main text-sm mb-1">
+                                                    {feat.title}
                                                 </div>
                                                 <p className="text-text-muted text-xs leading-relaxed">
                                                     {feat.desc}
@@ -495,18 +468,17 @@ const ProjectsSection = () => {
                                 </div>
                             )}
 
-                            {/* Tech Stack */}
-                            <div className="pt-2 border-t border-border">
-                                <div className="text-text-main font-bold text-xs mb-2.5 uppercase">
-                                    &gt; DEPENDENCIES &amp; STACK
+                            <div>
+                                <div className="tech-label text-text-muted mb-2.5">
+                                    TECHNOLOGY STACK
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedProject.techStack.map((tech, i) => (
                                         <span
                                             key={i}
-                                            className="px-3 py-1 bg-primary text-text-main text-xs border border-border"
+                                            className="px-3 py-1 bg-primary text-text-main tech-label border border-white/10"
                                         >
-                                            [ {tech} ]
+                                            {tech}
                                         </span>
                                     ))}
                                 </div>
