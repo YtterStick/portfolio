@@ -169,14 +169,14 @@ const Home = () => {
                         }
                     },
                     onComplete: () => {
+                        heroWordRef.current?.startIntro?.();
                         gsap.to(loaderRef.current, {
                             yPercent: -100,
-                            duration: 1.05,
+                            duration: 1.0,
                             ease: 'expo.inOut',
                             onComplete: () => setLoaderDone(true)
                         });
                         setTimeout(() => {
-                            heroWordRef.current?.startIntro?.();
                             const lede = rootRef.current?.querySelector('.hero-lede');
                             if (lede) {
                                 const spans = splitWordsOrLines(lede, true);
@@ -186,7 +186,7 @@ const Home = () => {
                                         duration: 1.3,
                                         ease: 'expo.out',
                                         stagger: 0.035,
-                                        delay: 0.25
+                                        delay: 0.15
                                     });
                                 }
                             }
@@ -196,9 +196,9 @@ const Home = () => {
                                 duration: 1.1,
                                 ease: 'expo.out',
                                 stagger: 0.08,
-                                delay: 0.15
+                                delay: 0.05
                             });
-                        }, 380);
+                        }, 250);
                     }
                 });
             } else {

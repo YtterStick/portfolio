@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import gsap from 'gsap';
 import * as THREE from 'three';
 
 const GLYPHS = '!#$%&*+-/0123456789:;<=>?@ABCDEFGHJKLMNPQRSTUVWXYZ[]^_{|}~';
@@ -21,9 +22,9 @@ function layoutWord(lines, W, maxH, stagger) {
     let asc0 = 0;
     lines.forEach((t, i) => {
         const m = c.measureText(t);
-        const iw = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
+        const iw = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) || m.width;
         if (iw > widest) widest = iw;
-        if (i === 0) asc0 = m.actualBoundingBoxAscent;
+        if (i === 0) asc0 = m.actualBoundingBoxAscent || test * 0.76;
     });
     let fs = (test * (W * (stagger ? (W < 700 ? 0.8 : 0.66) : 0.998))) / Math.max(1, widest);
     if (maxH) fs = Math.min(fs, ((maxH / lines.length) * 0.92) / (asc0 / test));
@@ -34,10 +35,10 @@ function layoutWord(lines, W, maxH, stagger) {
     const specs = [];
     lines.forEach((t, i) => {
         const m = c.measureText(t);
-        const asc = m.actualBoundingBoxAscent;
-        const desc = Math.max(0, m.actualBoundingBoxDescent);
-        const w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
-        let x = m.actualBoundingBoxLeft;
+        const asc = m.actualBoundingBoxAscent || fs * 0.76;
+        const desc = Math.max(0, m.actualBoundingBoxDescent || fs * 0.18);
+        const w = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) || m.width;
+        let x = m.actualBoundingBoxLeft || 0;
         if (stagger && lines.length > 1) x += (W - w) * (i / (lines.length - 1));
         specs.push({ t, x, y: y + asc });
         y += asc + desc + (i < lines.length - 1 ? gap : 0);
@@ -55,15 +56,25 @@ function hostWidth(host) {
 const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false, assemble = false }, ref) => {
     const hostRef = useRef(null);
     const engineRef = useRef(null);
+    const introStartedRef = useRef(false);
+    const explodeRef = useRef(assemble ? 1 : 0);
+    const linesKey = Array.isArray(lines) ? lines.join('|') : String(lines);
 
     useImperativeHandle(ref, () => ({
-        setExplode: (p) => engineRef.current?.setExplode?.(p),
-        startIntro: () => engineRef.current?.startIntro?.(),
+        setExplode: (p) => {
+            explodeRef.current = p;
+            engineRef.current?.setExplode?.(p);
+        },
+        startIntro: () => {
+            introStartedRef.current = true;
+            engineRef.current?.startIntro?.();
+        },
         render: () => engineRef.current?.render?.(),
         rebuild: () => engineRef.current?.build?.()
     }));
 
     useEffect(() => {
+        const parsedLines = linesKey.split('|');
         const host = hostRef.current;
         if (!host) return;
 
@@ -81,8 +92,8 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
 
         const createGL = () => {
             const state = {
-                explode: assemble && !REDUCED ? 1 : 0,
-                intro: !REDUCED && !assemble ? 0 : 1,
+                explode: REDUCED ? 0 : explodeRef.current,
+                intro: !REDUCED && !assemble && !introStartedRef.current ? 0 : 1,
                 introT: -1,
                 ndc: new THREE.Vector2(-10, -10),
                 moved: false,
@@ -137,14 +148,21 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
             };
             window.addEventListener('pointermove', onPointerMove, { passive: true });
 
+            const onVisChange = () => {
+                if (!document.hidden && state.visible) state.kick();
+            };
+            document.addEventListener('visibilitychange', onVisChange);
+
             let io = null;
-            if ('IntersectionObserver' in window) {
+            const observeStage = (target) => {
+                if (!('IntersectionObserver' in window)) return;
+                io?.disconnect();
                 io = new IntersectionObserver((es) => {
                     state.visible = es[0].isIntersecting;
                     if (state.visible) state.kick();
                 });
-                io.observe(host);
-            }
+                io.observe(target);
+            };
 
             state.build = () => {
                 if (disposed) return;
@@ -152,7 +170,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                 if (!W) return;
                 const mobile = W < 700;
                 const maxH = assemble ? 0 : Math.max(200, window.innerHeight * (mobile ? 0.4 : 0.58));
-                const L = layoutWord(lines, W, maxH, stagger);
+                const L = layoutWord(parsedLines, W, maxH, stagger);
                 host.style.height = `${L.h + 2}px`;
 
                 const stage = host.closest('section, footer') || host;
@@ -207,7 +225,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
 
                 const depth = L.fs * (mobile ? 0.07 : 0.16);
                 state.mobile = mobile;
-                const N = Math.round(clamp(ink.length * (mobile ? 0.28 : 0.15), 12000, mobile ? 32000 : 60000));
+                const N = Math.round(clamp(ink.length * (mobile ? 0.32 : 0.22), 16000, mobile ? 36000 : 72000));
                 const nSide = Math.round(N * clamp((rim.length * depth) / (ink.length + rim.length * depth), 0.15, 0.4));
                 const nFront = N - nSide;
 
@@ -305,7 +323,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                     uTime: { value: 0 },
                     uExplode: { value: state.explode },
                     uIntro: { value: state.intro },
-                    uSize: { value: mobile ? 1.9 : 3.6 },
+                    uSize: { value: mobile ? 2.3 : 4.3 },
                     uPR: { value: pr },
                     uCamZ: { value: camZ },
                     uWH: { value: new THREE.Vector2(CW, CH) },
@@ -438,8 +456,9 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
 
                 const cell = mobile ? 4 : 9;
                 state.puni.uCell.value.set(cell / CW, cell / CH);
-                state.puni.uGain.value = mobile ? 2.7 : 3.6;
+                state.puni.uGain.value = mobile ? 3.2 : 4.3;
                 state.puni.tScene.value = state.rt.texture;
+                observeStage(stage);
                 state.render();
             };
 
@@ -544,9 +563,6 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                     if (!REDUCED) state.t += dt;
                     state.tilt.x += (state.tilt.tx - state.tilt.x) * 0.05;
                     state.tilt.y += (state.tilt.ty - state.tilt.y) * 0.05;
-                    if (state.introT >= 0 && state.intro < 1) {
-                        state.intro = Math.min(1, (now / 1000 - state.introT) / 2.1);
-                    }
                     state.uni.uTime.value = state.t;
                     state.uni.uExplode.value = state.explode;
                     state.uni.uIntro.value = state.intro;
@@ -555,7 +571,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                     if (!REDUCED) state.simulate(dt);
                     const gone = state.explode >= 0.999;
                     if (!gone) state.render();
-                    if (state.visible && !gone && !REDUCED && !document.hidden) {
+                    if ((state.visible || state.intro < 1) && !gone && !REDUCED && !document.hidden) {
                         requestAnimationFrame(loop);
                     } else {
                         if (gone) {
@@ -568,18 +584,47 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                 requestAnimationFrame(loop);
             };
 
+            let introTween = null;
             state.startIntro = () => {
-                if (state.intro < 1) state.introT = performance.now() / 1000;
+                if (state.intro >= 1) {
+                    state.render();
+                    state.kick();
+                    return;
+                }
+                if (introTween) return;
+                introTween = gsap.to(state, {
+                    intro: 1,
+                    duration: 1.45,
+                    ease: 'power3.out',
+                    onUpdate: () => {
+                        if (state.uni) state.uni.uIntro.value = state.intro;
+                        if (state.group) {
+                            state.group.rotation.x = (state.mobile ? 0.08 : 0.2) + state.tilt.x;
+                        }
+                        state.render();
+                        state.kick();
+                    },
+                    onComplete: () => {
+                        state.intro = 1;
+                        if (state.uni) state.uni.uIntro.value = 1;
+                        state.render();
+                        state.kick();
+                    }
+                });
                 state.kick();
             };
 
             state.setExplode = (p) => {
                 state.explode = p;
+                if (state.uni) state.uni.uExplode.value = p;
+                state.render();
                 state.kick();
             };
 
             state.dispose = () => {
+                introTween?.kill();
                 window.removeEventListener('pointermove', onPointerMove);
+                document.removeEventListener('visibilitychange', onVisChange);
                 io?.disconnect();
                 state.points?.geometry?.dispose();
                 state.points?.material?.dispose();
@@ -600,7 +645,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
             host.appendChild(cv);
             const ctx = cv.getContext('2d');
             const state = {
-                explode: assemble && !REDUCED ? 1 : 0,
+                explode: REDUCED ? 0 : explodeRef.current,
                 cells: [],
                 W: 0,
                 H: 0,
@@ -610,8 +655,9 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                 const W = hostWidth(host);
                 if (!W) return;
                 const mobile = W < 700;
-                const L = layoutWord(lines, W, assemble ? 0 : Math.max(200, window.innerHeight * (mobile ? 0.4 : 0.6)), stagger);
+                const L = layoutWord(parsedLines, W, assemble ? 0 : Math.max(200, window.innerHeight * (mobile ? 0.4 : 0.6)), stagger);
                 const CW = L.w + 2, CH = L.h + 2;
+                host.style.height = `${CH}px`;
                 const o = document.createElement('canvas');
                 o.width = CW; o.height = CH;
                 const c = o.getContext('2d');
@@ -685,6 +731,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
             }, 180);
         };
 
+        let failsafeTimer = 0;
         fontsReady.then(() => {
             if (disposed) return;
             let engine = null;
@@ -698,17 +745,27 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
             if (!engine) engine = create2D();
             engineRef.current = engine;
             engine.build();
+            if (introStartedRef.current) {
+                engine.startIntro();
+            } else if (!assemble) {
+                // Failsafe: ensure hero wordmark always assembles even if loader callback already ran
+                failsafeTimer = window.setTimeout(() => {
+                    introStartedRef.current = true;
+                    engine.startIntro();
+                }, 1600);
+            }
             window.addEventListener('resize', onResize);
         });
 
         return () => {
             disposed = true;
             clearTimeout(resizeTimer);
+            clearTimeout(failsafeTimer);
             window.removeEventListener('resize', onResize);
             engineRef.current?.dispose?.();
             engineRef.current = null;
         };
-    }, [lines, stagger, assemble]);
+    }, [linesKey, stagger, assemble]);
 
     return <div ref={hostRef} className="word" />;
 });

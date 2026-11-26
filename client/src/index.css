@@ -183,7 +183,7 @@ main, .cryst-footer { position: relative; z-index: 1; }
 }
 .hero-meta p:nth-child(2) { text-align: center; }
 .hero-meta p:last-child { text-align: right; }
-.hero-title { margin: auto 0 0; position: relative; z-index: 1; }
+.hero-title { margin: auto 0 0; position: relative; z-index: 1; width: 100%; }
 .hero-foot {
   display: flex;
   justify-content: space-between;
