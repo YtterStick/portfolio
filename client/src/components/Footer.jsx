@@ -1,10 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useState, useEffect } from 'react';
 import { useScroll } from '../context/ScrollContext';
-import AsciiWordmark from './AsciiWordmark';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const formatManilaTime = () => {
     try {
@@ -23,30 +18,11 @@ const formatManilaTime = () => {
 
 const Footer = () => {
     const [clock, setClock] = useState(formatManilaTime);
-    const footerRef = useRef(null);
-    const wordRef = useRef(null);
     const { lenis } = useScroll();
 
     useEffect(() => {
         const timer = setInterval(() => setClock(formatManilaTime()), 1000);
         return () => clearInterval(timer);
-    }, []);
-
-    useEffect(() => {
-        const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-        if (reduced || !footerRef.current) return;
-
-        const st = ScrollTrigger.create({
-            trigger: footerRef.current,
-            start: 'top bottom',
-            end: 'bottom bottom',
-            scrub: 0.6,
-            onUpdate: (s) => {
-                wordRef.current?.setExplode(Math.max(0, 1 - s.progress * 1.08));
-            }
-        });
-
-        return () => st.kill();
     }, []);
 
     const scrollToTop = (e) => {
@@ -59,10 +35,7 @@ const Footer = () => {
     };
 
     return (
-        <footer ref={footerRef} className="cryst-footer">
-            <div className="pt-8">
-                <AsciiWordmark ref={wordRef} lines={['ANDREI DILAG']} assemble />
-            </div>
+        <footer className="cryst-footer">
             <div className="footer-bar">
                 <span>&copy; {new Date().getFullYear()} Andrei Dilag</span>
                 <span>{clock}</span>
