@@ -8,6 +8,8 @@ import BgAsciiCanvas from '../components/BgAsciiCanvas';
 import RocketScroll from '../components/RocketScroll';
 import { useScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
+import { soundEngine } from '../utils/soundEngine';
+import { scrambleElementText, attachMagneticMove, resetMagneticMove } from '../utils/scramble';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,6 +94,8 @@ const Home = () => {
     const [lightbox, setLightbox] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
     const [inquiryOpen, setInquiryOpen] = useState(false);
+    const [hoveredMore, setHoveredMore] = useState(null);
+    const morePreviewRef = useRef(null);
 
     // Inquiry modal form state
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -103,7 +107,7 @@ const Home = () => {
     const flagshipProjects = projectsData.slice(0, 3);
     const moreProjects = projectsData.slice(3);
 
-    // Custom difference cursor
+    // Custom difference cursor + floating "More systems" image follower
     useEffect(() => {
         const fine = window.matchMedia?.('(pointer: fine)')?.matches;
         const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
@@ -113,9 +117,12 @@ const Home = () => {
         document.documentElement.classList.add('has-cursor');
         let x = window.innerWidth / 2;
         let y = window.innerHeight / 2;
+        let px = x;
+        let py = y;
         let tx = x;
         let ty = y;
         let animId = 0;
+        let burstTimer = 0;
 
         const onMove = (e) => {
             tx = e.clientX;
@@ -127,17 +134,37 @@ const Home = () => {
             c.classList.toggle('link', !!link);
         };
 
+        const onDown = (e) => {
+            if (e.target?.closest?.('.hero') && !e.target?.closest?.('a, button')) {
+                c.classList.add('burst');
+                clearTimeout(burstTimer);
+                burstTimer = window.setTimeout(() => c.classList.remove('burst'), 360);
+            }
+        };
+
         document.addEventListener('pointermove', onMove, { passive: true });
+        document.addEventListener('pointerdown', onDown, { passive: true });
         const loop = () => {
             x += (tx - x) * 0.22;
             y += (ty - y) * 0.22;
             c.style.transform = `translate3d(${x}px,${y}px,0)`;
+
+            if (morePreviewRef.current) {
+                const vx = (tx - px) * 0.14;
+                px += (tx - px) * 0.14;
+                py += (ty - py) * 0.14;
+                const tilt = Math.max(-6, Math.min(6, vx * 0.35));
+                morePreviewRef.current.style.transform = `translate3d(${px + 26}px, ${py - 95}px, 0) rotate(${tilt.toFixed(2)}deg)`;
+            }
+
             animId = requestAnimationFrame(loop);
         };
         animId = requestAnimationFrame(loop);
 
         return () => {
+            clearTimeout(burstTimer);
             document.removeEventListener('pointermove', onMove);
+            document.removeEventListener('pointerdown', onDown);
             cancelAnimationFrame(animId);
             document.documentElement.classList.remove('has-cursor');
         };
@@ -388,6 +415,7 @@ const Home = () => {
                 end: 'bottom 45%',
                 onToggle: (s) => {
                     document.body.classList.toggle('inverted', s.isActive);
+                    soundEngine.playInvert(s.isActive);
                     heroWordRef.current?.render?.();
                 }
             });
@@ -521,6 +549,28 @@ const Home = () => {
             {/* Minimalist Interactive Rocket Scroll Rail */}
             <RocketScroll />
 
+            {/* Floating Cursor Preview for "More systems" rows */}
+            <div
+                ref={morePreviewRef}
+                className={`more-float-preview ${hoveredMore ? 'active' : ''}`}
+                aria-hidden="true"
+            >
+                <div className="more-float-inner">
+                    {moreProjects.map((proj, idx) => (
+                        <div
+                            key={proj._id}
+                            className={`more-float-slide ${hoveredMore?._id === proj._id ? 'visible' : ''}`}
+                        >
+                            <img src={proj.image} alt="" />
+                            <div className="more-float-meta">
+                                <span>0{idx + 4} — {proj.title}</span>
+                                <span>{proj.category}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             {/* Custom Difference Cursor */}
             <div ref={cursorRef} className="cryst-cursor" aria-hidden="true">
                 <span>View</span>
@@ -575,7 +625,10 @@ const Home = () => {
                     <figure
                         key={project._id}
                         className="ov"
-                        onClick={() => setSelectedProject(project)}
+                        onClick={() => {
+                            soundEngine.playClick();
+                            setSelectedProject(project);
+                        }}
                         tabIndex={0}
                         role="button"
                         aria-label={`Inspect ${project.title} case study`}
@@ -602,7 +655,14 @@ const Home = () => {
                                     href={project.liveLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        soundEngine.playClick();
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        soundEngine.playHover();
+                                        scrambleElementText(e.currentTarget);
+                                    }}
                                 >
                                     {cleanHost(project.liveLink)}
                                 </a>
@@ -622,12 +682,23 @@ const Home = () => {
 
                 <div className="more">
                     <p className="cryst-label">More systems</p>
-                    <ul className="more-list">
+                    <ul className="more-list" onMouseLeave={() => setHoveredMore(null)}>
                         {moreProjects.map((proj, idx) => (
                             <li key={proj._id}>
                                 <button
                                     type="button"
-                                    onClick={() => setSelectedProject(proj)}
+                                    onClick={() => {
+                                        soundEngine.playClick();
+                                        setSelectedProject(proj);
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        soundEngine.playHover();
+                                        setHoveredMore(proj);
+                                        const titleEl = e.currentTarget.querySelector('.m-t');
+                                        if (titleEl) scrambleElementText(titleEl);
+                                    }}
+                                    onFocus={() => setHoveredMore(proj)}
+                                    onBlur={() => setHoveredMore(null)}
                                 >
                                     <span className="m-n">0{idx + 4}</span>
                                     <span className="m-t">{proj.title}</span>
@@ -707,7 +778,11 @@ const Home = () => {
                             <a
                                 href="/andrei_dilag_resume.pdf"
                                 download="andrei_dilag_resume.pdf"
-                                className="pill-btn inline-block"
+                                className="pill-btn magnetic-item inline-block"
+                                onMouseEnter={() => soundEngine.playHover()}
+                                onClick={() => soundEngine.playClick()}
+                                onPointerMove={(e) => attachMagneticMove(e, 0.25, 0.34)}
+                                onPointerLeave={resetMagneticMove}
                             >
                                 Download resume (PDF) ↗
                             </a>
@@ -792,13 +867,27 @@ const Home = () => {
                     andreidilag12@gmail.com
                 </a>
                 <div className="contact-row">
-                    <button className="pill-btn" type="button" onClick={handleCopyEmail}>
+                    <button
+                        className="pill-btn magnetic-item"
+                        type="button"
+                        onMouseEnter={() => soundEngine.playHover()}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.26, 0.36)}
+                        onPointerLeave={resetMagneticMove}
+                        onClick={() => {
+                            soundEngine.playClick();
+                            handleCopyEmail();
+                        }}
+                    >
                         {copied ? 'Copied ✓' : 'Copy email'}
                     </button>
                     <button
-                        className="pill-btn"
+                        className="pill-btn magnetic-item"
                         type="button"
+                        onMouseEnter={() => soundEngine.playHover()}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.26, 0.36)}
+                        onPointerLeave={resetMagneticMove}
                         onClick={() => {
+                            soundEngine.playClick();
                             setFormStatus('');
                             setFormToast('');
                             setInquiryOpen(true);
@@ -806,13 +895,45 @@ const Home = () => {
                     >
                         Send a message
                     </button>
-                    <a href="https://github.com/YtterStick" target="_blank" rel="noopener noreferrer">
+                    <a
+                        href="https://github.com/YtterStick"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="magnetic-item"
+                        onMouseEnter={(e) => {
+                            soundEngine.playHover();
+                            scrambleElementText(e.currentTarget);
+                        }}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.22, 0.32)}
+                        onPointerLeave={resetMagneticMove}
+                    >
                         GitHub ↗
                     </a>
-                    <a href="https://www.linkedin.com/in/andrei-dilag-79b018268/" target="_blank" rel="noopener noreferrer">
+                    <a
+                        href="https://www.linkedin.com/in/andrei-dilag-79b018268/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="magnetic-item"
+                        onMouseEnter={(e) => {
+                            soundEngine.playHover();
+                            scrambleElementText(e.currentTarget);
+                        }}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.22, 0.32)}
+                        onPointerLeave={resetMagneticMove}
+                    >
                         LinkedIn ↗
                     </a>
-                    <a href="/andrei_dilag_resume.pdf" download="andrei_dilag_resume.pdf">
+                    <a
+                        href="/andrei_dilag_resume.pdf"
+                        download="andrei_dilag_resume.pdf"
+                        className="magnetic-item"
+                        onMouseEnter={(e) => {
+                            soundEngine.playHover();
+                            scrambleElementText(e.currentTarget);
+                        }}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.22, 0.32)}
+                        onPointerLeave={resetMagneticMove}
+                    >
                         Resume ↗
                     </a>
                 </div>

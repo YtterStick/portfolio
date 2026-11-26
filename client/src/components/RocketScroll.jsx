@@ -8,6 +8,7 @@ import {
     useVelocity
 } from 'framer-motion';
 import { useScroll } from '../context/ScrollContext';
+import { soundEngine } from '../utils/soundEngine';
 
 const WAYPOINTS = [
     { id: 'top', code: '00', label: 'Top' },
@@ -72,6 +73,9 @@ const RocketScroll = () => {
             setThrustActive(fast);
             if (fast) {
                 setSparkIdx((i) => (i + 1) % 1000);
+                if (Math.abs(v) > 320) {
+                    soundEngine.playRocketPulse(scrollYProgress.get());
+                }
             }
         });
 
@@ -185,7 +189,11 @@ const RocketScroll = () => {
                         <button
                             key={wp.id}
                             type="button"
-                            onClick={() => jumpToWaypoint(wp.id)}
+                            onClick={() => {
+                                soundEngine.playClick();
+                                jumpToWaypoint(wp.id);
+                            }}
+                            onMouseEnter={() => soundEngine.playHover()}
                             style={{ top: `${pct}%` }}
                             aria-label={`Scroll to ${wp.label}`}
                             className={`rocket-node ${active ? 'active' : ''}`}

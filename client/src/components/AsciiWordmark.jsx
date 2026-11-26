@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
+import { soundEngine } from '../utils/soundEngine';
 
 const GLYPHS = '!#$%&*+-/0123456789:;<=>?@ABCDEFGHJKLMNPQRSTUVWXYZ[]^_{|}~';
 const pick = () => GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
@@ -147,6 +148,68 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                 state.kick();
             };
             window.addEventListener('pointermove', onPointerMove, { passive: true });
+            const onPointerDown = (e) => {
+                if (REDUCED || state.intro < 0.85 || state.explode > 0.2) return;
+                if (e.target?.closest?.('a, button, input, textarea')) return;
+                const heroStage = host.closest('section') || host;
+                if (!heroStage.contains(e.target)) return;
+
+                const b = r.domElement.getBoundingClientRect();
+                if (!b.width || !b.height || !state.group || !state.grid || !state.off || !state.base) return;
+
+                const clickNdc = new THREE.Vector2(
+                    ((e.clientX - b.left) / b.width) * 2 - 1,
+                    -((e.clientY - b.top) / b.height) * 2 + 1
+                );
+                state.group.updateMatrixWorld(true);
+                state.ray.setFromCamera(clickNdc, state.camera);
+                const inv = new THREE.Matrix4().copy(state.group.matrixWorld).invert();
+                const rayLocal = state.ray.ray.clone().applyMatrix4(inv);
+                const hit = new THREE.Vector3();
+                if (!rayLocal.intersectPlane(state.plane, hit)) return;
+
+                hit.x -= state.points.position.x;
+                hit.y -= state.points.position.y;
+
+                const g = state.grid;
+                const off = state.off;
+                const base = state.base;
+                const mx = hit.x, my = hit.y, mz = hit.z;
+                const RAD = UNIT * 1.65;
+                const c0 = Math.max(0, ((mx - RAD - g.x0) / g.G) | 0);
+                const c1 = Math.min(g.cols - 1, ((mx + RAD - g.x0) / g.G) | 0);
+                const r0 = Math.max(0, ((my - RAD - g.y0) / g.G) | 0);
+                const r1 = Math.min(g.rows - 1, ((my + RAD - g.y0) / g.G) | 0);
+
+                let hitAny = false;
+                for (let cy = r0; cy <= r1; cy++) {
+                    for (let cx = c0; cx <= c1; cx++) {
+                        const cell = cy * g.cols + cx;
+                        for (let j = g.start[cell]; j < g.start[cell + 1]; j++) {
+                            const i = g.idx[j] * 3;
+                            const dx = (base[i] + off[i] - mx) / UNIT;
+                            const dy = (base[i + 1] + off[i + 1] - my) / UNIT;
+                            const dz = (base[i + 2] + off[i + 2] - mz) / UNIT;
+                            const d = Math.sqrt(dx * dx + dy * dy + dz * dz) + 1e-4;
+                            if (d > 1.65) continue;
+                            const falloff = 1 - d / 1.65;
+                            const blast = falloff * falloff * 105;
+                            off[i] += (dx / d) * blast;
+                            off[i + 1] += (dy / d) * blast;
+                            off[i + 2] += ((dz / d) * 0.5 + 0.65) * blast;
+                            hitAny = true;
+                        }
+                    }
+                }
+
+                if (hitAny) {
+                    state.active = true;
+                    state.offAttr.needsUpdate = true;
+                    soundEngine.playShockwave();
+                    state.kick();
+                }
+            };
+            window.addEventListener('pointerdown', onPointerDown, { passive: true });
 
             const onVisChange = () => {
                 if (!document.hidden && state.visible) state.kick();
@@ -624,6 +687,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
             state.dispose = () => {
                 introTween?.kill();
                 window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerdown', onPointerDown);
                 document.removeEventListener('visibilitychange', onVisChange);
                 io?.disconnect();
                 state.points?.geometry?.dispose();
