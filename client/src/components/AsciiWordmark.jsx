@@ -657,7 +657,7 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                 if (introTween) return;
                 introTween = gsap.to(state, {
                     intro: 1,
-                    duration: 1.45,
+                    duration: 1.05,
                     ease: 'power3.out',
                     onUpdate: () => {
                         if (state.uni) state.uni.uIntro.value = state.intro;

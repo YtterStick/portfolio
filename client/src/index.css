@@ -92,23 +92,64 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
 }
 .dim { color: var(--dim); }
 
-/* ---------- loader ---------- */
+/* ---------- loader (portal above everything, fast spaceship launch) ---------- */
 .loader {
   position: fixed;
   inset: 0;
-  z-index: 500;
+  z-index: 9999;
   background: #0a0a0a;
   color: #ededed;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: var(--pad);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: all;
 }
-.loader-name { font: 400 13px var(--mono); align-self: flex-start; text-transform: uppercase; }
-.loader-count {
-  font: 300 clamp(96px, 18vw, 280px)/0.8 var(--sans);
-  letter-spacing: -0.06em;
-  font-variant-numeric: tabular-nums;
+body.is-loading .cryst-nav,
+body.is-loading .rocket-rail {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.cryst-nav,
+.rocket-rail {
+  transition: opacity 0.45s var(--ease);
+}
+.loader-ship {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform, opacity;
+}
+.loader-ship svg {
+  display: block;
+}
+.loader-plume {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -1px;
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+.loader-flame {
+  display: block;
+  width: 4px;
+  height: 28px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(to bottom, #ffffff 0%, rgba(237, 237, 237, 0.55) 55%, transparent 100%);
+}
+.loader-sparks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 2px;
+  font: 400 10px/8px var(--mono);
+  color: rgba(237, 237, 237, 0.7);
+  animation: loaderSparkFlicker 0.14s steps(2) infinite;
+}
+@keyframes loaderSparkFlicker {
+  0% { opacity: 0.9; transform: translateY(0); }
+  100% { opacity: 0.45; transform: translateY(3px); }
 }
 
 /* ---------- nav ---------- */

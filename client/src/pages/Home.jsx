@@ -88,7 +88,8 @@ const HIGHLIGHTS = [
 const Home = () => {
     const rootRef = useRef(null);
     const loaderRef = useRef(null);
-    const countRef = useRef(null);
+    const shipRef = useRef(null);
+    const plumeRef = useRef(null);
     const cursorRef = useRef(null);
     const heroWordRef = useRef(null);
 
@@ -180,60 +181,90 @@ const Home = () => {
         window.scrollTo(0, 0);
 
         if (reduced) {
+            document.body.classList.remove('is-loading');
             setLoaderDone(true);
             heroWordRef.current?.startIntro?.();
             return () => {
                 document.body.classList.remove('inverted');
+                document.body.classList.remove('is-loading');
             };
         }
 
+        document.body.classList.add('is-loading');
+
         const ctx = gsap.context(() => {
-            // 1. Loader counter 000 -> 100
-            if (loaderRef.current && countRef.current) {
-                const counter = { v: 0 };
-                gsap.to(counter, {
-                    v: 100,
-                    duration: 1.25,
-                    ease: 'power2.inOut',
-                    onUpdate: () => {
-                        if (countRef.current) {
-                            countRef.current.textContent = `00${Math.round(counter.v)}`.slice(-3);
-                        }
+            // 1. Fast Spaceship Launch Loader (~0.88s total, portal above all headers)
+            if (loaderRef.current && shipRef.current && plumeRef.current) {
+                const tl = gsap.timeline();
+                gsap.set(shipRef.current, { y: 18, scale: 0.9, opacity: 0 });
+                gsap.set(plumeRef.current, { scaleY: 0.25, opacity: 0 });
+
+                // Quick ignition
+                tl.to(shipRef.current, {
+                    y: 0,
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.22,
+                    ease: 'power2.out'
+                }, 0)
+                .to(plumeRef.current, {
+                    scaleY: 1.15,
+                    opacity: 1,
+                    duration: 0.2,
+                    ease: 'power2.out'
+                }, 0.04)
+                // Launch straight upward!
+                .to(plumeRef.current, {
+                    scaleY: 3.4,
+                    duration: 0.42,
+                    ease: 'power3.in'
+                }, 0.22)
+                .to(shipRef.current, {
+                    y: () => -window.innerHeight * 0.72,
+                    duration: 0.44,
+                    ease: 'power3.in'
+                }, 0.22)
+                // Trigger hero 3D ASCII + lift curtain right in the rocket's wake
+                .add(() => {
+                    heroWordRef.current?.startIntro?.();
+                }, 0.3)
+                .to(loaderRef.current, {
+                    yPercent: -100,
+                    duration: 0.54,
+                    ease: 'expo.inOut',
+                    onStart: () => {
+                        setTimeout(() => {
+                            document.body.classList.remove('is-loading');
+                        }, 180);
                     },
                     onComplete: () => {
-                        heroWordRef.current?.startIntro?.();
-                        gsap.to(loaderRef.current, {
-                            yPercent: -100,
-                            duration: 1.0,
-                            ease: 'expo.inOut',
-                            onComplete: () => setLoaderDone(true)
-                        });
-                        setTimeout(() => {
-                            const lede = rootRef.current?.querySelector('.hero-lede');
-                            if (lede) {
-                                const spans = splitWordsOrLines(lede, true);
-                                if (spans?.length) {
-                                    gsap.from(spans, {
-                                        yPercent: 115,
-                                        duration: 1.3,
-                                        ease: 'expo.out',
-                                        stagger: 0.035,
-                                        delay: 0.15
-                                    });
-                                }
-                            }
-                            gsap.from('.hero-meta p, .hero-scroll', {
-                                y: 20,
-                                opacity: 0,
-                                duration: 1.1,
-                                ease: 'expo.out',
-                                stagger: 0.08,
-                                delay: 0.05
-                            });
-                        }, 250);
+                        document.body.classList.remove('is-loading');
+                        setLoaderDone(true);
                     }
-                });
+                }, 0.34)
+                .add(() => {
+                    const lede = rootRef.current?.querySelector('.hero-lede');
+                    if (lede) {
+                        const spans = splitWordsOrLines(lede, true);
+                        if (spans?.length) {
+                            gsap.from(spans, {
+                                yPercent: 115,
+                                duration: 1.05,
+                                ease: 'expo.out',
+                                stagger: 0.03
+                            });
+                        }
+                    }
+                    gsap.from('.hero-meta p', {
+                        y: 16,
+                        opacity: 0,
+                        duration: 0.9,
+                        ease: 'expo.out',
+                        stagger: 0.06
+                    });
+                }, 0.48);
             } else {
+                document.body.classList.remove('is-loading');
                 setLoaderDone(true);
                 heroWordRef.current?.startIntro?.();
             }
@@ -426,11 +457,18 @@ const Home = () => {
         }, rootRef);
 
         const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 600);
+        const loadSafetyTimer = setTimeout(() => {
+            document.body.classList.remove('is-loading');
+            setLoaderDone(true);
+            heroWordRef.current?.startIntro?.();
+        }, 1400);
 
         return () => {
             clearTimeout(refreshTimer);
+            clearTimeout(loadSafetyTimer);
             ctx.revert();
             document.body.classList.remove('inverted');
+            document.body.classList.remove('is-loading');
         };
     }, []);
 
@@ -586,14 +624,31 @@ const Home = () => {
                 <span>View</span>
             </div>
 
-            {/* Intro Loader (000 -> 100) */}
-            {!loaderDone && (
+            {/* Fast Spaceship Launch Loader (Portal on body -> strictly above Navbar & headers) */}
+            {!loaderDone && typeof document !== 'undefined' && createPortal(
                 <div ref={loaderRef} className="loader" aria-hidden="true">
-                    <span className="loader-name">ANDREI DILAG</span>
-                    <span className="loader-count">
-                        <span ref={countRef}>000</span>
-                    </span>
-                </div>
+                    <div ref={shipRef} className="loader-ship">
+                        <svg width="36" height="46" viewBox="0 0 24 30" fill="none">
+                            <path
+                                d="M12 2C12 2 6.8 8.2 6.8 16.5V21.5L4 24.4V26.2L8 24.7H16L20 26.2V24.4L17.2 21.5V16.5C17.2 8.2 12 2 12 2Z"
+                                fill="#0a0a0a"
+                                stroke="#ededed"
+                                strokeWidth="1.5"
+                                strokeLinejoin="round"
+                            />
+                            <circle cx="12" cy="12.5" r="2.1" fill="#ededed" />
+                        </svg>
+                        <div ref={plumeRef} className="loader-plume">
+                            <span className="loader-flame" />
+                            <span className="loader-sparks">
+                                <span>*</span>
+                                <span>+</span>
+                                <span>:</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>,
+                document.body
             )}
 
             {/* ============ HERO ============ */}
