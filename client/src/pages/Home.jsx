@@ -4,8 +4,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import axios from 'axios';
 import AsciiWordmark from '../components/AsciiWordmark';
+import AsciiPortrait from '../components/AsciiPortrait';
 import BgAsciiCanvas from '../components/BgAsciiCanvas';
 import RocketScroll from '../components/RocketScroll';
+import ProjectSimModalWidget from '../components/ProjectSimModalWidget';
+import AskAndreiModal from '../components/AskAndreiModal';
 import { useScroll } from '../context/ScrollContext';
 import { projectsData } from '../data/projects';
 import { soundEngine } from '../utils/soundEngine';
@@ -94,6 +97,7 @@ const Home = () => {
     const [lightbox, setLightbox] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
     const [inquiryOpen, setInquiryOpen] = useState(false);
+    const [askOpen, setAskOpen] = useState(false);
     const [hoveredMore, setHoveredMore] = useState(null);
     const morePreviewRef = useRef(null);
 
@@ -430,9 +434,9 @@ const Home = () => {
         };
     }, []);
 
-    // Modal & Lightbox ESC + scroll lock
+    // Modal & Lightbox ESC + scroll lock + navbar "Ask AI" event
     useEffect(() => {
-        const anyOpen = !!(lightbox || selectedProject || inquiryOpen);
+        const anyOpen = !!(lightbox || selectedProject || inquiryOpen || askOpen);
         if (anyOpen) {
             lenis?.stop?.();
         } else {
@@ -443,11 +447,17 @@ const Home = () => {
                 setLightbox(null);
                 setSelectedProject(null);
                 setInquiryOpen(false);
+                setAskOpen(false);
             }
         };
+        const onOpenAsk = () => setAskOpen(true);
         window.addEventListener('keydown', onKey);
-        return () => window.removeEventListener('keydown', onKey);
-    }, [lightbox, selectedProject, inquiryOpen, lenis]);
+        window.addEventListener('open-ask-andrei', onOpenAsk);
+        return () => {
+            window.removeEventListener('keydown', onKey);
+            window.removeEventListener('open-ask-andrei', onOpenAsk);
+        };
+    }, [lightbox, selectedProject, inquiryOpen, askOpen, lenis]);
 
     const handleCopyEmail = async () => {
         try {
@@ -722,13 +732,7 @@ const Home = () => {
 
                 <div className="about-grid">
                     <div className="about-photo" data-reveal-img>
-                        <figure className="photo-bw">
-                            <img
-                                src="/grad_pic.png"
-                                alt="Portrait of Andrei Dilag"
-                                loading="lazy"
-                            />
-                        </figure>
+                        <AsciiPortrait src="/grad_pic.png" alt="Portrait of Andrei Dilag" />
                     </div>
 
                     <div className="about-text">
@@ -774,7 +778,7 @@ const Home = () => {
                             </div>
                         </dl>
 
-                        <div>
+                        <div className="flex flex-wrap gap-3">
                             <a
                                 href="/andrei_dilag_resume.pdf"
                                 download="andrei_dilag_resume.pdf"
@@ -786,6 +790,19 @@ const Home = () => {
                             >
                                 Download resume (PDF) ↗
                             </a>
+                            <button
+                                type="button"
+                                className="pill-btn magnetic-item"
+                                onMouseEnter={() => soundEngine.playHover()}
+                                onPointerMove={(e) => attachMagneticMove(e, 0.25, 0.34)}
+                                onPointerLeave={resetMagneticMove}
+                                onClick={() => {
+                                    soundEngine.playClick();
+                                    setAskOpen(true);
+                                }}
+                            >
+                                Ask Andrei’s AI ↗
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -894,6 +911,19 @@ const Home = () => {
                         }}
                     >
                         Send a message
+                    </button>
+                    <button
+                        className="pill-btn magnetic-item"
+                        type="button"
+                        onMouseEnter={() => soundEngine.playHover()}
+                        onPointerMove={(e) => attachMagneticMove(e, 0.26, 0.36)}
+                        onPointerLeave={resetMagneticMove}
+                        onClick={() => {
+                            soundEngine.playClick();
+                            setAskOpen(true);
+                        }}
+                    >
+                        Ask Andrei’s AI
                     </button>
                     <a
                         href="https://github.com/YtterStick"
@@ -1059,6 +1089,9 @@ const Home = () => {
                                 </div>
                             )}
 
+                            {/* Interactive live system sandbox */}
+                            <ProjectSimModalWidget project={selectedProject} />
+
                             {selectedProject.keyFeatures && (
                                 <div className="border-t border-white/15 pt-6">
                                     <p className="cryst-label dim mb-4">Key capabilities</p>
@@ -1081,6 +1114,17 @@ const Home = () => {
                 </div>,
                 document.body
             )}
+
+            {/* ============ ASK ANDREI Q&A TERMINAL ============ */}
+            <AskAndreiModal
+                open={askOpen}
+                onClose={() => setAskOpen(false)}
+                onOpenInquiry={() => {
+                    setFormStatus('');
+                    setFormToast('');
+                    setInquiryOpen(true);
+                }}
+            />
 
             {/* ============ INQUIRY MODAL ============ */}
             {typeof document !== 'undefined' && inquiryOpen && createPortal(

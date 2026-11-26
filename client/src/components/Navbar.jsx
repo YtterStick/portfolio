@@ -88,6 +88,18 @@ const Navbar = () => {
             <div className="cryst-nav-right">
                 <button
                     type="button"
+                    onClick={() => {
+                        soundEngine.playClick();
+                        window.dispatchEvent(new CustomEvent('open-ask-andrei'));
+                    }}
+                    onMouseEnter={() => soundEngine.playHover()}
+                    className="sfx-toggle"
+                    title="Instant Q&A about Andrei’s work & experience"
+                >
+                    <span>ASK AI</span>
+                </button>
+                <button
+                    type="button"
                     onClick={() => soundEngine.toggle()}
                     aria-pressed={soundOn}
                     aria-label={soundOn ? 'Mute sound effects' : 'Enable subtle sound effects'}
