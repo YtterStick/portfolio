@@ -48,6 +48,7 @@ const RocketScroll = () => {
     const [thrustActive, setThrustActive] = useState(false);
 
     const rocketTop = useTransform(smoothProgress, [0, 1], ['0%', '100%']);
+    const rocketLeft = useTransform(smoothProgress, [0, 1], ['0%', '100%']);
 
     const flameScaleY = useTransform(smoothVelocity, (v) => {
         if (prefersReduced) return 0.35;
@@ -163,6 +164,7 @@ const RocketScroll = () => {
     const s2 = SPARKS[(sparkIdx + 2) % SPARKS.length];
 
     return (
+        <>
         <aside className="rocket-rail" aria-label="Scroll progress rocket">
             <span className="rocket-pct">{pctText}%</span>
 
@@ -243,6 +245,34 @@ const RocketScroll = () => {
                 </motion.div>
             </div>
         </aside>
+
+        {/* Sleek Top Horizontal Rocket Progress Track on Mobile */}
+        <div className="mob-rocket-bar" aria-hidden="true">
+            <div className="mob-rocket-track">
+                <motion.div
+                    className="mob-rocket-fill"
+                    style={{ scaleX: smoothProgress, transformOrigin: 'left' }}
+                />
+                <motion.div className="mob-rocket-shuttle" style={{ left: rocketLeft }}>
+                    <motion.div
+                        animate={{ rotate: prefersReduced ? 90 : direction === 'down' ? 90 : -90 }}
+                        transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+                        className="mob-rocket-icon"
+                    >
+                        <svg width="13" height="17" viewBox="0 0 24 30" fill="none">
+                            <path
+                                d="M12 2C12 2 6.8 8.2 6.8 16.5V21.5L4 24.4V26.2L8 24.7H16L20 26.2V24.4L17.2 21.5V16.5C17.2 8.2 12 2 12 2Z"
+                                fill="var(--bg)"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </motion.div>
+                </motion.div>
+            </div>
+        </div>
+        </>
     );
 };
 

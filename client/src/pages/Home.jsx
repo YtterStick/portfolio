@@ -112,9 +112,9 @@ const Home = () => {
     const flagshipProjects = projectsData.slice(0, 3);
     const moreProjects = projectsData.slice(3);
 
-    // Custom difference cursor + floating "More systems" image follower
+    // Custom difference cursor + floating "More systems" image follower (desktop fine pointer only)
     useEffect(() => {
-        const fine = window.matchMedia?.('(pointer: fine)')?.matches;
+        const fine = window.matchMedia?.('(hover: hover) and (pointer: fine)')?.matches;
         const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
         if (!fine || reduced || !cursorRef.current) return;
 
@@ -269,11 +269,12 @@ const Home = () => {
                 heroWordRef.current?.startIntro?.();
             }
 
-            // 2. Hero pin + 3D ASCII scatter on scroll
+            // 2. Hero pin + 3D ASCII scatter on scroll (brisker pin travel on mobile)
+            const isMobileViewport = window.innerWidth < 768;
             ScrollTrigger.create({
                 trigger: '.hero',
                 start: 'top top',
-                end: '+=110%',
+                end: isMobileViewport ? '+=65%' : '+=110%',
                 pin: true,
                 scrub: true,
                 onUpdate: (s) => {
@@ -766,6 +767,7 @@ const Home = () => {
                                     onBlur={() => setHoveredMore(null)}
                                 >
                                     <span className="m-n">0{idx + 4}</span>
+                                    <img src={proj.image} alt="" loading="lazy" className="m-thumb" />
                                     <span className="m-t">{proj.title}</span>
                                     <span className="m-d">{proj.valueProp}</span>
                                     <span className="m-a" aria-hidden="true">
@@ -1057,27 +1059,26 @@ const Home = () => {
                     role="dialog"
                     aria-modal="true"
                     aria-label={`${selectedProject.title} Case Study`}
-                    className="fixed inset-0 z-[350] flex items-center justify-center p-4 sm:p-8 bg-black/90 overflow-y-auto"
+                    className="fixed inset-0 z-[350] flex items-end sm:items-center justify-center p-0 sm:p-8 bg-black/90 overflow-y-auto"
                     onClick={() => setSelectedProject(null)}
                 >
                     <div
-                        className="w-full max-w-4xl bg-[#111111] text-[#ededed] border border-white/15 max-h-[90vh] flex flex-col my-auto"
+                        className="w-full max-w-4xl bg-[#111111] text-[#ededed] border-t sm:border border-white/15 max-h-[92dvh] sm:max-h-[90vh] flex flex-col sm:my-auto"
                         onClick={(e) => e.stopPropagation()}
                         data-lenis-prevent
                     >
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-white/15">
+                        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-white/15 shrink-0 bg-[#111111]">
                             <span className="cryst-label">{selectedProject.category}</span>
                             <button
                                 type="button"
-                                autoFocus
                                 onClick={() => setSelectedProject(null)}
-                                className="cryst-label cursor-pointer hover:opacity-70"
+                                className="cryst-label cursor-pointer py-1 px-2 hover:opacity-70"
                             >
-                                Close [ESC]
+                                Close ✕
                             </button>
                         </div>
 
-                        <div className="p-6 sm:p-10 overflow-y-auto space-y-8">
+                        <div className="p-5 sm:p-10 overflow-y-auto space-y-7 sm:space-y-8">
                             <div className="aspect-video w-full overflow-hidden bg-black border border-white/10">
                                 <img
                                     src={selectedProject.image}
@@ -1187,23 +1188,22 @@ const Home = () => {
                     role="dialog"
                     aria-modal="true"
                     aria-label="Send a message"
-                    className="fixed inset-0 z-[350] flex items-center justify-center p-4 sm:p-8 bg-black/90 overflow-y-auto"
+                    className="fixed inset-0 z-[350] flex items-end sm:items-center justify-center p-0 sm:p-8 bg-black/90 overflow-y-auto"
                     onClick={() => setInquiryOpen(false)}
                 >
                     <div
-                        className="w-full max-w-xl bg-[#111111] text-[#ededed] border border-white/15 p-6 sm:p-10 my-auto"
+                        className="w-full max-w-xl bg-[#111111] text-[#ededed] border-t sm:border border-white/15 p-5 sm:p-10 max-h-[92dvh] overflow-y-auto sm:my-auto"
                         onClick={(e) => e.stopPropagation()}
                         data-lenis-prevent
                     >
-                        <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-6">
-                            <span className="cryst-label">Direct inquiry — andreidilag12@gmail.com</span>
+                        <div className="flex items-center justify-between gap-2 border-b border-white/15 pb-4 mb-5">
+                            <span className="cryst-label truncate">Direct inquiry — andreidilag12@gmail.com</span>
                             <button
                                 type="button"
-                                autoFocus
                                 onClick={() => setInquiryOpen(false)}
-                                className="cryst-label cursor-pointer hover:opacity-70"
+                                className="cryst-label shrink-0 cursor-pointer py-1 px-2 hover:opacity-70"
                             >
-                                Close [ESC]
+                                Close ✕
                             </button>
                         </div>
 
@@ -1224,7 +1224,7 @@ const Home = () => {
                                 </button>
                             </div>
                         ) : (
-                            <form onSubmit={handleInquirySubmit} className="space-y-4 text-sm">
+                            <form onSubmit={handleInquirySubmit} className="space-y-4 text-base sm:text-sm">
                                 <div>
                                     <label className="block cryst-label dim mb-1.5">Name</label>
                                     <input
@@ -1232,7 +1232,7 @@ const Home = () => {
                                         required
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-white focus:outline-none focus:border-white"
+                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-base sm:text-sm text-white focus:outline-none focus:border-white"
                                         placeholder="Your name"
                                     />
                                 </div>
@@ -1243,7 +1243,7 @@ const Home = () => {
                                         required
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-white focus:outline-none focus:border-white"
+                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-base sm:text-sm text-white focus:outline-none focus:border-white"
                                         placeholder="you@company.com"
                                     />
                                 </div>
@@ -1254,7 +1254,7 @@ const Home = () => {
                                         required
                                         value={formData.subject}
                                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-white focus:outline-none focus:border-white"
+                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-base sm:text-sm text-white focus:outline-none focus:border-white"
                                         placeholder="Project build, freelance, or hiring"
                                     />
                                 </div>
@@ -1265,7 +1265,7 @@ const Home = () => {
                                         required
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-white focus:outline-none focus:border-white resize-none"
+                                        className="w-full bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-base sm:text-sm text-white focus:outline-none focus:border-white resize-none"
                                         placeholder="Tell me about your project or role..."
                                     />
                                 </div>

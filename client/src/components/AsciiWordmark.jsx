@@ -27,25 +27,26 @@ function layoutWord(lines, W, maxH, stagger) {
         if (iw > widest) widest = iw;
         if (i === 0) asc0 = m.actualBoundingBoxAscent || test * 0.76;
     });
-    let fs = (test * (W * (stagger ? (W < 700 ? 0.8 : 0.66) : 0.998))) / Math.max(1, widest);
+    let fs = (test * (W * (stagger ? (W < 700 ? 0.72 : 0.66) : 0.98))) / Math.max(1, widest);
     if (maxH) fs = Math.min(fs, ((maxH / lines.length) * 0.92) / (asc0 / test));
     c.font = FONT(fs);
-    const gap = fs * 0.07;
+    const gap = fs * (W < 700 ? 0.12 : 0.07);
     let y = 0;
     let inkW = 0;
     const specs = [];
+    const safeW = Math.max(40, W - (W < 700 ? 6 : 0));
     lines.forEach((t, i) => {
         const m = c.measureText(t);
         const asc = m.actualBoundingBoxAscent || fs * 0.76;
         const desc = Math.max(0, m.actualBoundingBoxDescent || fs * 0.18);
         const w = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) || m.width;
         let x = m.actualBoundingBoxLeft || 0;
-        if (stagger && lines.length > 1) x += (W - w) * (i / (lines.length - 1));
+        if (stagger && lines.length > 1) x += Math.max(0, safeW - w) * (i / (lines.length - 1));
         specs.push({ t, x, y: y + asc });
         y += asc + desc + (i < lines.length - 1 ? gap : 0);
         if (w > inkW) inkW = w;
     });
-    if (stagger) inkW = W;
+    if (stagger) inkW = safeW;
     return { fs, specs, w: Math.ceil(inkW), h: Math.ceil(y) };
 }
 
@@ -517,9 +518,9 @@ const AsciiWordmark = forwardRef(({ lines = ['ANDREI', 'DILAG'], stagger = false
                     state.postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
                 }
 
-                const cell = mobile ? 4 : 9;
+                const cell = mobile ? 5.5 : 9;
                 state.puni.uCell.value.set(cell / CW, cell / CH);
-                state.puni.uGain.value = mobile ? 3.2 : 4.3;
+                state.puni.uGain.value = mobile ? 3.8 : 4.3;
                 state.puni.tScene.value = state.rt.texture;
                 observeStage(stage);
                 state.render();

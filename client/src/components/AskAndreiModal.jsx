@@ -195,18 +195,18 @@ const AskAndreiModal = ({ open, onClose, onOpenInquiry }) => {
             role="dialog"
             aria-modal="true"
             aria-label="Ask about Andrei"
-            className="fixed inset-0 z-[360] flex items-center justify-center p-4 sm:p-8 bg-black/90 overflow-y-auto"
+            className="fixed inset-0 z-[360] flex items-end sm:items-center justify-center p-0 sm:p-8 bg-black/90 overflow-y-auto"
             onClick={onClose}
         >
             <div
-                className="w-full max-w-2xl bg-[#111111] text-[#ededed] border border-white/15 p-6 sm:p-8 my-auto"
+                className="w-full max-w-2xl bg-[#111111] text-[#ededed] border-t sm:border border-white/15 p-5 sm:p-8 max-h-[92dvh] overflow-y-auto sm:my-auto"
                 onClick={(e) => e.stopPropagation()}
                 data-lenis-prevent
             >
-                <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-4 mb-5">
-                    <div>
-                        <span className="cryst-label block">ANDREI.SYS — Live Recruiter Q&amp;A</span>
-                        <span className="cryst-label dim text-[11px]">{modeTag}</span>
+                <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-4 mb-4 sm:mb-5">
+                    <div className="min-w-0">
+                        <span className="cryst-label block truncate">ANDREI.SYS — Live Recruiter Q&amp;A</span>
+                        <span className="cryst-label dim text-[11px] block truncate">{modeTag}</span>
                     </div>
                     <button
                         type="button"
@@ -214,9 +214,9 @@ const AskAndreiModal = ({ open, onClose, onOpenInquiry }) => {
                             soundEngine.playClick();
                             onClose();
                         }}
-                        className="cryst-label cursor-pointer hover:opacity-70"
+                        className="cryst-label shrink-0 cursor-pointer py-1 px-2 hover:opacity-70"
                     >
-                        Close [ESC]
+                        Close ✕
                     </button>
                 </div>
 
@@ -273,8 +273,8 @@ const AskAndreiModal = ({ open, onClose, onOpenInquiry }) => {
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask in English, Tagalog, or Taglish (e.g. Magkano o paano Evalo?)..."
-                        className="flex-1 bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-sm text-white placeholder-[#6e6e6e] focus:outline-none focus:border-white"
+                        placeholder="Ask in English, Tagalog, or Taglish..."
+                        className="flex-1 min-w-0 bg-[#0a0a0a] border border-white/20 px-3.5 py-2.5 text-base sm:text-sm text-white placeholder-[#6e6e6e] focus:outline-none focus:border-white"
                     />
                     <button type="submit" disabled={loading} className="pill-btn text-sm whitespace-nowrap disabled:opacity-50">
                         {loading ? '...' : 'Ask ↵'}
